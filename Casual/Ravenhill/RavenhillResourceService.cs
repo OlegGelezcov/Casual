@@ -64,5 +64,9 @@ namespace Casual.Ravenhill {
             }).ToList();
         }
 
+
+        public SearchObjectData GetSearchObjectData(string id) {
+            return searchObjects.ContainsKey(id) ? searchObjects[id] : null;
+        }
     }
 }

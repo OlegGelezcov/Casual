@@ -48,6 +48,7 @@
     <Compile Include="CasualEngine.cs" />
     <Compile Include="EventService.cs" />
     <Compile Include="CasualInput.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="GameBehaviour.cs" />
     <Compile Include="GameElement.cs" />
     <Compile Include="GameModeService.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="Interfaces.cs" />
     <Compile Include="IResourceService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Ravenhill\BaseSearchableObject.cs" />
     <Compile Include="Ravenhill\Data\IconData.cs" />
     <Compile Include="Ravenhill\Data\PriceData.cs" />
     <Compile Include="Ravenhill\Data\RoomData.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Ravenhill\Data\RoomType.cs" />
     <Compile Include="Ravenhill\Data\SearchObjectData.cs" />
     <Compile Include="Ravenhill\GameEventName.cs" />
+    <Compile Include="Ravenhill\ISearchableObject.cs" />
     <Compile Include="Ravenhill\RavenhillBaseListenerBehaviour.cs" />
     <Compile Include="Ravenhill\RavenhillBaseView.cs" />
     <Compile Include="Ravenhill\RavenhillEngine.cs" />
@@ -72,7 +75,10 @@
     <Compile Include="Ravenhill\RavenhillResourceService.cs" />
     <Compile Include="Ravenhill\RavenhillViewService.cs" />
     <Compile Include="Ravenhill\RavenhillViewType.cs" />
+    <Compile Include="Ravenhill\SearchGroup.cs" />
+    <Compile Include="Ravenhill\SearchManager.cs" />
     <Compile Include="Ravenhill\Test\RavenhillTestListener.cs" />
+    <Compile Include="Ravenhill\UI\SearchTextcs.cs" />
     <Compile Include="ResourceObjectCache.cs" />
     <Compile Include="ResourceService.cs" />
     <Compile Include="Singleton.cs" />

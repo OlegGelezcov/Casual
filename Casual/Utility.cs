@@ -17,6 +17,7 @@ namespace Casual {
             }
         }
 
+<<<<<<< HEAD
         public static string RayHitObjectName(Vector2 screenPosition, Camera camera = null) {
             if(camera == null ) {
                 camera = Camera.main;
@@ -31,6 +32,16 @@ namespace Casual {
                 return hit.transform.name;
             }
             return string.Empty;
+=======
+        public static SystemLanguage gameLanguage {
+            get {
+                if (Application.systemLanguage == SystemLanguage.Russian) {
+                    return SystemLanguage.Russian;
+                }
+
+                return SystemLanguage.English;
+            }
+>>>>>>> oleg
         }
     }
 }

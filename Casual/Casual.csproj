@@ -60,6 +60,7 @@
     <Compile Include="Ravenhill\Data\RoomData.cs" />
     <Compile Include="Ravenhill\Data\RoomMode.cs" />
     <Compile Include="Ravenhill\Data\RoomType.cs" />
+    <Compile Include="Ravenhill\Data\SearchObjectData.cs" />
     <Compile Include="Ravenhill\GameEventName.cs" />
     <Compile Include="Ravenhill\RavenhillBaseListenerBehaviour.cs" />
     <Compile Include="Ravenhill\RavenhillBaseView.cs" />

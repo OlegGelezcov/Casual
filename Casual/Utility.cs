@@ -16,5 +16,15 @@ namespace Casual {
                     Application.platform == RuntimePlatform.LinuxPlayer;
             }
         }
+
+        public static SystemLanguage gameLanguage {
+            get {
+                if (Application.systemLanguage == SystemLanguage.Russian) {
+                    return SystemLanguage.Russian;
+                }
+
+                return SystemLanguage.English;
+            }
+        }
     }
 }

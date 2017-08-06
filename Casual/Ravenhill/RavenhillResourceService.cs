@@ -6,11 +6,20 @@ namespace Casual.Ravenhill {
     public class RavenhillResourceService : ResourceService {
 
         private const string kResourceFile = "Data/Temp/resources";
+        private readonly List<string> kStringAssets = new List<string> {
+            "Data/Loc/str_achievements",
+            "Data/Loc/str_gameobjects",
+            "Data/Loc/str_interface",
+            "Data/Loc/str_misc",
+            "Data/Loc/str_quests",
+            "Data/Loc/str_searchobjects",
+            "Data/Loc/str_tutorial"
+        };
 
         private Dictionary<string, string> resourcePathDictionary { get; } = new Dictionary<string, string>();
         private Dictionary<string, RoomData> roomDataDictionary { get; } = new Dictionary<string, RoomData>();
         private Dictionary<string, SearchObjectData> searchObjects { get; } = new Dictionary<string, SearchObjectData>();
-
+        private StringResource stringResource { get; } = new StringResource();
 
         private bool m_IsLoaded = false;
 
@@ -29,6 +38,10 @@ namespace Casual.Ravenhill {
 
         public override void Setup(object data) {
             Load();
+        }
+
+        private void LoadStrings() {
+            stringResource.Load()
         }
 
         private void LoadResourcePath() {

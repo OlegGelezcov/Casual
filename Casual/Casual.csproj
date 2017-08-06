@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C23DEBA1-276A-4C63-A757-8BCB0AEEC02F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Casual</RootNamespace>
+    <AssemblyName>Casual</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\Users\olegg\Documents\Ravenhill\Assets\Plugins\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;RAVENHILL;UNITY_IOS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\Program Files\Unity2017_1\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\Program Files\Unity2017_1\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BaseView.cs" />
+    <Compile Include="CanvasService.cs" />
+    <Compile Include="CasualEngine.cs" />
+    <Compile Include="EventService.cs" />
+    <Compile Include="CasualInput.cs" />
+    <Compile Include="GameBehaviour.cs" />
+    <Compile Include="GameElement.cs" />
+    <Compile Include="GameModeService.cs" />
+    <Compile Include="ICanvasSerive.cs" />
+    <Compile Include="Interfaces.cs" />
+    <Compile Include="IResourceService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Ravenhill\Data\IconData.cs" />
+    <Compile Include="Ravenhill\Data\PriceData.cs" />
+    <Compile Include="Ravenhill\Data\RoomData.cs" />
+    <Compile Include="Ravenhill\Data\RoomMode.cs" />
+    <Compile Include="Ravenhill\Data\RoomType.cs" />
+    <Compile Include="Ravenhill\GameEventName.cs" />
+    <Compile Include="Ravenhill\RavenhillBaseListenerBehaviour.cs" />
+    <Compile Include="Ravenhill\RavenhillBaseView.cs" />
+    <Compile Include="Ravenhill\RavenhillEngine.cs" />
+    <Compile Include="Ravenhill\RavenhillEventArgs.cs" />
+    <Compile Include="Ravenhill\RavenhillEventService.cs" />
+    <Compile Include="Ravenhill\RavenhillGameModeService.cs" />
+    <Compile Include="Ravenhill\RavenhillInput.cs" />
+    <Compile Include="Ravenhill\RavenhillResourceService.cs" />
+    <Compile Include="Ravenhill\RavenhillViewService.cs" />
+    <Compile Include="Ravenhill\RavenhillViewType.cs" />
+    <Compile Include="Ravenhill\Test\RavenhillTestListener.cs" />
+    <Compile Include="ResourceObjectCache.cs" />
+    <Compile Include="ResourceService.cs" />
+    <Compile Include="Singleton.cs" />
+    <Compile Include="UI\FirstSiblingTransform.cs" />
+    <Compile Include="UI\LastSiblingTransform.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="UXMLDocument.cs" />
+    <Compile Include="ViewService.cs" />
+    <Compile Include="ZoomCamera.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

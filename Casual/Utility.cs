@@ -17,22 +17,24 @@ namespace Casual {
             }
         }
 
-<<<<<<< HEAD
+
         public static string RayHitObjectName(Vector2 screenPosition, Camera camera = null) {
-            if(camera == null ) {
+            if (camera == null) {
                 camera = Camera.main;
             }
-            if(camera == null ) {
+            if (camera == null) {
                 return string.Empty;
             }
 
             Ray ray = camera.ScreenPointToRay(screenPosition);
             RaycastHit hit;
-            if(Physics.Raycast(ray, out hit)) {
+            if (Physics.Raycast(ray, out hit)) {
                 return hit.transform.name;
             }
             return string.Empty;
-=======
+        }
+
+
         public static SystemLanguage gameLanguage {
             get {
                 if (Application.systemLanguage == SystemLanguage.Russian) {
@@ -41,7 +43,7 @@ namespace Casual {
 
                 return SystemLanguage.English;
             }
->>>>>>> oleg
+
         }
     }
 }

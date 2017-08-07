@@ -16,7 +16,8 @@ namespace Casual.Ravenhill.Test {
 
         public override void OnDisable() {
             base.OnDisable();
-            engine.GetService<IEventService>().RemoveAll(this);
+
+            engine?.GetService<IEventService>().RemoveAll(this);
         }
 
         public override string listenerName => "test_listener";

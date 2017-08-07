@@ -1,6 +1,7 @@
 ﻿using Casual.Ravenhill.Data;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Casual.Ravenhill {
     public class RavenhillResourceService : ResourceService {
@@ -29,6 +30,7 @@ namespace Casual.Ravenhill {
 
         public override void Load() {
             LoadResourcePath();
+            LoadStrings();
             LoadRooms();
             LoadSearchObjects();
             m_IsLoaded = true;
@@ -41,7 +43,11 @@ namespace Casual.Ravenhill {
         }
 
         private void LoadStrings() {
-            stringResource.Load()
+            var conflicts = stringResource.Load(kStringAssets, Utility.gameLanguage);
+            foreach (var conflict in conflicts) {
+                Debug.LogWarning(conflict.ToString());
+            }
+            Debug.Log($"string loaded {stringCount}");
         }
 
         private void LoadResourcePath() {
@@ -81,5 +87,10 @@ namespace Casual.Ravenhill {
         public SearchObjectData GetSearchObjectData(string id) {
             return searchObjects.ContainsKey(id) ? searchObjects[id] : null;
         }
+
+        public string GetString(string key) => stringResource.GetString(key);
+
+        public int stringCount => stringResource.count;
+
     }
 }

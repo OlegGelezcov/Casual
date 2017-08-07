@@ -31,6 +31,8 @@ namespace Casual.Ravenhill.Data {
             return string.Empty;
         }
 
+        public int count => stringCache.Count;
+
         public List<StringHashConflict> Load(List<string> assetFiles, SystemLanguage lang) {
             stringCache.Clear();
             List<StringHashConflict> conflicts = new List<StringHashConflict>();
@@ -58,7 +60,7 @@ namespace Casual.Ravenhill.Data {
                 }
                 uint hash = JenkinsHash(key);
                 if(targetCache.ContainsKey(hash)) {
-                    conflicts.Add(new StringHashConflict(key, content, hash));
+                    conflicts.Add(new StringHashConflict(key, content, hash, asset));
                 } else {
                     targetCache.Add(hash, content);
                 }
@@ -71,11 +73,17 @@ namespace Casual.Ravenhill.Data {
         public string key { get; private set; }
         public string text { get; private set; }
         public uint hash { get; private set; }
+        public string assetName { get; private set; }
 
-        public StringHashConflict(string key, string text, uint hash) {
+        public StringHashConflict(string key, string text, uint hash, string assetName) {
             this.key = key;
             this.text = text;
             this.hash = hash;
+            this.assetName = assetName;
+        }
+
+        public override string ToString() {
+            return $"Conflict {assetName}: {key}({hash}) - {text}";
         }
     }
 }

@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Casual.Ravenhill.Data {
+﻿namespace Casual.Ravenhill.Data {
 
     public class PriceData {
         private int silver { get; set; }
         private int gold { get; set; }
+
+        public static PriceData FromSilver(int silver) {
+            return new PriceData(silver, 0);
+        }
+
+        public static PriceData FromGold(int gold ) {
+            return new PriceData(0, gold);
+        }
 
         public PriceData() {
             silver = 0;

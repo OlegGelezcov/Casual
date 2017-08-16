@@ -34,6 +34,12 @@ namespace Casual {
             return string.Empty;
         }
 
+        public static string RayHitObjectName2D(Vector2 screenPosition ) {
+            var ray = Camera.main.ScreenPointToRay(new Vector3(screenPosition.x, screenPosition.y, 0.0f));
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+            return hit.collider?.name ?? string.Empty;
+        }
+
 
         public static SystemLanguage gameLanguage {
             get {
@@ -44,6 +50,19 @@ namespace Casual {
                 return SystemLanguage.English;
             }
 
+        }
+
+        public static string FormatMS(float interval ) {
+            TimeSpan timeSpan = TimeSpan.FromSeconds(interval);
+            return $"{timeSpan.Minutes.ToString("00")}:{timeSpan.Seconds.ToString("00")}";
+        }
+
+        public static int TryParseInt(string text, int defaultValue = 0) {
+            int ret;
+            if(int.TryParse(text, out ret)) {
+                return ret;
+            }
+            return defaultValue;
         }
     }
 }

@@ -13,6 +13,12 @@ namespace Casual {
 
     public class UXMLDocument {
 
+        public static UXMLDocument FromXml(string xml) {
+            UXMLDocument document = new UXMLDocument();
+            document.Parse(xml);
+            return document;
+        }
+
 #if UNITY_IOS
         private XmlDocument m_Document;
 #else
@@ -84,7 +90,7 @@ namespace Casual {
 #endif
         }
 
-        public string GetString(string name) {
+        public string GetString(string name, string defaultValue = "") {
 #if UNITY_IOS
             foreach(XmlAttribute attrib in m_Node.Attributes ) {
                 if(attrib.Name == name ) {
@@ -98,7 +104,7 @@ namespace Casual {
                 }
             }
 #endif
-            return string.Empty;
+            return defaultValue;
         }
 
         public float GetFloat(string name) {

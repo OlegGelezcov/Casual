@@ -1,9 +1,6 @@
 ﻿using Casual.Ravenhill;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Casual {
 
@@ -28,6 +25,7 @@ namespace Casual {
                 Dictionary<string, IEventListener<GameEventName>> filteredListeners = listeners[eventName];
                 if (filteredListeners.ContainsKey(listener.listenerName)) {
                     filteredListeners.Remove(listener.listenerName);
+                    Debug.Log($"listener {listener.listenerName} unsubscribe from {eventName}");
                 }
             }
         }
@@ -37,6 +35,7 @@ namespace Casual {
                 Dictionary<string, IEventListener<GameEventName>> filteredListeners = kvp.Value;
                 if (filteredListeners.ContainsKey(listener.listenerName)) {
                     filteredListeners.Remove(listener.listenerName);
+                    Debug.Log($"listener {listener.listenerName} unsubscribe from {kvp.Key}");
                 }
             }
         }

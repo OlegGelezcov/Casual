@@ -21,6 +21,26 @@ namespace Casual.Ravenhill {
         private Dictionary<string, RoomData> roomDataDictionary { get; } = new Dictionary<string, RoomData>();
         private Dictionary<string, SearchObjectData> searchObjects { get; } = new Dictionary<string, SearchObjectData>();
         private StringResource stringResource { get; } = new StringResource();
+        private ResourceObjectCache<string, GameObject> prefabObjectCache { get; } = new ResourceObjectCache<string, GameObject>();
+        private ResourceObjectCache<string, Sprite> spriteObjectCache { get; } = new ResourceObjectCache<string, Sprite>();
+        private Dictionary<string, ToolData> tools { get; } = new Dictionary<string, ToolData>();
+        private Dictionary<string, BonusData> bonuses { get; } = new Dictionary<string, BonusData>();
+
+        private List<RoomSettingData> roomSettings { get; } = new List<RoomSettingData>();
+        public LevelExpTable levelExpTable { get; } = new LevelExpTable();
+        private Dictionary<string, AvatarData> avatars { get; } = new Dictionary<string, AvatarData>();
+
+        private Sprite m_TransparentSprite = null;
+
+        public override Sprite transparent {
+            get {
+                if(m_TransparentSprite == null ) {
+                    m_TransparentSprite = spriteObjectCache.GetObject("transparent");
+                }
+                return m_TransparentSprite;
+            }
+        }
+
 
         private bool m_IsLoaded = false;
 
@@ -30,9 +50,16 @@ namespace Casual.Ravenhill {
 
         public override void Load() {
             LoadResourcePath();
+            PreloadPrefabs();
+            PreloadSprites();
             LoadStrings();
             LoadRooms();
             LoadSearchObjects();
+            LoadRoomSettings();
+            LoadLevelExpTable();
+            LoadAvatars();
+            LoadTools();
+            LoadBonuses();
             m_IsLoaded = true;
             var eventService = engine.GetService<IEventService>();
             eventService?.SendEvent(new RavenhillResourceLoadedEventArgs());
@@ -40,6 +67,73 @@ namespace Casual.Ravenhill {
 
         public override void Setup(object data) {
             Load();
+        }
+
+        private void PreloadPrefabs() {
+            prefabObjectCache.Load(new Dictionary<string, string> {
+                ["search_text"] = "Prefabs/UI/Misc/search_text",
+                ["search_object_particles"] = "Prefabs/Effects/search_object_particles",
+                ["found_search_object"] = "Prefabs/Effects/found_search_object"
+            });
+        }
+
+        private void PreloadSprites() {
+            spriteObjectCache.Load(new Dictionary<string, string> {
+                ["transparent"] = "Sprites/transparent"
+            });
+        }
+
+        private void LoadBonuses() {
+            UXMLDocument document = new UXMLDocument();
+            document.Load(resourcePathDictionary["bonuses"]);
+
+            bonuses.Clear();
+            document.Element("bonuses").Elements("bonus").ForEach(bonusElement => {
+                BonusData bonusData = new BonusData();
+                bonusData.Load(bonusElement);
+                bonuses[bonusData.id] = bonusData;
+            });
+        }
+
+        private void LoadTools() {
+            UXMLDocument document = new UXMLDocument();
+            document.Load(resourcePathDictionary["tools"]);
+
+            tools.Clear();
+            document.Element("tools").Elements("tool").ForEach(toolElement => {
+                ToolData toolData = new ToolData();
+                toolData.Load(toolElement);
+                tools[toolData.id] = toolData;
+            });
+        }
+
+        private void LoadAvatars() {
+            UXMLDocument document = new UXMLDocument();
+            document.Load(resourcePathDictionary["avatars"]);
+
+            avatars.Clear();
+            document.Element("avatars").Elements("avatar").ForEach(avatarElement => {
+                AvatarData avatarData = new AvatarData();
+                avatarData.Load(avatarElement);
+                avatars[avatarData.id] = avatarData;
+            });
+        }
+
+        private void LoadLevelExpTable() {
+            levelExpTable.Load(resourcePathDictionary["level_exp_table"]);
+        }
+
+        private void LoadRoomSettings() {
+            string path = resourcePathDictionary["room_settings"];
+            UXMLDocument document = new UXMLDocument();
+            document.Load(path);
+            roomSettings.Clear();
+            var dump = document.Element("room_settings").Elements("room_setting").Select(roomSettingElement => {
+                RoomSettingData data = new RoomSettingData();
+                data.Load(roomSettingElement);
+                roomSettings.Add(data);
+                return data;
+            }).ToList();
         }
 
         private void LoadStrings() {
@@ -83,14 +177,64 @@ namespace Casual.Ravenhill {
             }).ToList();
         }
 
+        public AvatarData GetAvatarData(string avatarId) {
+            if(avatars.ContainsKey(avatarId)) {
+                return avatars[avatarId];
+            }
+            return null;
+        }
+
+        public RoomData GetRoomData(string roomId) {
+            if(roomDataDictionary.ContainsKey(roomId)) {
+                return roomDataDictionary[roomId];
+            }
+            return null;
+        }
+
+        public RoomData GetRoomData(RoomType roomType ) {
+            foreach(var kvp in roomDataDictionary) {
+                if(kvp.Value.roomType == roomType ) {
+                    return kvp.Value;
+                }
+            }
+            return null;
+        }
+
+        public RoomData GetRoomDataBySceneName(string sceneName, RoomMode roomMode) {
+            foreach(var kvp in roomDataDictionary) {
+                if(sceneName == kvp.Value.GetScene(roomMode)) {
+                    return kvp.Value;
+                }
+            }
+            return null;
+        }
+
+        public override Sprite GetSprite(IconData data) {
+            if (data.hasIcon) {
+                return spriteObjectCache.GetObject(data.id, data.iconPath);
+            } else {
+                return transparent;
+            }
+        }
 
         public SearchObjectData GetSearchObjectData(string id) {
             return searchObjects.ContainsKey(id) ? searchObjects[id] : null;
         }
 
-        public string GetString(string key) => stringResource.GetString(key);
+        public override GameObject GetCachedPrefab(string key, string path="") {
+            return prefabObjectCache.GetObject(key, path);
+        }
+
+        public override string GetString(string key) => stringResource.GetString(key);
 
         public int stringCount => stringResource.count;
 
+        public RoomSettingData GetRoomSetting(RoomLevel roomLevel) {
+            return roomSettings.FirstOrDefault(roomSetting => roomSetting.roomLevel == roomLevel);
+        }
+
+        public ToolData GetTool(string id) {
+            return tools.GetOrDefault(id);
+        }
     }
 }

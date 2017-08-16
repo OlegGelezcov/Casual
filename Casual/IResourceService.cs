@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Casual.Ravenhill.Data;
+using UnityEngine;
 
 namespace Casual {
     public interface IResourceService : IService {
         void Load();
         bool isLoaded { get;  }
+        string GetString(string key);
+        GameObject GetCachedPrefab(string key, string path = "");
+        Sprite transparent { get; }
+        Sprite GetSprite(IconData data);
     }
 }

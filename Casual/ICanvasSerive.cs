@@ -11,5 +11,6 @@ namespace Casual {
         void AddToFirstGroup(Transform view);
         void AddToLastGroup(Transform view);
         void RestoreSiblings();
+        Vector2 WorldToCanvasPoint(Vector3 position, Camera camera = null);
     }
 }

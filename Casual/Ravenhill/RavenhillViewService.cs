@@ -20,6 +20,8 @@ namespace Casual.Ravenhill {
 
         public override bool hasModals => (modalCount > 0);
 
+        public bool noModals => (!hasModals);
+
         private int modalCount {
             get {
                 int counter = 0;

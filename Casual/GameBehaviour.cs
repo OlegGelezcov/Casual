@@ -14,7 +14,7 @@ namespace Casual {
         public CasualEngine engine =>
             CasualEngine.instance;
 
-        public IViewService viewService {
+        public virtual IViewService viewService {
             get {
                 m_ViewSerice = m_ViewSerice ?? engine.GetService<IViewService>();
                 return m_ViewSerice;

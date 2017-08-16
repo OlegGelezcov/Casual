@@ -22,16 +22,13 @@ namespace Casual.Ravenhill {
         private SearchGroup[] searchGroups => m_SearchGroups;
 
         private List<SearchObjectData> notFoundedObjects { get; } = new List<SearchObjectData>();
-        private List<SearchObjectData> activeObjects { get; } = new List<SearchObjectData>();
+        public List<SearchObjectData> activeObjects { get; } = new List<SearchObjectData>();
         private List<SearchObjectData> foundedObjects { get; } = new List<SearchObjectData>();
 
         private SearchGroup activeGroup { get; set; }
         private BaseSearchableObject[] currentSearchObjects { get; set; }
         private int numberToFind { get; set; }
 
-        public override void OnEvent(EventArgs<GameEventName> args) {
-
-        }
 
         public int searchableObjectCount => currentSearchObjects?.Length ?? 0;
 
@@ -39,7 +36,12 @@ namespace Casual.Ravenhill {
 
         public override void Start() {
             base.Start();
+            
 
+            SearchSession session = engine.GetService<IGameModeService>().Cast<RavenhillGameModeService>().searchSession;
+
+            StartSearch(session.roomInfo.roomSetting.searchObjectCount);
+            engine.GetService<IViewService>().ShowView(RavenhillViewType.search_pan, session);
         }
 
         public void StartSearch(int maxCount) {
@@ -51,7 +53,9 @@ namespace Casual.Ravenhill {
             int groupIndex = UnityEngine.Random.Range(0, searchGroups.Length);
             searchGroups[groupIndex].gameObject.SetActive(true);
             activeGroup = searchGroups[groupIndex];
+
             currentSearchObjects = activeGroup.Activate(maxObjectCount);
+
             engine.GetService<IEventService>().SendEvent(new SearchProgressChangedEventArgs(foundedSearchObjectCount, searchableObjectCount));
 
             var resourceService = engine.GetService<IResourceService>() as RavenhillResourceService;
@@ -63,6 +67,7 @@ namespace Casual.Ravenhill {
                 }
             }
             numberToFind = notFoundedObjects.Count;
+            ActivateIndices();
         }
 
         private void ActivateIndices() {
@@ -80,16 +85,21 @@ namespace Casual.Ravenhill {
         private void ActivateObject(SearchObjectData data) {
             var targetObject = currentSearchObjects.FirstOrDefault(sObj => sObj.id == data.id);
             targetObject?.Activate(data);
+            
         }
 
-        public void CollectObject(string id) {
-            var activeData = activeObjects.FirstOrDefault(obj => obj.id == id);
+        public void CollectObject(BaseSearchableObject searchableObject) {
+            var activeData = activeObjects.FirstOrDefault(obj => obj.id == searchableObject.id);
             activeObjects.Remove(activeData);
             foundedObjects.Add(activeData);
             engine.GetService<IEventService>()?.SendEvent(new SearchProgressChangedEventArgs(foundedSearchObjectCount, searchableObjectCount));
+            searchableObject.Collect();
+
             if(isWin) {
+                Debug.Log("EXIT");
                 ExitWithSuccess();
             } else {
+                Debug.Log("ACTIVATE NEXT");
                 ActivateIndices();
             }
         }
@@ -97,7 +107,13 @@ namespace Casual.Ravenhill {
         private bool isWin => foundedSearchObjectCount == numberToFind;
 
         protected virtual void ExitWithSuccess() {
+            StartCoroutine(CorExitWithSuccess());
+        }
 
+        private System.Collections.IEnumerator CorExitWithSuccess() {
+            yield return new WaitForSeconds(2.0f);
+            engine.GetService<IViewService>().RemoveView(RavenhillViewType.search_pan);
+            engine.Cast<RavenhillEngine>().EndSearchSession(SearchStatus.success, 30);
         }
     }
 }

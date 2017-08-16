@@ -38,6 +38,11 @@ namespace Casual {
         public static T Get<T>() where T : CasualEngine {
             return (instance as T);
         }
+
+
+        public T Cast<T>() where T : CasualEngine {
+            return (this as T);
+        }
     }
 
     public class ServiceNotRegisteredException : UnityException {

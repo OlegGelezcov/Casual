@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Casual.Ravenhill.Data {
     public enum RoomType {
+        map,
         hallway,
-        search
+        search,
     }
 }

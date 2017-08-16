@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Casual.Ravenhill {
-    public abstract class RavenhillBaseView : BaseView<RavenhillViewType> {
+    public abstract class RavenhillBaseView : BaseView<RavenhillViewType>, IEventListener<GameEventName> {
+
 
     }
 }

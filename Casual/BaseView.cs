@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Casual {
-    public abstract class BaseView<T> : GameBehaviour {
+    public abstract class BaseView<T> : Ravenhill.RavenhillBaseListenerBehaviour {
 
         [SerializeField]
         private Animator m_Animator;

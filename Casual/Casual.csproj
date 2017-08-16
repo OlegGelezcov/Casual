@@ -63,7 +63,10 @@
     <Compile Include="Ravenhill\BaseSearchableObject.cs" />
     <Compile Include="Ravenhill\Data\AvatarData.cs" />
     <Compile Include="Ravenhill\Data\BonusData.cs" />
+    <Compile Include="Ravenhill\Data\ChargerData.cs" />
+    <Compile Include="Ravenhill\Data\FoodData.cs" />
     <Compile Include="Ravenhill\Data\IconData.cs" />
+    <Compile Include="Ravenhill\Data\IngredientData.cs" />
     <Compile Include="Ravenhill\Data\InventoryItemData.cs" />
     <Compile Include="Ravenhill\Data\InventoryItemType.cs" />
     <Compile Include="Ravenhill\Data\LevelExpTable.cs" />
@@ -75,8 +78,10 @@
     <Compile Include="Ravenhill\Data\RoomType.cs" />
     <Compile Include="Ravenhill\Data\SearchMode.cs" />
     <Compile Include="Ravenhill\Data\SearchObjectData.cs" />
+    <Compile Include="Ravenhill\Data\StoryChargerData.cs" />
     <Compile Include="Ravenhill\Data\StringResource.cs" />
     <Compile Include="Ravenhill\Data\ToolData.cs" />
+    <Compile Include="Ravenhill\Data\WeaponData.cs" />
     <Compile Include="Ravenhill\GameEventName.cs" />
     <Compile Include="Ravenhill\IPlayerService.cs" />
     <Compile Include="Ravenhill\ISearchableObject.cs" />

@@ -25,6 +25,11 @@ namespace Casual.Ravenhill {
         private ResourceObjectCache<string, Sprite> spriteObjectCache { get; } = new ResourceObjectCache<string, Sprite>();
         private Dictionary<string, ToolData> tools { get; } = new Dictionary<string, ToolData>();
         private Dictionary<string, BonusData> bonuses { get; } = new Dictionary<string, BonusData>();
+        private Dictionary<string, FoodData> foods { get; } = new Dictionary<string, FoodData>();
+        private Dictionary<string, WeaponData> weapons { get; } = new Dictionary<string, WeaponData>();
+        private Dictionary<string, ChargerData> chargers { get; } = new Dictionary<string, ChargerData>();
+        private Dictionary<string, StoryChargerData> storyChargers { get; } = new Dictionary<string, StoryChargerData>();
+        private Dictionary<string, IngredientData> ingredients { get; } = new Dictionary<string, IngredientData>();
 
         private List<RoomSettingData> roomSettings { get; } = new List<RoomSettingData>();
         public LevelExpTable levelExpTable { get; } = new LevelExpTable();
@@ -60,6 +65,11 @@ namespace Casual.Ravenhill {
             LoadAvatars();
             LoadTools();
             LoadBonuses();
+            LoadFoods();
+            LoadWeapons();
+            LoadChargers();
+            LoadStoryChargers();
+            LoadIngredients();
             m_IsLoaded = true;
             var eventService = engine.GetService<IEventService>();
             eventService?.SendEvent(new RavenhillResourceLoadedEventArgs());
@@ -80,6 +90,66 @@ namespace Casual.Ravenhill {
         private void PreloadSprites() {
             spriteObjectCache.Load(new Dictionary<string, string> {
                 ["transparent"] = "Sprites/transparent"
+            });
+        }
+
+        private void LoadIngredients() {
+            UXMLDocument document = new UXMLDocument();
+            document.Load(resourcePathDictionary["ingredients"]);
+
+            ingredients.Clear();
+            document.Element("ingredients").Elements("ingredient").ForEach((ingredientElement) => {
+                IngredientData ingredientData = new IngredientData();
+                ingredientData.Load(ingredientElement);
+                ingredients[ingredientData.id] = ingredientData;
+            });
+        }
+
+        private void LoadStoryChargers() {
+            UXMLDocument document = new UXMLDocument();
+            document.Load(resourcePathDictionary["story_chargers"]);
+
+            storyChargers.Clear();
+            document.Element("story_chargers").Elements("charger").ForEach(chargerElement => {
+                StoryChargerData storyChargerData = new StoryChargerData();
+                storyChargerData.Load(chargerElement);
+                storyChargers[storyChargerData.id] = storyChargerData;
+            });
+        }
+
+        private void LoadChargers() {
+            UXMLDocument document = new UXMLDocument();
+            document.Load(resourcePathDictionary["chargers"]);
+
+            chargers.Clear();
+            document.Element("chargers").Elements("charger").ForEach(chargerElement => {
+                ChargerData chargerData = new ChargerData();
+                chargerData.Load(chargerElement);
+                chargers[chargerData.id] = chargerData;
+            });
+        }
+
+        private void LoadWeapons() {
+            UXMLDocument document = new UXMLDocument();
+            document.Load(resourcePathDictionary["weapons"]);
+
+            weapons.Clear();
+            document.Element("weapons").Elements("weapon").ForEach(weaponElement => {
+                WeaponData weaponData = new WeaponData();
+                weaponData.Load(weaponElement);
+                weapons[weaponData.id] = weaponData;
+            });
+        }
+
+        private void LoadFoods() {
+            UXMLDocument document = new UXMLDocument();
+            document.Load(resourcePathDictionary["foods"]);
+
+            foods.Clear();
+            document.Element("foods").Elements("food").ForEach(foodElement => {
+                FoodData foodData = new FoodData();
+                foodData.Load(foodElement);
+                foods[foodData.id] = foodData;
             });
         }
 
@@ -235,6 +305,22 @@ namespace Casual.Ravenhill {
 
         public ToolData GetTool(string id) {
             return tools.GetOrDefault(id);
+        }
+
+        public FoodData GetFood(string id) {
+            return foods.GetOrDefault(id);
+        }
+
+        public BonusData GetBonus(string id) {
+            return bonuses.GetOrDefault(id);
+        }
+
+        public ChargerData GetCharger(string id) {
+            return chargers.GetOrDefault(id);
+        }
+
+        public IngredientData GetIngredient(string id) {
+            return ingredients.GetOrDefault(id);
         }
     }
 }

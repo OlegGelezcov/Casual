@@ -11,6 +11,70 @@ using UnityEngine.UI;
 namespace Casual {
     public static class Extensions {
 
+        private static readonly Dictionary<ColorType, string> s_ColorTypeMap = new Dictionary<ColorType, string> {
+            { ColorType.aqua, "#00ffffff" },
+            { ColorType.black, "#000000ff" },
+            { ColorType.blue, "#0000ffff" },
+            { ColorType.brown, "#a52a2aff" },
+            { ColorType.darkblue, "#0000a0ff" },
+            { ColorType.fuchsia, "#ff00ffff" },
+            { ColorType.green, "#008000ff"},
+            { ColorType.grey, "#808080ff" },
+            { ColorType.lightblue, "#add8e6ff" },
+            { ColorType.lime, "#00ff00ff" },
+            { ColorType.magenta, "#ff00ffff" },
+            { ColorType.maroon, "#800000ff" },
+            { ColorType.navy, "#000080ff" },
+            { ColorType.olive, "#808000ff" },
+            { ColorType.orange, "#ffa500ff" },
+            { ColorType.purple, "#800080ff" },
+            { ColorType.red, "#ff0000ff" },
+            { ColorType.silver, "#c0c0c0ff" },
+            { ColorType.teal, "#008080ff" },
+            { ColorType.white, "#ffffffff" },
+            { ColorType.yellow, "#ffff00ff" }
+        };
+
+        public static string Colored(this string str, string colorName) {
+            var values = Enum.GetValues(typeof(ColorType));
+
+            string colorNameTrimmed = colorName.ToLower().Trim();
+            foreach (var type in values) {
+                if (type.ToString() == colorNameTrimmed) {
+                    return str.Colored((ColorType)type);
+                }
+            }
+
+            return str.Colored(ColorType.white);
+        }
+
+        public static string Colored(this string str, ColorType type) {
+            return string.Format("<color={0}>{1}</color>", ColorType2HexString(type), str);
+        }
+
+        public static string Sized(this string str, int size) {
+            return string.Format("<size={0}>{1}</size>", size, str);
+        }
+
+        public static string Bolded(this string str) {
+            return string.Format("<b>{0}</b>", str);
+        }
+
+        public static string Italized(this string str) {
+            return string.Format("<i>{0}</i>", str);
+        }
+
+
+        public static string ColorType2HexString(ColorType type) {
+            if (s_ColorTypeMap.ContainsKey(type)) {
+                return s_ColorTypeMap[type];
+            }
+            return "#ffffffff";
+        }
+
+
+
+
         public static void ShuffleArray<T>(this T[] array) {
             if(array != null && array.Length > 1) {
                 for (int i = array.Length - 1; i > 0; i--) {
@@ -95,5 +159,29 @@ namespace Casual {
             }
             return defaultValue;
         }
+    }
+
+    public enum ColorType {
+        aqua,
+        black,
+        blue,
+        brown,
+        darkblue,
+        fuchsia,
+        green,
+        grey,
+        lightblue,
+        lime,
+        magenta,
+        maroon,
+        navy,
+        olive,
+        orange,
+        purple,
+        red,
+        silver,
+        teal,
+        white,
+        yellow
     }
 }

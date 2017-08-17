@@ -47,6 +47,7 @@
     <Compile Include="CanvasService.cs" />
     <Compile Include="CasualEngine.cs" />
     <Compile Include="CasualDebug\GizmoObject.cs" />
+    <Compile Include="DebugService.cs" />
     <Compile Include="EventService.cs" />
     <Compile Include="CasualInput.cs" />
     <Compile Include="Extensions.cs" />
@@ -61,12 +62,18 @@
     <Compile Include="ISaveService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ravenhill\BaseSearchableObject.cs" />
+    <Compile Include="Ravenhill\Data\CollectableData.cs" />
     <Compile Include="Ravenhill\Data\AvatarData.cs" />
     <Compile Include="Ravenhill\Data\BonusData.cs" />
     <Compile Include="Ravenhill\Data\ChargerData.cs" />
+    <Compile Include="Ravenhill\Data\CollectionData.cs" />
+    <Compile Include="Ravenhill\Data\DropItem.cs" />
+    <Compile Include="Ravenhill\Data\DropType.cs" />
     <Compile Include="Ravenhill\Data\FoodData.cs" />
     <Compile Include="Ravenhill\Data\IconData.cs" />
+    <Compile Include="Ravenhill\Data\IIdObject.cs" />
     <Compile Include="Ravenhill\Data\IngredientData.cs" />
+    <Compile Include="Ravenhill\Data\InventoryItem.cs" />
     <Compile Include="Ravenhill\Data\InventoryItemData.cs" />
     <Compile Include="Ravenhill\Data\InventoryItemType.cs" />
     <Compile Include="Ravenhill\Data\LevelExpTable.cs" />
@@ -82,6 +89,8 @@
     <Compile Include="Ravenhill\Data\StringResource.cs" />
     <Compile Include="Ravenhill\Data\ToolData.cs" />
     <Compile Include="Ravenhill\Data\WeaponData.cs" />
+    <Compile Include="Ravenhill\DebugService.cs" />
+    <Compile Include="Ravenhill\Editor\XmlTools.cs" />
     <Compile Include="Ravenhill\GameEventName.cs" />
     <Compile Include="Ravenhill\IPlayerService.cs" />
     <Compile Include="Ravenhill\ISearchableObject.cs" />
@@ -93,6 +102,7 @@
     <Compile Include="Ravenhill\RavenhillEventArgs.cs" />
     <Compile Include="Ravenhill\RavenhillEventService.cs" />
     <Compile Include="Ravenhill\RavenhillGameBehaviour.cs" />
+    <Compile Include="Ravenhill\RavenhillGameElement.cs" />
     <Compile Include="Ravenhill\RavenhillGameModeService.cs" />
     <Compile Include="Ravenhill\RavenhillInput.cs" />
     <Compile Include="Ravenhill\RavenhillResourceService.cs" />
@@ -105,8 +115,12 @@
     <Compile Include="Ravenhill\SearchManager.cs" />
     <Compile Include="Ravenhill\Test\RavenhillTestListener.cs" />
     <Compile Include="Ravenhill\Test\TestColoredObjectAnim.cs" />
+    <Compile Include="Ravenhill\UI\ExitRoomView\ExitRoomView.cs" />
+    <Compile Include="Ravenhill\UI\ExitRoomView\MarketAdItemView.cs" />
     <Compile Include="Ravenhill\UI\HUD.cs" />
+    <Compile Include="Ravenhill\UI\ListItemViews\InventoryItemShortView.cs" />
     <Compile Include="Ravenhill\UI\Map\RoomMapUIView.cs" />
+    <Compile Include="Ravenhill\UI\RavenhillCloseableView.cs" />
     <Compile Include="Ravenhill\UI\RavenhillUIBehaviour.cs" />
     <Compile Include="Ravenhill\UI\RectTransformBinding.cs" />
     <Compile Include="Ravenhill\UI\SearchPan.cs" />
@@ -129,6 +143,7 @@
     <Compile Include="UI\ImageAnimFill.cs" />
     <Compile Include="UI\ImageProgress.cs" />
     <Compile Include="UI\LastSiblingTransform.cs" />
+    <Compile Include="UI\ListView.cs" />
     <Compile Include="UI\NumericTextAnim.cs" />
     <Compile Include="UI\NumericTextProgress.cs" />
     <Compile Include="UI\RectTransformAnimPosition.cs" />

@@ -1,4 +1,5 @@
 ﻿namespace Casual.Ravenhill.Data {
+
     public class IngredientData : InventoryItemData {
         public PriceData price { get; private set; }
         public float prob { get; private set; }

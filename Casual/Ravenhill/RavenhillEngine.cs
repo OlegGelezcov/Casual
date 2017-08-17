@@ -87,7 +87,7 @@ namespace Casual.Ravenhill {
             Register<ICanvasSerive, CanvasService>(FindObjectOfType<CanvasService>());
             Register<IGameModeService, RavenhillGameModeService>(FindObjectOfType<RavenhillGameModeService>());
             Register<IPlayerService, PlayerService>(FindObjectOfType<PlayerService>());
-            
+            Register<IDebugService, DebugService>(FindObjectOfType<DebugService>());
         }
 
         protected virtual void SetupServices() {
@@ -98,6 +98,7 @@ namespace Casual.Ravenhill {
             GetService<ICanvasSerive>().Setup(null);
             GetService<IGameModeService>().Setup(null);
             GetService<IPlayerService>().Setup(null);
+            GetService<IDebugService>().Setup(null);
         }
 
         public void LoadScene(string roomId  ) {   

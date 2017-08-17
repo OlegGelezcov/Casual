@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Casual.Ravenhill {
     public enum RavenhillViewType : int {
         search_pan = 0,
-        hud = 1
+        hud = 1,
+        exit_room_view = 2
     }
 }

@@ -6,6 +6,8 @@
         Weapon = 3,
         Charger = 4,
         StoryCharger = 5,
-        Ingredient = 6
+        Ingredient = 6,
+        Collection = 7,
+        Collectable = 8
     }
 }

@@ -64,5 +64,29 @@ namespace Casual {
             }
             return defaultValue;
         }
+
+        public static int GetIntOrDefault(string source, int defaultValue = 0) {
+            int val;
+            if (int.TryParse(source, out val)) {
+                return val;
+            }
+            return defaultValue;
+        }
+
+        public static float GetFloatOrDefault(string source, float defaultValue = 0.0f) {
+            float val;
+            if (float.TryParse(source, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out val)) {
+                return val;
+            }
+            return defaultValue;
+        }
+
+        public static bool GetBoolOrDefault(string source, bool defaultValue = false) {
+            bool val;
+            if (bool.TryParse(source, out val)) {
+                return val;
+            }
+            return defaultValue;
+        }
     }
 }

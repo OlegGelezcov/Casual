@@ -6,7 +6,7 @@ namespace Casual.Ravenhill {
         private Dictionary<GameEventName, System.Action<EventArgs<GameEventName>>> handlers { get; } = new Dictionary<GameEventName, System.Action<EventArgs<GameEventName>>>();
 
 
-        public virtual string listenerName { get; } = "default";
+        public abstract string listenerName { get; }
 
         public void OnEvent(EventArgs<GameEventName> args) {
             if(handlers.ContainsKey(args.eventName)) {

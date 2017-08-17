@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Casual.Ravenhill.Data {
+    public class CollectableData : InventoryItemData  {
+
+
+        public override void Load(UXMLElement element) {
+            base.Load(element);
+        }
+
+        public override InventoryItemType type => InventoryItemType.Collectable;
+    }
+}

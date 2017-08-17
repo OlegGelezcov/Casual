@@ -1,6 +1,6 @@
 ﻿namespace Casual.Ravenhill.Data {
 
-    public class IconData {
+    public class IconData : IIdObject {
         public string id { get; private set; }
         public string nameId { get; private set; }
         public string descriptionId { get; private set; }

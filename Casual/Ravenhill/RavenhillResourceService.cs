@@ -31,6 +31,10 @@ namespace Casual.Ravenhill {
         private Dictionary<string, StoryChargerData> storyChargers { get; } = new Dictionary<string, StoryChargerData>();
         private Dictionary<string, IngredientData> ingredients { get; } = new Dictionary<string, IngredientData>();
 
+        //loaded by last(after other inventory items)
+        private Dictionary<string, CollectionData> collections { get; } = new Dictionary<string, CollectionData>();
+
+
         private List<RoomSettingData> roomSettings { get; } = new List<RoomSettingData>();
         public LevelExpTable levelExpTable { get; } = new LevelExpTable();
         private Dictionary<string, AvatarData> avatars { get; } = new Dictionary<string, AvatarData>();
@@ -70,6 +74,9 @@ namespace Casual.Ravenhill {
             LoadChargers();
             LoadStoryChargers();
             LoadIngredients();
+
+
+            LoadCollections();
             m_IsLoaded = true;
             var eventService = engine.GetService<IEventService>();
             eventService?.SendEvent(new RavenhillResourceLoadedEventArgs());
@@ -93,6 +100,18 @@ namespace Casual.Ravenhill {
             });
         }
 
+        private void LoadCollections() {
+            UXMLDocument document = new UXMLDocument();
+            document.Load(resourcePathDictionary["collections"]);
+
+            collections.Clear();
+            document.Element("collections").Elements("collection").ForEach(collectionElement => {
+                CollectionData collectionData = new CollectionData();
+                collectionData.Load(collectionElement);
+                collections[collectionData.id] = collectionData;
+            });
+        }
+
         private void LoadIngredients() {
             UXMLDocument document = new UXMLDocument();
             document.Load(resourcePathDictionary["ingredients"]);
@@ -104,6 +123,8 @@ namespace Casual.Ravenhill {
                 ingredients[ingredientData.id] = ingredientData;
             });
         }
+
+
 
         private void LoadStoryChargers() {
             UXMLDocument document = new UXMLDocument();
@@ -287,6 +308,13 @@ namespace Casual.Ravenhill {
             }
         }
 
+        public Sprite GetSprite(InventoryItem item) {
+            if(item.data != null ) {
+                return GetSprite(item.data);
+            }
+            return transparent;
+        }
+
         public SearchObjectData GetSearchObjectData(string id) {
             return searchObjects.ContainsKey(id) ? searchObjects[id] : null;
         }
@@ -321,6 +349,53 @@ namespace Casual.Ravenhill {
 
         public IngredientData GetIngredient(string id) {
             return ingredients.GetOrDefault(id);
+        }
+
+        public StoryChargerData GetStoryCharger(string id) {
+            return storyChargers.GetOrDefault(id);
+        }
+
+        public WeaponData GetWeapon(string id ) {
+            return weapons.GetOrDefault(id);
+        }
+
+        public CollectionData GetCollection(string id) {
+            return collections.GetOrDefault(id);
+        }
+
+        public InventoryItemData GetInventoryItemData(InventoryItemType type, string id) {
+            switch (type) {
+                case InventoryItemType.Bonus: {
+                        return GetBonus(id);
+                    }
+                case InventoryItemType.Charger: {
+                        return GetCharger(id);
+                    }
+                case InventoryItemType.Collectable: {
+                        throw new System.NotImplementedException("InventoryItemType.Collectable");
+                    }
+                case InventoryItemType.Collection: {
+                        return GetCollection(id);
+                    }
+                case InventoryItemType.Food: {
+                        return GetFood(id);
+                    }
+                case InventoryItemType.Ingredient: {
+                        return GetIngredient(id);
+                    }
+                case InventoryItemType.StoryCharger: {
+                        return GetStoryCharger(id);
+                    }
+                case InventoryItemType.Tool: {
+                        return GetTool(id);
+                    }
+                case InventoryItemType.Weapon: {
+                        return GetWeapon(id);
+                    }
+                default: {
+                        throw new System.NotImplementedException($"{type}");
+                    }
+            }
         }
     }
 }

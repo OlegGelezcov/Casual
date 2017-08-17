@@ -133,5 +133,11 @@ namespace Casual.Ravenhill {
         public string roomId {
             get => roomInfo?.id ?? string.Empty;
         }
+
+        public RoomData roomData {
+            get {
+                return roomInfo?.roomData ?? null;
+            }
+        }
     }
 }

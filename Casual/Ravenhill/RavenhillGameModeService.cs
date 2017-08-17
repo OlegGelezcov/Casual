@@ -1,5 +1,7 @@
 ﻿using System;
 using Casual.Ravenhill.Data;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Casual.Ravenhill {
     public class RavenhillGameModeService : GameModeService, ISaveable {
@@ -29,7 +31,14 @@ namespace Casual.Ravenhill {
         }
 
         public void EndSession(SearchStatus status, int time) {
-            searchSession.EndSession(status, time);
+            List<InventoryItem> drops = null;
+            if(status == SearchStatus.success) {
+                drops = GenerateRoomDrop(searchSession.roomData, GetRoomInfo(searchSession.roomData.id).roomLevel);
+            } else {
+                drops = new List<InventoryItem>();
+            }
+
+            searchSession.EndSession(status, time, drops);
         }
 
         public void ChangeRoom(string roomId ) {
@@ -39,6 +48,32 @@ namespace Casual.Ravenhill {
 
         public RoomInfo GetRoomInfo(string roomId) {
             return roomManager.GetRoomInfo(roomId);
+        }
+
+        //Algorithm of generation room drop...
+        public List<InventoryItem> GenerateRoomDrop(RoomData roomData, RoomLevel roomLevel) {
+                
+            RavenhillResourceService resourceService = engine.GetService<IResourceService>() as RavenhillResourceService;
+            List<InventoryItem> result = new List<InventoryItem>();
+
+            List<CollectableData> collectables = resourceService.GetCollectables(roomData.id).FindAll((item) => {
+                return ((int)roomLevel >= (int)item.roomLevel) &&
+                    (UnityEngine.Random.value < item.prob);
+            });
+            result.AddRange(collectables.Select(c => new InventoryItem(c, 1)).ToList());
+
+            List<WeaponData> weapons = resourceService.weaponList.FindAll((w) => UnityEngine.Random.value < w.prob);
+            result.AddRange(weapons.Select(w => new InventoryItem(w, 1)).ToList());
+
+            List<IngredientData> ingredients = resourceService.GetIngredients(roomData.id).FindAll(item => {
+                return UnityEngine.Random.value < item.prob;
+            });
+            result.AddRange(ingredients.Select(i => new InventoryItem(i, 1)).ToList());
+
+            List<ChargerData> chargers = resourceService.chargerList.FindAll(item => UnityEngine.Random.value < item.prob);
+            result.AddRange(chargers.Select(c => new InventoryItem(c, 1)).ToList());
+
+            return result;
         }
 
 
@@ -97,6 +132,7 @@ namespace Casual.Ravenhill {
         public SearchStatus searchStatus { get; private set; }
         public int searchTime { get; private set; }
         public bool isStarted { get; private set; }
+        public List<InventoryItem> roomDropList { get; } = new List<InventoryItem>();
 
         public SearchSession() {
         }
@@ -116,19 +152,24 @@ namespace Casual.Ravenhill {
         public void StartSession(RoomInfo roomInfo) {
             if(!isStarted) {
                 SetRoomInfo(roomInfo);
+                roomDropList.Clear();
                 isStarted = true;
                 engine.GetService<IEventService>()?.SendEvent(new SearchSessionStartedEventArgs(this));
             }
         }
 
-        public void EndSession(SearchStatus status, int time) {
+        public void EndSession(SearchStatus status, int time, List<InventoryItem> drops) {
             if(isStarted) {
                 SetSearchStatus(status);
                 SetSearchTime(time);
+                roomDropList.Clear();
+                roomDropList.AddRange(drops);
                 isStarted = false;
                 engine.GetService<IEventService>()?.SendEvent(new SearchSessionEndedEventArgs(this));
             }
         }
+
+        
 
         public string roomId {
             get => roomInfo?.id ?? string.Empty;

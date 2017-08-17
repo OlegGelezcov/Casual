@@ -30,6 +30,7 @@ namespace Casual.Ravenhill {
         private Dictionary<string, ChargerData> chargers { get; } = new Dictionary<string, ChargerData>();
         private Dictionary<string, StoryChargerData> storyChargers { get; } = new Dictionary<string, StoryChargerData>();
         private Dictionary<string, IngredientData> ingredients { get; } = new Dictionary<string, IngredientData>();
+        private Dictionary<string, CollectableData> collectables { get; } = new Dictionary<string, CollectableData>();
 
         //loaded by last(after other inventory items)
         private Dictionary<string, CollectionData> collections { get; } = new Dictionary<string, CollectionData>();
@@ -74,7 +75,7 @@ namespace Casual.Ravenhill {
             LoadChargers();
             LoadStoryChargers();
             LoadIngredients();
-
+            LoadCollectables();
 
             LoadCollections();
             m_IsLoaded = true;
@@ -109,6 +110,18 @@ namespace Casual.Ravenhill {
                 CollectionData collectionData = new CollectionData();
                 collectionData.Load(collectionElement);
                 collections[collectionData.id] = collectionData;
+            });
+        }
+
+        private void LoadCollectables() {
+            UXMLDocument document = new UXMLDocument();
+            document.Load(resourcePathDictionary["collectables"]);
+
+            collectables.Clear();
+            document.Element("collectables").Elements("collectable").ForEach(collectableElement => {
+                CollectableData collectableData = new CollectableData();
+                collectableData.Load(collectableElement);
+                collectables[collectableData.id] = collectableData;
             });
         }
 
@@ -363,6 +376,22 @@ namespace Casual.Ravenhill {
             return collections.GetOrDefault(id);
         }
 
+        public CollectableData GetCollectable(string id) {
+            return collectables.GetOrDefault(id);
+        }
+
+        public List<CollectableData> GetCollectables(string roomId) {
+            return collectables.Values.Where(data => data.IsValidRoom(roomId)).ToList();
+        }
+
+        public List<IngredientData> GetIngredients(string roomId) {
+            return ingredients.Values.Where(data => data.IsValidRoom(roomId)).ToList();
+        }
+
+        public List<WeaponData> weaponList => new List<WeaponData>(weapons.Values);
+
+        public List<ChargerData> chargerList => new List<ChargerData>(chargers.Values);
+
         public InventoryItemData GetInventoryItemData(InventoryItemType type, string id) {
             switch (type) {
                 case InventoryItemType.Bonus: {
@@ -372,7 +401,7 @@ namespace Casual.Ravenhill {
                         return GetCharger(id);
                     }
                 case InventoryItemType.Collectable: {
-                        throw new System.NotImplementedException("InventoryItemType.Collectable");
+                        return GetCollectable(id);
                     }
                 case InventoryItemType.Collection: {
                         return GetCollection(id);

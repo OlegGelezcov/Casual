@@ -122,7 +122,14 @@
     <Compile Include="Ravenhill\SearchSession.cs" />
     <Compile Include="Ravenhill\Test\RavenhillTestListener.cs" />
     <Compile Include="Ravenhill\Test\TestColoredObjectAnim.cs" />
+    <Compile Include="Ravenhill\UI\Collection\ChargerItemView.cs" />
     <Compile Include="Ravenhill\UI\Collection\CollectableItemView.cs" />
+    <Compile Include="Ravenhill\UI\Collection\CollectionChargersView.cs" />
+    <Compile Include="Ravenhill\UI\Collection\CollectionItemView.cs" />
+    <Compile Include="Ravenhill\UI\Collection\CollectionsView.cs" />
+    <Compile Include="Ravenhill\UI\Collection\CollectionView.cs" />
+    <Compile Include="Ravenhill\UI\Collection\WishItemView.cs" />
+    <Compile Include="Ravenhill\UI\Collection\WishlistView.cs" />
     <Compile Include="Ravenhill\UI\EnterRoomView\EnterRoomView.cs" />
     <Compile Include="Ravenhill\UI\ExitRoomView\CurrentScoreView.cs" />
     <Compile Include="Ravenhill\UI\ExitRoomView\CurrentScoreViewEditor.cs" />

@@ -189,6 +189,8 @@ namespace Casual.Ravenhill.UI {
 
             collectionsButton.SetListener(() => {
                 Debug.Log("show collections");
+                viewService.ShowView(RavenhillViewType.collections);
+
             });
 
             inventoryButton.SetListener(() => {

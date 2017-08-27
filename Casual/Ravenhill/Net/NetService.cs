@@ -1,4 +1,8 @@
-﻿namespace Casual.Ravenhill.Net {
+﻿using Casual.Ravenhill.Data;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Casual.Ravenhill.Net {
     public class NetService : RavenhillGameBehaviour, INetService {
 
         public NetRoomScore GetBestRoomScore(SearchSession session) {
@@ -29,7 +33,9 @@
             
         }
 
-
+        public void ShareWishlist(List<CollectableData> collectables ) {
+            Debug.Log($"Share items: {collectables.Count}");
+        }
     }
 
     public interface INetService : IService {

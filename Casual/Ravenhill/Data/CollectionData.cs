@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Casual.Ravenhill.Data {
     public class CollectionData : InventoryItemData {
@@ -33,6 +34,14 @@ namespace Casual.Ravenhill.Data {
         public override bool isUsableFromInventory => false;
         public override bool IsSellable => false;
         public override PriceData price { get => PriceData.None; protected set { } }
+
+        public CollectionChargeData GetChargeData(string chargerId ) {
+            return chargers.FirstOrDefault(obj => obj.id == chargerId);
+        }
+
+        public DropItem GetDropItem(DropType type) {
+            return rewards.FirstOrDefault(di => di.type == type);
+        }
     }
 
     public class CollectionChargeData {

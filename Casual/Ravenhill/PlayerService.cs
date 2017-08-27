@@ -1,4 +1,5 @@
 ﻿using Casual.Ravenhill.Data;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Casual.Ravenhill {
@@ -51,6 +52,10 @@ namespace Casual.Ravenhill {
                 return wishlist.IsFull;
             }
         }
+
+        public List<CollectableData> WishItems => wishlist.collectableList;
+
+        public int WishlistCount => wishlist.Count;
         #endregion
 
         public int GetItemCount(InventoryItemData data) {

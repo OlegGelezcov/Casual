@@ -158,4 +158,10 @@ namespace Casual.UI {
             base.Setup(data);
         }
     }
+
+    public class CollectionListView : ListView<CollectionData> {
+        public override void Setup(ListViewData data) {
+            base.Setup(data);
+        }
+    }
 }

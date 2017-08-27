@@ -11,6 +11,7 @@ namespace Casual.Ravenhill {
         exit_room_view = 2,
         enter_room_view = 3,
         inventory = 4,
-        store = 5
+        store = 5,
+        collections = 6
     }
 }

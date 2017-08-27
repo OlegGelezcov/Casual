@@ -1,9 +1,6 @@
-﻿using System;
+﻿using Casual.Ravenhill.Data;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Casual.Ravenhill.Data;
 
 namespace Casual.Ravenhill {
     public class Wishlist : RavenhillGameElement, IWishlist, ISaveElement {
@@ -36,6 +33,8 @@ namespace Casual.Ravenhill {
         }
 
         public bool IsFull => collectables.Count >= kMaxSize;
+
+        public int Count => collectables.Count;
         #endregion
 
         #region ISaveElement
@@ -64,5 +63,12 @@ namespace Casual.Ravenhill {
             }
         } 
         #endregion
+
+        public List<CollectableData> collectableList {
+            get {
+                List<CollectableData> list = new List<CollectableData>(collectables.Values);
+                return list.OrderBy(c => c.id).ToList();
+            }
+        }
     }
 }

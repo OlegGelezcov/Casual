@@ -110,6 +110,48 @@ namespace Casual.Ravenhill {
             }
         }
 
+        public bool IsCollectionReadyToCharge(CollectionData collection ) {
+            bool collectablesReady = true;
+
+            RavenhillResourceService resourceService = engine.GetService<IResourceService>().Cast<RavenhillResourceService>();
+            PlayerService playerService = engine.GetService<IPlayerService>().Cast<PlayerService>();
+
+            foreach(string collectableId in collection.collectableIds ) {
+                CollectableData data = resourceService.GetCollectable(collectableId);
+                int playerCount = playerService.GetItemCount(data);
+                if(playerCount <= 0 ) {
+                    collectablesReady = false;
+                    break;
+                }
+            }
+
+            bool chargersReady = true;
+            foreach(var info in collection.chargers) {
+                ChargerData data = resourceService.GetCharger(info.id);
+                int playerCount = playerService.GetItemCount(data);
+                if(playerCount < info.count ) {
+                    chargersReady = false;
+                    break;
+                }
+            }
+
+            return collectablesReady && chargersReady;
+        }
+
+        public void ChargeCollection(CollectionData collectionData) {
+            PlayerService playerService = engine.GetService<IPlayerService>().Cast<PlayerService>();
+            foreach (string collectableId in collectionData.collectableIds) {
+                playerService.RemoveItem(InventoryItemType.Collectable, collectableId, 1);
+            }
+
+            foreach(var info in collectionData.chargers) {
+                playerService.RemoveItem(InventoryItemType.Charger, info.id, info.count);
+            }
+
+            playerService.AddItem(new InventoryItem(collectionData, 1));
+            engine.Cast<RavenhillEngine>().DropItems(collectionData.rewards, null, () => !viewService.hasModals);
+        }
+
 
         #region ISaveable
         public string saveId => "gamemode";

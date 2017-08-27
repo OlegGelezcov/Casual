@@ -20,7 +20,7 @@ namespace Casual.Ravenhill {
 
             public Sprite Sprite {
                 get {
-                    if(sprite == null ) {
+                    if (sprite == null) {
                         sprite = cache.GetObject(key, path);
                     }
                     return sprite;
@@ -82,7 +82,7 @@ namespace Casual.Ravenhill {
 
         public override Sprite transparent {
             get {
-                if(m_TransparentSprite == null ) {
+                if (m_TransparentSprite == null) {
                     m_TransparentSprite = spriteObjectCache.GetObject("transparent");
                 }
                 return m_TransparentSprite;
@@ -330,22 +330,22 @@ namespace Casual.Ravenhill {
         }
 
         public AvatarData GetAvatarData(string avatarId) {
-            if(avatars.ContainsKey(avatarId)) {
+            if (avatars.ContainsKey(avatarId)) {
                 return avatars[avatarId];
             }
             return null;
         }
 
         public RoomData GetRoomData(string roomId) {
-            if(roomDataDictionary.ContainsKey(roomId)) {
+            if (roomDataDictionary.ContainsKey(roomId)) {
                 return roomDataDictionary[roomId];
             }
             return null;
         }
 
-        public RoomData GetRoomData(RoomType roomType ) {
-            foreach(var kvp in roomDataDictionary) {
-                if(kvp.Value.roomType == roomType ) {
+        public RoomData GetRoomData(RoomType roomType) {
+            foreach (var kvp in roomDataDictionary) {
+                if (kvp.Value.roomType == roomType) {
                     return kvp.Value;
                 }
             }
@@ -353,8 +353,8 @@ namespace Casual.Ravenhill {
         }
 
         public RoomData GetRoomDataBySceneName(string sceneName, RoomMode roomMode) {
-            foreach(var kvp in roomDataDictionary) {
-                if(sceneName == kvp.Value.GetScene(roomMode)) {
+            foreach (var kvp in roomDataDictionary) {
+                if (sceneName == kvp.Value.GetScene(roomMode)) {
                     return kvp.Value;
                 }
             }
@@ -370,14 +370,14 @@ namespace Casual.Ravenhill {
         }
 
         public Sprite GetSprite(InventoryItem item) {
-            if(item.data != null ) {
+            if (item.data != null) {
                 return GetSprite(item.data);
             }
             return transparent;
         }
 
-        public Sprite GetSprite(DropItem dropItem ) {
-            switch(dropItem.type ) {
+        public Sprite GetSprite(DropItem dropItem) {
+            switch (dropItem.type) {
                 case DropType.exp: {
                         return expSprite.Sprite;
                     }
@@ -408,7 +408,7 @@ namespace Casual.Ravenhill {
             return searchObjects.ContainsKey(id) ? searchObjects[id] : null;
         }
 
-        public override GameObject GetCachedPrefab(string key, string path="") {
+        public override GameObject GetCachedPrefab(string key, string path = "") {
             return prefabObjectCache.GetObject(key, path);
         }
 
@@ -444,7 +444,7 @@ namespace Casual.Ravenhill {
             return storyChargers.GetOrDefault(id);
         }
 
-        public WeaponData GetWeapon(string id ) {
+        public WeaponData GetWeapon(string id) {
             return weapons.GetOrDefault(id);
         }
 
@@ -477,6 +477,9 @@ namespace Casual.Ravenhill {
         public List<FoodData> foodList => new List<FoodData>(foods.Values);
 
         public List<IngredientData> ingredientList => new List<IngredientData>(ingredients.Values);
+
+        public List<CollectionData> collectionList =>
+            new List<CollectionData>(collections.Values).OrderBy(c => c.id).ToList();
 
         public List<InventoryItemData> marketItems {
             get {

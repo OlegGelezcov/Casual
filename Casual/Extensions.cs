@@ -109,6 +109,11 @@ namespace Casual {
             button.onClick.AddListener(action);
         }
 
+        public static void SetListener(this Toggle toggle, UnityAction<bool> action) {
+            if(toggle == null) { return; }
+            toggle.onValueChanged.RemoveAllListeners();
+            toggle.onValueChanged.AddListener(action);
+        }
 
 
         public static T GetOrAdd<T>(this GameObject go) where T : MonoBehaviour {
@@ -158,6 +163,10 @@ namespace Casual {
                 return value;
             }
             return defaultValue;
+        }
+
+        public static T RandomElement<T>(this List<T> list) {
+            return list[UnityEngine.Random.Range(0, list.Count - 1)];
         }
     }
 

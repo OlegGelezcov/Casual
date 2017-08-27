@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Casual.Ravenhill.Net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,19 +16,30 @@ namespace Casual.Ravenhill {
 
         private RavenhillViewService m_ViewService;
 
-        private IEventService m_EventService;
+       // private IEventService m_EventService;
 
         private PlayerService m_PlayerService;
 
+        private NetService m_NetService;
 
-        public IEventService eventService {
+
+        public NetService netService {
             get {
-                if(m_EventService == null ) {
-                    m_EventService = engine.GetService<IEventService>();
+                if(m_NetService == null ) {
+                    m_NetService = engine.GetService<INetService>().Cast<NetService>();
                 }
-                return m_EventService;
+                return m_NetService;
             }
         }
+
+        //public IEventService eventService {
+        //    get {
+        //        if(m_EventService == null ) {
+        //            m_EventService = engine.GetService<IEventService>();
+        //        }
+        //        return m_EventService;
+        //    }
+        //}
 
 
         public RavenhillViewService ravenhillViewService {

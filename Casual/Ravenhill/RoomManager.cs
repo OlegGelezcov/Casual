@@ -19,6 +19,18 @@ namespace Casual.Ravenhill {
             }
         }
 
+        public void RollSearchMode(string roomId) {
+            GetRoomInfo(roomId).RollSearchMode();
+        }
+
+        public void AddProgress(string roomId ) {
+            GetRoomInfo(roomId).AddProgress();
+        }
+
+        public void Unlock(string roomId ) {
+            GetRoomInfo(roomId).Unlock(true);
+        }
+
         public UXMLWriteElement GetSave() {
             UXMLWriteElement element = new UXMLWriteElement("rooms");
             foreach(KeyValuePair<string, RoomInfo> room in rooms ) {

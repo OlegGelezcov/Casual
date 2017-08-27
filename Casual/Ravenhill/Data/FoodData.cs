@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Casual.Ravenhill.Data {
     public class FoodData : InventoryItemData {
-        public PriceData price { get; private set; }
+        public override PriceData price { get; protected set; }
 
         public override void Load(UXMLElement element) {
             base.Load(element);
@@ -14,5 +14,7 @@ namespace Casual.Ravenhill.Data {
         }
 
         public override InventoryItemType type => InventoryItemType.Food;
+        public override bool isUsableFromInventory => true;
+        public override bool IsSellable => true;
     }
 }

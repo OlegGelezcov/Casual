@@ -7,6 +7,7 @@
         private RectTransform m_RectTransform;
 
         public override void StartAnim(MCFloatAnimData data) {
+            StopAnim();
             m_RectTransform = GetComponent<RectTransform>();
             m_RectTransform.localScale = new Vector3(data.start, data.start, 1);
             base.StartAnim(data);

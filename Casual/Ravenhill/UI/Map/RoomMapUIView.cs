@@ -8,11 +8,13 @@ namespace Casual.Ravenhill.UI.Map {
 
         private string m_RoomId;
 
+#pragma warning disable 0649
         [SerializeField]
         private Text m_RoomNameText;
 
         [SerializeField]
         private EventTrigger m_EventTrigger;
+#pragma warning restore 0649
 
         private float viewRemovedLastTime { get; set; } = 0;
 
@@ -30,8 +32,6 @@ namespace Casual.Ravenhill.UI.Map {
                 return m_RoomData;
             }
         }
-
-        public override string listenerName => $"room_map_ui_view: {roomId}";
 
         private RectTransformBinding rectTransformBinding { get; set; }
         private Vector2 offset { get; set; }
@@ -60,20 +60,17 @@ namespace Casual.Ravenhill.UI.Map {
 
         public override void OnEnable() {
             base.OnEnable();
-            AddHandler(GameEventName.view_removed, OnViewRemoved);
+            RavenhillEvents.ViewRemoved += OnViewRemoved;
         }
 
         public override void OnDisable() {
             base.OnDisable();
-
+            RavenhillEvents.ViewRemoved -= OnViewRemoved;
         }
 
 
-        private void OnViewRemoved(EventArgs<GameEventName> inargs ) {
-            RavenhillViewRemovedEventArgs args = inargs as RavenhillViewRemovedEventArgs;
-            if (args != null ) {
-                viewRemovedLastTime = Time.time;
-            }
+        private void OnViewRemoved(RavenhillViewType viewType ) {
+            viewRemovedLastTime = Time.time;
         }
 
         private float viewRemovedInterval {

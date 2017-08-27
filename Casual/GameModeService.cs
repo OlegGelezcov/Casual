@@ -25,7 +25,7 @@ namespace Casual {
             GameModeName oldGameModeName = this.gameModeName;
             this.gameModeName = gameModeName;
             if(oldGameModeName != this.gameModeName ) {
-                engine.GetService<IEventService>().SendEvent(new GameModeChangedEventArgs(oldGameModeName, this.gameModeName));
+                RavenhillEvents.OnGameModeChanged(oldGameModeName, this.gameModeName);
             }
         }
     }

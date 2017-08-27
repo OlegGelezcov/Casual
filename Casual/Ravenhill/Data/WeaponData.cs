@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Casual.Ravenhill.Data {
     public class WeaponData : InventoryItemData {
 
-        public PriceData price { get; private set; }
+        public override PriceData price { get; protected set; }
         public float prob { get; private set; }
         public string invitationId { get; private set; }
 
@@ -19,5 +19,7 @@ namespace Casual.Ravenhill.Data {
         }
 
         public override InventoryItemType type => InventoryItemType.Weapon;
+        public override bool isUsableFromInventory => false;
+        public override bool IsSellable => true;
     }
 }

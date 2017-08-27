@@ -102,7 +102,7 @@ namespace Casual.Ravenhill {
 
         }
 
-        private GameObject ShowView(RavenhillViewType type, object data = null ) {
+        public override  GameObject ShowView(RavenhillViewType type, object data = null ) {
             GameObject resultObject = null;
 
             if(openedViews.ContainsKey(type)) {
@@ -120,12 +120,11 @@ namespace Casual.Ravenhill {
                 openedViews.Add(type, resultObject);
             }
 
-            IEventService eventService = engine.GetService<IEventService>();
-            eventService?.SendEvent(new RavenhillViewAddedArgs(type));
+            RavenhillEvents.OnViewAdded(type);
             return resultObject;
         }
 
-        public void RemoveView(RavenhillViewType viewType ) {
+        public override void RemoveView(RavenhillViewType viewType ) {
             if(openedViews.ContainsKey(viewType)) {
                 GameObject instance = openedViews[viewType];
                 openedViews.Remove(viewType);
@@ -140,8 +139,7 @@ namespace Casual.Ravenhill {
                         GameObject.Destroy(instance);
                     }
 
-                    IEventService eventService = engine.GetService<IEventService>();
-                    eventService?.SendEvent(new RavenhillViewRemovedEventArgs(viewType));
+                    RavenhillEvents.OnViewRemoved(viewType);
                 }
             }
         }
@@ -155,13 +153,17 @@ namespace Casual.Ravenhill {
             }
         }
 
-        public override GameObject ShowView(object viewType, object data = null) {
-            return this.ShowView((RavenhillViewType)viewType, data);
+        public override bool ExistView(RavenhillViewType viewType) {
+            return openedViews.ContainsKey(viewType);
         }
 
-        public override void RemoveView(object viewType) {
-            this.RemoveView((RavenhillViewType)viewType);
-        }
+        //public override GameObject ShowView(object viewType, object data = null) {
+        //    return this.ShowView((RavenhillViewType)viewType, data);
+        //}
+
+        //public override void RemoveView(object viewType) {
+        //    this.RemoveView((RavenhillViewType)viewType);
+        //}
     }
 
 

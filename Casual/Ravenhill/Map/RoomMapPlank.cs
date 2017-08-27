@@ -1,13 +1,15 @@
-﻿using Casual.Ravenhill.UI.Map;
+﻿using Casual.Ravenhill.Data;
+using Casual.Ravenhill.UI.Map;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Casual.Ravenhill.Map {
 
-    public class RoomMapPlank : RavenhillBaseListenerBehaviour {
+    public class RoomMapPlank : RavenhillGameBehaviour {
 
         private const float kViewRemoveTimeout = 0.5f;
 
+#pragma warning disable 0649
         [SerializeField]
         private string m_RoomId;
 
@@ -28,6 +30,7 @@ namespace Casual.Ravenhill.Map {
 
         [SerializeField]
         private GameObject m_OpenedDoorObject;
+#pragma warning restore 0649
 
         private RoomInfo m_RoomInfo;
 
@@ -47,8 +50,6 @@ namespace Casual.Ravenhill.Map {
         
         private string roomId => m_RoomId;
         
-
-        public override string listenerName => "room_map_plank" + roomId;
 
         private RoomInfo roomInfo {
             get {
@@ -95,10 +96,10 @@ namespace Casual.Ravenhill.Map {
 
         public override void OnEnable() {
             base.OnEnable();
-            AddHandler(GameEventName.view_removed, OnViewRemoved);
-            AddHandler(GameEventName.touch, OnTouch);
-            AddHandler(GameEventName.room_unlocked, OnRoomUnlockedChanged);
-            AddHandler(GameEventName.search_mode_changed, OnSearchModeChanged);
+            RavenhillEvents.ViewAdded += OnViewRemoved;
+            RavenhillEvents.Touch += OnTouch;
+            RavenhillEvents.RoomUnlocked += OnRoomUnlocked;
+            RavenhillEvents.SearchModeChanged += OnSearchModeChanged;
             UpdateLockedState();
             UpdateSearchModeState();
             CreateUI();
@@ -107,58 +108,52 @@ namespace Casual.Ravenhill.Map {
         public override void OnDisable() {
             base.OnDisable();
             DestroyUI();
+            RavenhillEvents.ViewAdded -= OnViewRemoved;
+            RavenhillEvents.Touch -= OnTouch;
+            RavenhillEvents.RoomUnlocked -= OnRoomUnlocked;
+            RavenhillEvents.SearchModeChanged -= OnSearchModeChanged;
         }
+
+
 
         public override void Update() {
             base.Update();
         }
 
-
-
         private void EnterRoom() {
             IViewService viewService = engine.GetService<IViewService>();
             if (!viewService.hasModals) {
                 if (!EventSystem.current.IsPointerOverGameObject()) {
-                    //var roomData = engine.GetService<IResourceService>().Cast<RavenhillResourceService>().GetRoomData(roomId);
                     RoomInfo roomInfo = engine.GetService<IGameModeService>().Cast<RavenhillGameModeService>().GetRoomInfo(roomId);
-                    engine.Cast<RavenhillEngine>().EnterSearchRoom(roomInfo);
+                    //engine.Cast<RavenhillEngine>().EnterSearchRoom(roomInfo);
+                    viewService.ShowView(RavenhillViewType.enter_room_view, roomInfo);
                 }
             }
         }
 
-        private void OnSearchModeChanged(EventArgs<GameEventName> inargs ) {
-            SearchModeChangedEventArgs args = inargs as SearchModeChangedEventArgs;
-            if(args == null ) { return; }
-            if(args.roomInfo.id == roomId ) {
+        private void OnViewRemoved(RavenhillViewType viewType) {
+            lastViewRemoveTime = Time.time;
+        }
+
+        private void OnSearchModeChanged(SearchMode oldSearchMode, SearchMode newSearchMode, RoomInfo roomInfo ) {
+            if(roomInfo.id == roomId ) {
                 UpdateSearchModeState();
             }
         }
 
-        private void OnViewRemoved(EventArgs<GameEventName> inargs) {
-            RavenhillViewRemovedEventArgs args = inargs as RavenhillViewRemovedEventArgs;
-            if(args != null ) {
-                lastViewRemoveTime = Time.time;
-            }
-        }
-
-        private void OnRoomUnlockedChanged(EventArgs<GameEventName> inargs ) {
-            RoomUnlockedEventArgs args = inargs as RoomUnlockedEventArgs;
-            if(args == null ) { return; }
-
-            if(args.roomInfo.id == roomId ) {
+        private void OnRoomUnlocked(RoomInfo roomInfo ) {
+            if(roomInfo.id == roomId ) {
                 UpdateLockedState();
             }
         }
 
-        private void OnTouch(EventArgs<GameEventName> inargs ) {
-            TouchEventArgs args = inargs as TouchEventArgs;
-            if(args != null ) {
-                if(Time.time - lastViewRemoveTime >= kViewRemoveTimeout ) {
-                    if(Utility.RayHitObjectName2D(args.position) == name ) {
-                        EnterRoom();
-                    }
+        private void OnTouch(Vector2 position ) {
+            if (Time.time - lastViewRemoveTime >= kViewRemoveTimeout) {
+                if (Utility.RayHitObjectName2D(position) == name) {
+                    EnterRoom();
                 }
             }
         }
+
     }
 }

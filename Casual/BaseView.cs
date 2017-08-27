@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Casual {
-    public abstract class BaseView<T> : Ravenhill.RavenhillBaseListenerBehaviour {
+    public abstract class BaseView<T> : Ravenhill.RavenhillGameBehaviour {
 
+#pragma warning disable 0649
         [SerializeField]
         private Animator m_Animator;
 
         [SerializeField]
         private float m_DestroyTimeout = 0.5f;
+#pragma warning restore 0649
 
         protected Animator animator {
             get => m_Animator;

@@ -17,6 +17,16 @@
             gold = 0;
         }
 
+        public static bool IsNone(PriceData price) {
+            return (price.silver == 0) && (price.gold == 0);
+        }
+
+        public static PriceData None {
+            get {
+                return new PriceData();
+            }
+        }
+
         public PriceData(int silver, int gold) {
             this.silver = silver;
             this.gold = gold;

@@ -1,26 +1,41 @@
 ﻿using Casual.Ravenhill.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Casual.Ravenhill {
+
+
     public class RoomInfo : GameElement, ISaveElement {
 
         private RoomData m_RoomData;
-        private RoomSettingData m_RoomSettingData;
+        
 
         public string id { get; private set; } = string.Empty;
+        public bool isUnlocked { get; private set; } = false;
         public RoomLevel roomLevel { get; private set; } = RoomLevel.Beginner;
         public int roomProgress { get; private set; } = 0;
         public SearchMode searchMode { get; private set; } = SearchMode.Day;
         public int recordSearchTime { get; private set; } = int.MaxValue;
-        public bool isUnlocked { get; private set; } = false;
+        private RoomSettingData m_RoomSettingData;
 
+        public void RollSearchMode() {
+            int value = UnityEngine.Random.Range(0, 1);
+            SetSearchMode(value != 0 ? SearchMode.Day : SearchMode.Night);
+        }
 
+        public float progress {
+            get {
+                return Mathf.Clamp01((float)roomProgress / 100.0f);
+            }
+        }
 
-
+        public RoomSettingData roomSetting {
+            get {
+                if ((m_RoomSettingData == null) || (m_RoomSettingData.roomLevel != roomLevel)) {
+                    m_RoomSettingData = (engine.GetService<IResourceService>() as RavenhillResourceService).GetRoomSetting(roomLevel);
+                }
+                return m_RoomSettingData;
+            }
+        }
 
         public RoomData roomData {
             get {
@@ -32,11 +47,10 @@ namespace Casual.Ravenhill {
             }
         }
 
-
-        public RoomSettingData roomSetting {
+        public RoomSettingData currentRoomSetting {
             get {
-                if((m_RoomSettingData == null) || (m_RoomSettingData.roomLevel != roomLevel)) {
-                    m_RoomSettingData = (engine.GetService<IResourceService>() as RavenhillResourceService).GetRoomSetting(roomLevel);
+                if(m_RoomSettingData == null || (m_RoomSettingData.roomLevel != roomLevel)) {
+                    m_RoomSettingData = engine.GetService<IResourceService>().Cast<RavenhillResourceService>().GetRoomSetting(roomLevel);
                 }
                 return m_RoomSettingData;
             }
@@ -44,48 +58,47 @@ namespace Casual.Ravenhill {
 
         public RoomInfo() { }
 
-        public RoomInfo(string id, RoomLevel roomLevel, int roomProgress, SearchMode searchMode, int recordSearchTime ) {
+        public RoomInfo(string id) {
             this.id = id;
-            this.roomLevel = roomLevel;
-            this.searchMode = searchMode;
-            this.recordSearchTime = recordSearchTime;
+
         }
 
         public static RoomInfo CreateNew(string id ) {
-            return new RoomInfo(id, RoomLevel.Beginner, 0, SearchMode.Day, int.MaxValue);
+            return new RoomInfo(id);
         }
 
         public void Unlock(bool value) {
             bool oldIsUnlocked = isUnlocked;
             isUnlocked = value;
             if(isUnlocked != oldIsUnlocked ) {
-                engine.GetService<IEventService>().SendEvent(new RoomUnlockedEventArgs(this));
+                RavenhillEvents.OnRoomUnlocked(this);
             }
         }
 
         public bool TrySetRecordTime(int time ) {
-            if(time < recordSearchTime ) {
+            if (time < recordSearchTime) {
                 int oldTime = recordSearchTime;
                 recordSearchTime = time;
-                engine.GetService<IEventService>().SendEvent(new RoomRecordTimeChangedEventArgs(oldTime, recordSearchTime, this));
+                RavenhillEvents.OnRoomRecordTimeChanged(oldTime, recordSearchTime, this);
                 return true;
             }
             return false;
         }
 
-        private void SetSearchMode(SearchMode searchMode) {
+        public void SetSearchMode(SearchMode searchMode) {
             SearchMode oldSearchMode = this.searchMode;
             this.searchMode = searchMode;
-            if(oldSearchMode != searchMode ) {
-                engine.GetService<IEventService>().SendEvent(new SearchModeChangedEventArgs(oldSearchMode, searchMode, this));
+            if (oldSearchMode != searchMode) {
+                RavenhillEvents.OnSearchModeChanged(oldSearchMode, searchMode, this);
             }
         }
 
-        private void SetRoomLevel(RoomLevel newRoomLevel) {
-            RoomLevel oldRoomLevel = this.roomLevel;
-            this.roomLevel = newRoomLevel;
-            if(oldRoomLevel != newRoomLevel) {
-                engine.GetService<IEventService>().SendEvent(new RoomLevelChangedEventArgs(oldRoomLevel, this.roomLevel, this));
+
+        public void SetRoomLevel(RoomLevel newRoomLevel) {
+            RoomLevel oldRoomLevel = roomLevel;
+            roomLevel = newRoomLevel;
+            if (oldRoomLevel != newRoomLevel) {
+                RavenhillEvents.OnRoomLevelChanged(oldRoomLevel, roomLevel, this);
             }
         }
 
@@ -94,6 +107,7 @@ namespace Casual.Ravenhill {
             if(count > 0 ) {
                 int oldRoomProgress = roomProgress;
                 roomProgress += count;
+              
                 if(roomProgress >= 100) {
                     if (roomLevel != RoomLevel.Hunter) {
                         roomProgress = 0;
@@ -102,7 +116,7 @@ namespace Casual.Ravenhill {
                         roomProgress = 100;
                     }
                 }
-                engine.GetService<IEventService>().SendEvent(new RoomProgressChangedEventArgs(oldRoomProgress, this.roomProgress, this));
+                RavenhillEvents.OnRoomProgressChanged(oldRoomProgress, roomProgress, this);
             }
             return isLevelChanged;
         }
@@ -117,19 +131,19 @@ namespace Casual.Ravenhill {
                     }
                     break;
                 case RoomLevel.Advanced: {
-                        if(AddRoomProgress(roomSetting.roomProgress)) {
+                        if (AddRoomProgress(roomSetting.roomProgress)) {
                             SetRoomLevel(RoomLevel.Detective);
                         }
                     }
                     break;
                 case RoomLevel.Detective: {
-                        if(AddRoomProgress(roomSetting.roomProgress)) {
+                        if (AddRoomProgress(roomSetting.roomProgress)) {
                             SetRoomLevel(RoomLevel.Explorer);
                         }
                     }
                     break;
                 case RoomLevel.Explorer: {
-                        if(AddRoomProgress(roomSetting.roomProgress)) {
+                        if (AddRoomProgress(roomSetting.roomProgress)) {
                             SetRoomLevel(RoomLevel.Hunter);
                         }
                     }
@@ -145,31 +159,31 @@ namespace Casual.Ravenhill {
         public UXMLWriteElement GetSave() {
             UXMLWriteElement element = new UXMLWriteElement("room");
             element.AddAttribute("id", id);
-            element.AddAttribute("room_level", roomLevel.ToString());
-            element.AddAttribute("room_progress", roomProgress);
-            element.AddAttribute("search_mode", searchMode.ToString());
-            element.AddAttribute("record_time", recordSearchTime);
             element.AddAttribute("is_unlocked", isUnlocked);
+            element.AddAttribute("level", roomLevel.ToString());
+            element.AddAttribute("progress", roomProgress);
+            element.AddAttribute("search_mode", searchMode.ToString());
+            element.AddAttribute("record_time", recordSearchTime.ToString());
             return element;
         }
 
         public void Load(UXMLElement element) {
             if(element == null ) { return; }
             id = element.GetString("id");
-            roomLevel = element.GetEnum<RoomLevel>("room_level", RoomLevel.Beginner);
-            roomProgress = element.GetInt("room_progress", 0);
-            searchMode = element.GetEnum<SearchMode>("search_mode");
-            recordSearchTime = element.GetInt("record_time", int.MaxValue);
             isUnlocked = element.GetBool("is_unlocked");
+            roomLevel = element.GetEnum("level", RoomLevel.Beginner);
+            roomProgress = element.GetInt("progress", 0);
+            searchMode = element.GetEnum("search_mode", SearchMode.Day);
+            recordSearchTime = element.GetInt("record_time", int.MaxValue);
         } 
 
         public void InitSave() {
             id = string.Empty;
+            isUnlocked = false;
             roomLevel = RoomLevel.Beginner;
             roomProgress = 0;
             searchMode = SearchMode.Day;
             recordSearchTime = int.MaxValue;
-            isUnlocked = false;
         }
         #endregion
     }

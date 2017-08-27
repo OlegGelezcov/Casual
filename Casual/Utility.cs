@@ -8,6 +8,12 @@ using UnityEngine;
 namespace Casual {
     public static class Utility {
 
+        public static int unixTime {
+            get {
+                return (int)((System.DateTime.UtcNow - new System.DateTime(1970, 1, 1)).TotalSeconds);
+            }
+        }
+
         public static bool isEditorOrStandalone {
             get {
                 return Application.isEditor || 
@@ -87,6 +93,54 @@ namespace Casual {
                 return val;
             }
             return defaultValue;
+        }
+
+        public static Vector2 Range(Vector2 min, Vector2 max) {
+            float x = UnityEngine.Random.Range(min.x, max.x);
+            float y = UnityEngine.Random.Range(min.y, max.y);
+            return new Vector2(x, y);
+        }
+
+        public static Vector2 Bezier2(float t, Vector2 start, Vector2 mid, Vector2 end) {
+            return (1.0f - t) * (1.0f - t) * start +
+                2.0f * t * (1.0f - t) * mid +
+                t * t * end;
+        }
+
+        public static Vector3 Bezier2(float t, Vector3 start, Vector3 mid, Vector3 end ) {
+            return (1.0f - t) * (1.0f - t) * start +
+                    2.0f * t * (1.0f - t) * mid +
+                    t * t * end;
+        }
+
+        public static float Bezier2(float t, float start, float mid, float end ) {
+            return (1.0f - t) * (1.0f - t) * start +
+                    2.0f * t * (1.0f - t) * mid +
+                    t * t * end;
+        }
+
+        public static Vector2 Bezier3(float t, Vector2 start, Vector2 mid1, Vector2 mid2, Vector2 end ) {
+            float invt = 1.0f - t;
+            return invt * invt * invt * start +
+                3.0f * t * invt * invt * mid1 +
+                3 * t * t * invt * mid2 +
+                t * t * t * end;
+        }
+
+        public static Vector3 Bezier3(float t, Vector3 start, Vector3 mid1, Vector3 mid2, Vector3 end ) {
+            float invt = 1.0f - t;
+            return invt * invt * invt * start +
+                3.0f * t * invt * invt * mid1 +
+                3 * t * t * invt * mid2 +
+                t * t * t * end;
+        }
+
+        public static float Bezier3(float t, float start, float mid1, float mid2, float end ) {
+            float invt = 1.0f - t;
+            return invt * invt * invt * start +
+                3.0f * t * invt * invt * mid1 +
+                3 * t * t * invt * mid2 +
+                t * t * t * end;
         }
     }
 }

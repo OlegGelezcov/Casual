@@ -9,20 +9,20 @@ using UnityEngine;
 
 namespace Casual {
     [RequireComponent(typeof(Canvas))]
-    public class CanvasService : RavenhillBaseListenerBehaviour, ICanvasSerive {
+    public class CanvasService : RavenhillGameBehaviour, ICanvasSerive {
 
+#pragma warning disable 0649
         [SerializeField]
         private FirstSiblingTransform m_FirstSiblingTransform;
 
         [SerializeField]
         private LastSiblingTransform m_LastSiblingTransform;
+#pragma warning restore 0649
 
         private FirstSiblingTransform firstSiblingTransform => m_FirstSiblingTransform;
         private LastSiblingTransform lastSiblingTransform => m_LastSiblingTransform;
 
         private static bool isCreated { get; set; } = false;
-
-        public override string listenerName => "canvas";
 
         private RectTransform m_RectTransform;
 

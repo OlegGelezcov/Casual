@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Casual.Ravenhill {
-    public class RavenhillEventService : EventService {
-    }
+    //public class RavenhillEventService : EventService {
+    //}
 }

@@ -26,5 +26,9 @@ namespace Casual.Ravenhill.Data {
         public bool IsValidRoom(string roomId ) {
             return rooms.Contains(roomId);
         }
+
+        public override bool isUsableFromInventory => false;
+        public override bool IsSellable => false;
+        public override PriceData price { get => PriceData.None; protected set { } }
     }
 }

@@ -8,6 +8,7 @@ namespace Casual.Ravenhill.UI {
 
     public class SearchText : GameBehaviour {
 
+#pragma warning disable 0649
         [SerializeField]
         private Text m_Text;
 
@@ -25,7 +26,7 @@ namespace Casual.Ravenhill.UI {
 
         [SerializeField]
         private GraphicAnimAlpha m_GraphicAnimAlpha;
-
+#pragma warning restore 0649
 
         private GraphicAnimAlpha graphicAnimAlpha => m_GraphicAnimAlpha;
         private Image highlightImage => m_HightlightImage;
@@ -75,7 +76,7 @@ namespace Casual.Ravenhill.UI {
                 }
                 bool completed = !result.Item2;
                 if(completed) {
-                    engine.GetService<IEventService>().SendEvent(new SearchTextStrokedEventArgs(this, searchObjectData));
+                    RavenhillEvents.OnSearchTextStroked(this, searchObjectData);
                 }
             }
         }

@@ -16,7 +16,7 @@ namespace Casual {
     /// <summary>
     /// Abstract class for any command
     /// </summary>
-    public abstract class BaseCommand {
+    public abstract class BaseCommand : Ravenhill.RavenhillGameElement {
 
         public BaseCommand(string name) {
             this.name = name.ToLower();

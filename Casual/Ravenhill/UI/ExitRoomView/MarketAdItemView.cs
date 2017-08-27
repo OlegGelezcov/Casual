@@ -5,6 +5,7 @@ using UnityEngine.UI;
 namespace Casual.Ravenhill.UI {
     public class MarketAdItemView : RavenhillGameBehaviour {
 
+#pragma warning disable 0649
         [SerializeField]
         private Button m_ActionButton;
 
@@ -13,7 +14,7 @@ namespace Casual.Ravenhill.UI {
 
         [SerializeField]
         private Text m_DescriptionText;
-
+#pragma warning restore 0649
 
         private Button actionButton => m_ActionButton;
         private Image iconImage => m_IconImage;

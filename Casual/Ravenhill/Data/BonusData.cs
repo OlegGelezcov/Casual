@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Casual.Ravenhill.Data {
 
     public class BonusData : InventoryItemData {
-        public PriceData price { get; private set; }
+        public override PriceData price { get; protected set; }
         public int interval { get; private set; }
         public Dictionary<string, int> ingredients { get; private set; }
 
@@ -24,5 +24,7 @@ namespace Casual.Ravenhill.Data {
         }
 
         public override InventoryItemType type => InventoryItemType.Bonus;
+        public override bool isUsableFromInventory => true;
+        public override bool IsSellable => true;
     }
 }

@@ -6,6 +6,28 @@ using UnityEngine;
 namespace Casual.Ravenhill {
     public class RavenhillResourceService : ResourceService {
 
+        public class CachedSprite {
+            private Sprite sprite = null;
+            private string key;
+            private string path;
+            private ResourceObjectCache<string, Sprite> cache;
+
+            public CachedSprite(string key, string path, ResourceObjectCache<string, Sprite> cache) {
+                this.key = key;
+                this.path = path;
+                this.cache = cache;
+            }
+
+            public Sprite Sprite {
+                get {
+                    if(sprite == null ) {
+                        sprite = cache.GetObject(key, path);
+                    }
+                    return sprite;
+                }
+            }
+        }
+
         private const string kResourceFile = "Data/Temp/resources";
         private readonly List<string> kStringAssets = new List<string> {
             "Data/Loc/str_achievements",
@@ -31,6 +53,22 @@ namespace Casual.Ravenhill {
         private Dictionary<string, StoryChargerData> storyChargers { get; } = new Dictionary<string, StoryChargerData>();
         private Dictionary<string, IngredientData> ingredients { get; } = new Dictionary<string, IngredientData>();
         private Dictionary<string, CollectableData> collectables { get; } = new Dictionary<string, CollectableData>();
+
+        public CachedSprite expSprite;
+        public CachedSprite healthSprite;
+        public CachedSprite maxHealthSprite;
+        public CachedSprite silverSprite;
+        public CachedSprite goldSprite;
+
+        private Dictionary<RoomLevel, string> roomLevelNameTable { get; } = new Dictionary<RoomLevel, string> {
+            [RoomLevel.Beginner] = "Loc_rank_beginner",
+            [RoomLevel.Advanced] = "Loc_rank_advanced",
+            [RoomLevel.Detective] = "Loc_rank_detective",
+            [RoomLevel.Explorer] = "Loc_rank_explorer",
+            [RoomLevel.Hunter] = "Loc_rank_hunter"
+        };
+
+
 
         //loaded by last(after other inventory items)
         private Dictionary<string, CollectionData> collections { get; } = new Dictionary<string, CollectionData>();
@@ -78,20 +116,29 @@ namespace Casual.Ravenhill {
             LoadCollectables();
 
             LoadCollections();
+            LoadMiscSprites();
             m_IsLoaded = true;
-            var eventService = engine.GetService<IEventService>();
-            eventService?.SendEvent(new RavenhillResourceLoadedEventArgs());
+            RavenhillEvents.OnResourceLoaded();
         }
 
         public override void Setup(object data) {
             Load();
         }
 
+        private void LoadMiscSprites() {
+            expSprite = new CachedSprite("exp", "Sprites/Misc/exp", spriteObjectCache);
+            healthSprite = new CachedSprite("health", "Sprites/Misc/health", spriteObjectCache);
+            maxHealthSprite = new CachedSprite("maxhealth", "Sprites/Misc/health", spriteObjectCache);
+            goldSprite = new CachedSprite("gold", "Sprites/Misc/gold", spriteObjectCache);
+            silverSprite = new CachedSprite("silver", "Sprites/Misc/silver", spriteObjectCache);
+        }
+
         private void PreloadPrefabs() {
             prefabObjectCache.Load(new Dictionary<string, string> {
                 ["search_text"] = "Prefabs/UI/Misc/search_text",
                 ["search_object_particles"] = "Prefabs/Effects/search_object_particles",
-                ["found_search_object"] = "Prefabs/Effects/found_search_object"
+                ["found_search_object"] = "Prefabs/Effects/found_search_object",
+                ["drop_object"] = "Prefabs/UI/Misc/drop_object"
             });
         }
 
@@ -196,6 +243,7 @@ namespace Casual.Ravenhill {
                 BonusData bonusData = new BonusData();
                 bonusData.Load(bonusElement);
                 bonuses[bonusData.id] = bonusData;
+                Debug.Log($"load bonus {bonusData.id}");
             });
         }
 
@@ -328,6 +376,34 @@ namespace Casual.Ravenhill {
             return transparent;
         }
 
+        public Sprite GetSprite(DropItem dropItem ) {
+            switch(dropItem.type ) {
+                case DropType.exp: {
+                        return expSprite.Sprite;
+                    }
+                case DropType.gold: {
+                        return goldSprite.Sprite;
+                    }
+                case DropType.health: {
+                        return healthSprite.Sprite;
+                    }
+                case DropType.max_health: {
+                        return maxHealthSprite.Sprite;
+                    }
+                case DropType.silver: {
+                        return silverSprite.Sprite;
+                    }
+                case DropType.item: {
+                        return GetSprite(dropItem.itemData);
+                    }
+                default: {
+                        return transparent;
+                    }
+            }
+        }
+
+
+
         public SearchObjectData GetSearchObjectData(string id) {
             return searchObjects.ContainsKey(id) ? searchObjects[id] : null;
         }
@@ -392,6 +468,30 @@ namespace Casual.Ravenhill {
 
         public List<ChargerData> chargerList => new List<ChargerData>(chargers.Values);
 
+        public List<StoryChargerData> storyChargerList => new List<StoryChargerData>(storyChargers.Values);
+
+        public List<BonusData> bonusList => new List<BonusData>(bonuses.Values);
+
+        public List<ToolData> toolList => new List<ToolData>(tools.Values);
+
+        public List<FoodData> foodList => new List<FoodData>(foods.Values);
+
+        public List<IngredientData> ingredientList => new List<IngredientData>(ingredients.Values);
+
+        public List<InventoryItemData> marketItems {
+            get {
+                List<InventoryItemData> items = new List<InventoryItemData>();
+                items.AddRange(tools.Values);
+                items.AddRange(bonuses.Values);
+                items.AddRange(foods.Values);
+                items.AddRange(weapons.Values);
+                items.AddRange(chargers.Values);
+                items.AddRange(storyChargers.Values);
+                items.AddRange(ingredients.Values);
+                return items;
+            }
+        }
+
         public InventoryItemData GetInventoryItemData(InventoryItemType type, string id) {
             switch (type) {
                 case InventoryItemType.Bonus: {
@@ -425,6 +525,19 @@ namespace Casual.Ravenhill {
                         throw new System.NotImplementedException($"{type}");
                     }
             }
+        }
+
+        public string GetRoomLevelName(RoomLevel roomLevel) {
+            return GetString(roomLevelNameTable[roomLevel]);
+        }
+
+        public Sprite GetPriceSprite(PriceData price) {
+            if(price.type == MoneyType.silver ) {
+                return silverSprite.Sprite;
+            } else if(price.type == MoneyType.gold ) {
+                return goldSprite.Sprite;
+            }
+            return transparent;
         }
     }
 }

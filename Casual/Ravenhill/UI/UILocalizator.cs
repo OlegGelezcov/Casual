@@ -4,8 +4,10 @@ using UnityEngine.UI;
 namespace Casual.Ravenhill.UI {
     public class UILocalizator : RavenhillGameBehaviour {
 
+#pragma warning disable 0649
         [SerializeField]
         private string m_StringId;
+#pragma warning restore 0649
 
         private string stringId => m_StringId;
 

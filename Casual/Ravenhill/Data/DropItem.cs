@@ -1,11 +1,15 @@
-﻿namespace Casual.Ravenhill.Data {
+﻿using UnityEngine;
+
+namespace Casual.Ravenhill.Data {
     public class DropItem : RavenhillGameElement {
 
         public InventoryItemData itemData { get; private set; }
         public int count { get; private set; }
         public DropType type { get; private set; }
 
-        public DropItem(DropType type, int count, InventoryItemData itemData = null ) {
+        public Color color { get; set; } = Color.white;
+
+        public DropItem(DropType type, int count, InventoryItemData itemData = null) {
             this.type = type;
             this.count = count;
             this.itemData = itemData;

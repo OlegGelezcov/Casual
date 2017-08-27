@@ -10,6 +10,8 @@ using UnityEngine.UI;
 namespace Casual.Ravenhill.UI {
     public class SearchPan : RavenhillBaseView {
 
+
+#pragma warning disable 0169,0649
         [SerializeField]
         private SearchTextSlot[] m_Slots;
 
@@ -42,11 +44,10 @@ namespace Casual.Ravenhill.UI {
 
         [SerializeField]
         private SearchTimerView m_SearchTimerView;
+#pragma warning restore 0169,0649
+
 
         private SearchTimerView searchTimerView => m_SearchTimerView;
-
-
-        public override string listenerName => "search_pan";
 
         public override RavenhillViewType viewType => RavenhillViewType.search_pan;
 
@@ -58,15 +59,20 @@ namespace Casual.Ravenhill.UI {
 
         public override void OnEnable() {
             base.OnEnable();
-            AddHandler(GameEventName.search_object_collected, OnSearchObjectCollected);
-            AddHandler(GameEventName.search_progress_changed, OnSearchProgressChanged);
-            AddHandler(GameEventName.search_object_activated, OnSearchTextActivated);
-            AddHandler(GameEventName.search_text_stroked, OnSearchTextStroked);
 
+
+            RavenhillEvents.SearchObjectCollected += OnSearchObjectCollected;
+            RavenhillEvents.SearchProgressChanged += OnSearchProgressChanged;
+            RavenhillEvents.SearchObjectActivated += OnSearchTextActivated;
+            RavenhillEvents.SearchTextStroked += OnSearchTextStroked;
         }
 
         public override void OnDisable() {
             base.OnDisable();
+            RavenhillEvents.SearchObjectCollected -= OnSearchObjectCollected;
+            RavenhillEvents.SearchProgressChanged -= OnSearchProgressChanged;
+            RavenhillEvents.SearchObjectActivated -= OnSearchTextActivated;
+            RavenhillEvents.SearchTextStroked -= OnSearchTextStroked;
         }
 
         public override void Setup(object data = null) {
@@ -81,7 +87,7 @@ namespace Casual.Ravenhill.UI {
             }
 
             SearchSession session = data as SearchSession;
-            searchTimerView?.StartTimer(session.roomInfo.roomSetting.searchTime);
+            searchTimerView?.StartTimer(session.roomInfo.currentRoomSetting.searchTime);
         }
 
         private SearchTextSlot FindEmptySlot() {
@@ -92,31 +98,22 @@ namespace Casual.Ravenhill.UI {
             return slots.FirstOrDefault(slot => slot.searchObjectDataId == searchObjectData.id);
         }
 
-        private void OnSearchProgressChanged(EventArgs<GameEventName> inargs) {
+        private void OnSearchProgressChanged(int oldValue, int newValue) {
 
         }
 
-        private void OnSearchTextStroked(EventArgs<GameEventName> inargs ) {
-            SearchTextStrokedEventArgs args = inargs as SearchTextStrokedEventArgs;
-            if (args != null ) {
-                var slot = FindSlot(args.searchObjectData);
-                slot?.DestroyText();
-            }
+        private void OnSearchTextStroked(SearchText searchText, SearchObjectData data) {
+            var slot = FindSlot(data);
+            slot?.DestroyText();
         }
 
-        private void OnSearchObjectCollected(EventArgs<GameEventName> inargs ) {
-            SearchObjectCollectedEventArgs args = inargs as SearchObjectCollectedEventArgs;
-            if (args != null ) {
-                var slot = FindSlot(args.searchObjectData);
-                slot?.Stroke();
-            }
+        private void OnSearchObjectCollected(SearchObjectData data, ISearchableObject searchable ) {
+            var slot = FindSlot(data);
+            slot?.Stroke();
         }
 
-        private void OnSearchTextActivated(EventArgs<GameEventName> inargs ) {
-            SearchObjectActivatedEventArgs args = inargs as SearchObjectActivatedEventArgs;
-            if (args != null ) {
-                StartCoroutine(CorCreateSearchTextSlotText(args.searchObjectData));
-            }
+        private void OnSearchTextActivated(SearchObjectData data, BaseSearchableObject searchable) {
+            StartCoroutine(CorCreateSearchTextSlotText(data));
         }
 
         private System.Collections.IEnumerator CorCreateSearchTextSlotText(SearchObjectData searchObjectData ) {

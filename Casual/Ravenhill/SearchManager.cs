@@ -1,4 +1,5 @@
 ﻿using Casual.Ravenhill.Data;
+using Casual.Ravenhill.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,17 +8,17 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Casual.Ravenhill {
-    public class SearchManager : RavenhillBaseListenerBehaviour {
+    public class SearchManager : RavenhillGameBehaviour {
 
+#pragma warning disable 0649
         [SerializeField]
         private int m_MaxActiveObjects = 6;
 
         [SerializeField]
         private SearchGroup[] m_SearchGroups;
+#pragma warning restore 0649
 
         public int maxActiveObjects => m_MaxActiveObjects;
-
-        public override string listenerName => "search_manager";
 
         private SearchGroup[] searchGroups => m_SearchGroups;
 
@@ -34,18 +35,33 @@ namespace Casual.Ravenhill {
 
         public int foundedSearchObjectCount => foundedObjects.Count;
 
+        public override void OnEnable() {
+            base.OnEnable();
+            RavenhillEvents.SearchTimerCompleted += OnSearchTimerCompleted;
+        }
+
+        public override void OnDisable() {
+            base.OnDisable();
+            RavenhillEvents.SearchTimerCompleted -= OnSearchTimerCompleted;
+        }
+
+        private void OnSearchTimerCompleted() {
+            EndSearch(status: SearchStatus.fail, showExitRoomView: true);
+        }
+
         public override void Start() {
             base.Start();
             
 
-            SearchSession session = engine.GetService<IGameModeService>().Cast<RavenhillGameModeService>().searchSession;
+            SearchSession session = ravenhillGameModeService.searchSession;
 
-            StartSearch(session.roomInfo.roomSetting.searchObjectCount);
+            StartSearch(session.roomInfo.currentRoomSetting.searchObjectCount);
             engine.GetService<IViewService>().ShowView(RavenhillViewType.search_pan, session);
         }
 
         public void StartSearch(int maxCount) {
-            engine.GetService<IEventService>().SendEvent(new SearchStartedEventArgs());
+            RavenhillEvents.OnSearchStarted();
+
             ActivateGroup(maxCount);
         }
 
@@ -56,8 +72,7 @@ namespace Casual.Ravenhill {
 
             currentSearchObjects = activeGroup.Activate(maxObjectCount);
 
-            engine.GetService<IEventService>().SendEvent(new SearchProgressChangedEventArgs(foundedSearchObjectCount, searchableObjectCount));
-
+            RavenhillEvents.OnSearchProgressChanged(foundedSearchObjectCount, searchableObjectCount);
             var resourceService = engine.GetService<IResourceService>() as RavenhillResourceService;
             notFoundedObjects.Clear();
             for(int i = 0; i < currentSearchObjects.Length; i++ ) {
@@ -92,12 +107,12 @@ namespace Casual.Ravenhill {
             var activeData = activeObjects.FirstOrDefault(obj => obj.id == searchableObject.id);
             activeObjects.Remove(activeData);
             foundedObjects.Add(activeData);
-            engine.GetService<IEventService>()?.SendEvent(new SearchProgressChangedEventArgs(foundedSearchObjectCount, searchableObjectCount));
+            RavenhillEvents.OnSearchProgressChanged(foundedSearchObjectCount, searchableObjectCount);
             searchableObject.Collect();
 
             if(isWin) {
                 Debug.Log("EXIT");
-                ExitWithSuccess();
+                EndSearch(status: SearchStatus.success, showExitRoomView: true);
             } else {
                 Debug.Log("ACTIVATE NEXT");
                 ActivateIndices();
@@ -106,14 +121,46 @@ namespace Casual.Ravenhill {
 
         private bool isWin => foundedSearchObjectCount == numberToFind;
 
-        protected virtual void ExitWithSuccess() {
-            StartCoroutine(CorExitWithSuccess());
+        public void EndSearch(SearchStatus status, bool showExitRoomView) {
+            var timerView = FindObjectOfType<SearchTimerView>();
+            timerView.isBreaked = true;
+
+            int searchTime = 0;
+            if(timerView ) {
+                searchTime = Mathf.RoundToInt(timerView.searchTime);
+            }  else {
+                searchTime = ravenhillGameModeService.searchSession.roomInfo.currentRoomSetting.searchTime;
+            }
+
+            engine.Cast<RavenhillEngine>().EndSearchSession(status, searchTime);
+
+            if(status == SearchStatus.success || showExitRoomView ) {
+                StartCoroutine(CorShowExitRoomView());
+            } else {
+                Exit();
+            }
         }
 
-        private System.Collections.IEnumerator CorExitWithSuccess() {
+        private System.Collections.IEnumerator CorShowExitRoomView() {
+            yield return new WaitForSeconds(4.0f);
+            viewService.RemoveView(RavenhillViewType.search_pan);
+               
+            viewService.ShowView(RavenhillViewType.exit_room_view, ravenhillGameModeService.searchSession);
+        }
+
+
+
+        public virtual void Exit() {
+            StartCoroutine(CorExit());
+        }
+
+
+        private System.Collections.IEnumerator CorExit() {
             yield return new WaitForSeconds(2.0f);
-            engine.GetService<IViewService>().RemoveView(RavenhillViewType.search_pan);
-            engine.Cast<RavenhillEngine>().EndSearchSession(SearchStatus.success, 30);
+            if(viewService.ExistView(RavenhillViewType.search_pan)) {
+                viewService.RemoveView(RavenhillViewType.search_pan);
+            }
+            engine.Cast<RavenhillEngine>().LoadPreviousScene();
         }
     }
 }

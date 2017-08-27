@@ -1,15 +1,13 @@
-﻿using Casual.UI;
+﻿using Casual.Ravenhill.Data;
+using Casual.UI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Casual.Ravenhill.UI {
     public class ExitRoomView : RavenhillCloseableView {
 
+#pragma warning disable 0649
         [SerializeField]
         private Text m_RoomNameText;
 
@@ -17,7 +15,7 @@ namespace Casual.Ravenhill.UI {
         private InventoryItemListView m_ListView;
 
         [SerializeField]
-        private GameObject m_InventoryItemViewPrefab;
+        private GameObject m_NotFoundAnyItemsInfoObject;
 
         [SerializeField]
         private Text m_SearchStatusText;
@@ -34,21 +32,47 @@ namespace Casual.Ravenhill.UI {
         [SerializeField]
         private MarketAdItemView m_MarketAdItemView;
 
+        [SerializeField]
+        private RoomInfoView m_RoomInfoView;
+
+        [SerializeField]
+        private NetRoomScoreView m_BestRoomScore;
+
+        [SerializeField]
+        private NetRoomScoreView m_MyBestRoomScore;
+
+        [SerializeField]
+        private CurrentScoreView m_CurrentScoreView;
+
+        [SerializeField]
+        private Text m_TimeText;
+
+        [SerializeField]
+        private Button m_CloseBigButton;
+#pragma warning restore 0649
+
+
 
         private Text roomNameText => m_RoomNameText;
         private InventoryItemListView listView => m_ListView;
-        private GameObject inventoryItemViewPrefab => m_InventoryItemViewPrefab;
         private Text searchStatusText => m_SearchStatusText;
         private GameObject expSilverRewardParent => m_ExpSilverRewardParent;
         private NumericTextProgress expRewardCountText => m_ExpRewardCountText;
         private NumericTextProgress silverRewardCountText => m_SilverRewardCountText;
         private MarketAdItemView marketAdItemView => m_MarketAdItemView;
+        private GameObject notFoundAnyItemsInfoObject => m_NotFoundAnyItemsInfoObject;
+        private RoomInfoView roomInfoView => m_RoomInfoView;
+        private NetRoomScoreView bestRoomScore => m_BestRoomScore;
+        private NetRoomScoreView myBestRoomScore => m_MyBestRoomScore;
+        private CurrentScoreView currentScoreView => m_CurrentScoreView;
+        private Text timeText => m_TimeText;
+        private Button closeBigButton => m_CloseBigButton;
 
         public override bool isModal => true;
 
         public override int siblingIndex => 1;
 
-        public override string listenerName => "exit_room_view";
+        
 
         public override RavenhillViewType viewType => RavenhillViewType.exit_room_view;
 
@@ -63,7 +87,51 @@ namespace Casual.Ravenhill.UI {
             }
 
             roomNameText.text = resourceService.GetString(session.roomData.nameId);
-            //listView.Setup()
+
+
+            Debug.Log($"session drop list {session.roomDropList.Count}".Colored(ColorType.yellow));
+
+            InventoryItemListView.ListViewData listViewData = new InventoryItemListView.ListViewData {
+                dataList = session.roomDropList
+            };
+            listView.Setup(listViewData);
+
+            if(session.roomDropList.Count == 0 ) {
+                notFoundAnyItemsInfoObject?.ActivateSelf();
+            } else {
+                notFoundAnyItemsInfoObject?.DeactivateSelf();
+            }
+
+            if(session.searchStatus == SearchStatus.success) {
+                searchStatusText.text = resourceService.GetString("status_success");
+            } else {
+                searchStatusText.text = resourceService.GetString("status_fail");
+            }
+
+            if(session.searchStatus == SearchStatus.success ) {
+                expSilverRewardParent.ActivateSelf();
+                expRewardCountText.SetValue(0, session.roomData.expReward);
+                silverRewardCountText.SetValue(0, session.roomData.silverReward);
+            } else {
+                expSilverRewardParent.DeactivateSelf();
+            }
+
+            marketAdItemView.Setup(resourceService.marketItems.RandomElement());
+
+            roomInfoView.Setup(session.roomInfo);
+
+            bestRoomScore.Setup(netService.GetBestRoomScore(session));
+            myBestRoomScore.Setup(netService.GetPlayerBestRoomScore(session));
+            currentScoreView.Setup(session);
+
+            timeText.text = Utility.FormatMS(session.searchTime);
+
+            closeBigButton.SetListener(Close);
+        }
+
+        protected override void OnClose() {
+            base.OnClose();
+            ravenhillGameModeService.ExitSessionRoom();
         }
     }
 }

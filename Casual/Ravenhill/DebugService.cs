@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Casual.Ravenhill.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +7,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Casual.Ravenhill {
-    public class DebugService : RavenhillBaseListenerBehaviour, IDebugService {
+    public class DebugService : RavenhillGameBehaviour, IDebugService {
 
+#pragma warning disable 0649
         [SerializeField]
         private GUISkin m_Skin;
 
@@ -19,6 +21,7 @@ namespace Casual.Ravenhill {
 
         [SerializeField]
         private int m_MaxMessages = 100;
+#pragma warning restore 0649
 
         private GUIStyle m_ConsoleStyle;
         private GUIStyle m_TextfieldStyle;
@@ -45,6 +48,8 @@ namespace Casual.Ravenhill {
             m_TextfieldStyle = m_Skin.GetStyle("textfield");
 
             //engine.GetService<IDebugCommandService>().Add("createmapcharacter", new CreateMapCharacterCommand("createmapcharacter"));
+            Add("exitroomview", new ExitRoomViewCommand("exitroomview"));
+            Add("test", new TestCommand("test"));
         }
 
 
@@ -80,6 +85,13 @@ namespace Casual.Ravenhill {
 
         }
 
+        public override void Update() {
+            base.Update();
+            if(Input.GetKeyUp(KeyCode.BackQuote)) {
+                isOpened = !isOpened;
+            }
+        }
+
         private void ParseCommand(string rawCommand) {
             if(!Execute(rawCommand)) {
                 AddMessage($"invalid command: {rawCommand}".Colored(ColorType.red));
@@ -104,8 +116,6 @@ namespace Casual.Ravenhill {
                 }
             }
         }
-
-        public override string listenerName => "debug_service";
 
         private Dictionary<string, BaseCommand> commands { get; } = new Dictionary<string, BaseCommand>();
 
@@ -134,5 +144,52 @@ namespace Casual.Ravenhill {
         }
 
 
+    }
+
+    public class ExitRoomViewCommand : BaseCommand {
+
+        public ExitRoomViewCommand(string commandName)
+            : base(commandName) { }
+
+        public override bool Execute(string source) {
+            bool success = GetBool(source, 1);
+            SearchSession session = null;
+
+            session = new SearchSession();
+            
+            session.SetRoomInfo(new RoomInfo("r4"));
+
+            var bonuses = resourceService.bonusList.Select(b => new Data.InventoryItem(b, 1)).ToList();
+            engine.GetService<IDebugService>().AddMessage($"bonus count {bonuses.Count}", ColorType.yellow);
+            session.OnEndSession(success ? SearchStatus.success : SearchStatus.fail, 60, bonuses);
+            viewService.ShowView(RavenhillViewType.exit_room_view, session);
+            return true;
+        }
+    }
+
+    public class TestCommand : BaseCommand {
+
+        public TestCommand(string commandName) 
+            : base(commandName) { }
+
+        public override bool Execute(string source) {
+            string testType = GetToken(source, 1);
+            switch(testType) {
+                case "drop": {
+                        List<DropItem> dropItems = new List<DropItem>();
+                        foreach(ToolData toolData in resourceService.toolList ) {
+                            dropItems.Add(new DropItem(DropType.item, 1, toolData));
+                        }
+                        dropItems.Add(new DropItem(DropType.exp, 10));
+                        dropItems.Add(new DropItem(DropType.gold, 10));
+                        dropItems.Add(new DropItem(DropType.health, 10));
+                        dropItems.Add(new DropItem(DropType.max_health, 10));
+                        dropItems.Add(new DropItem(DropType.silver, 10));
+                        engine.Cast<RavenhillEngine>().DropItems(dropItems);
+                    }
+                    return true;
+            }
+            return false;
+        }
     }
 }

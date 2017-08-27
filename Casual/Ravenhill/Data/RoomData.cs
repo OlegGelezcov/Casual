@@ -3,7 +3,7 @@
 
         public int level { get; private set; }
         public PriceData price { get; private set; } = new PriceData();
-        public int energy { get; private set; }
+        //public int energy { get; private set; }
         public RoomType roomType { get; private set; }
         public string scaryIconPath { get; private set; }
         public int silverReward { get; private set; }
@@ -17,7 +17,7 @@
             base.Load(element);
             level = element.GetInt("level", 1);
             price.Load(element);
-            energy = element.GetInt("energy", 0);
+            //energy = element.GetInt("energy", 0);
             roomType = element.GetEnum<RoomType>("type", RoomType.hallway);
             scaryIconPath = element.GetString("sicon");
             silverReward = element.GetInt("reward_silver", 0);

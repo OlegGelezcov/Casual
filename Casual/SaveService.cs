@@ -27,17 +27,17 @@ namespace Casual {
                     if (!string.IsNullOrEmpty(saveString)) {
                         saveable.Load(saveString);
                         saveable.OnLoaded();
-                        engine?.GetService<IEventService>()?.SendEvent(new SaveableLoadedEventArgs(saveable));
+                        RavenhillEvents.OnSaveableLoaded(saveable);
                     } else {
                         saveable.InitSave();
                         saveable.OnLoaded();
-                        engine?.GetService<IEventService>()?.SendEvent(new SaveableLoadedEventArgs(saveable));
+                        RavenhillEvents.OnSaveableLoaded(saveable);
                     }
                 }
             } else {
                 saveable.InitSave();
                 saveable.OnLoaded();
-                engine?.GetService<IEventService>()?.SendEvent(new SaveableLoadedEventArgs(saveable));
+                RavenhillEvents.OnSaveableLoaded(saveable);
             }
         }
 

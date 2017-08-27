@@ -12,12 +12,13 @@ namespace Casual.UI {
    
     public class ListView<T> : GameBehaviour where T : IIdObject {
 
+#pragma warning disable 0649
         [SerializeField]
         private Transform m_Layout;
 
         [SerializeField]
         private GameObject m_ItemPrefab;
-
+#pragma warning restore 0649
 
         private Transform layout => m_Layout;
 
@@ -122,6 +123,7 @@ namespace Casual.UI {
                 }
             }
             views.Clear();
+            changes.Clear();
         }
     }
 
@@ -143,7 +145,17 @@ namespace Casual.UI {
 
     public class InventoryItemListView : ListView<InventoryItem> {
 
+        public override void Setup(ListViewData data) {
+            Debug.Log($"inventory list count {data.dataList.Count}");
+            base.Setup(data);
+        }
+
     }
 
-    
+    public class InventoryItemDataListView : ListView<InventoryItemData> {
+
+        public override void Setup(ListViewData data) {
+            base.Setup(data);
+        }
+    }
 }

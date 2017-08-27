@@ -30,6 +30,9 @@ namespace Casual.Ravenhill.Data {
         }
 
         public override InventoryItemType type => InventoryItemType.Collection;
+        public override bool isUsableFromInventory => false;
+        public override bool IsSellable => false;
+        public override PriceData price { get => PriceData.None; protected set { } }
     }
 
     public class CollectionChargeData {

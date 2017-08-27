@@ -9,7 +9,7 @@ using UnityEngine;
 using Casual.Ravenhill.UI;
 
 namespace Casual.Ravenhill {
-    public abstract class BaseSearchableObject : RavenhillBaseListenerBehaviour, ISearchableObject {
+    public abstract class BaseSearchableObject : RavenhillGameBehaviour, ISearchableObject {
 
         public abstract string id { get; }
 
@@ -51,7 +51,7 @@ namespace Casual.Ravenhill {
                                        //particles.transform.parent = null;
                                        //Destroy(particles, 0.5f);
                                        Destroy(gameObject);
-                                       engine.GetService<IEventService>().SendEvent(new SearchObjectCollectedEventArgs(data, this));
+                                       RavenhillEvents.OnSearchObjectCollected(data, this);
                                    }
                               });
 

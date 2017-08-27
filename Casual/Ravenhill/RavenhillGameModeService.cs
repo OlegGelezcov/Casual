@@ -22,7 +22,7 @@ namespace Casual.Ravenhill {
             this.roomMode = roomMode;
 
             if(oldRoomMode != this.roomMode ) {
-                engine.GetService<IEventService>()?.SendEvent(new RoomModeChangedEventArgs(oldRoomMode, this.roomMode));
+                RavenhillEvents.OnRoomModeChanged(oldRoomMode, this.roomMode);
             }
         }
 
@@ -39,6 +39,12 @@ namespace Casual.Ravenhill {
             }
 
             searchSession.EndSession(status, time, drops);
+        }
+
+        public void ExitSessionRoom() {
+            ApplySessionResults(searchSession);
+            var searchManager = FindObjectOfType<SearchManager>();
+            searchManager?.Exit();
         }
 
         public void ChangeRoom(string roomId ) {
@@ -74,6 +80,34 @@ namespace Casual.Ravenhill {
             result.AddRange(chargers.Select(c => new InventoryItem(c, 1)).ToList());
 
             return result;
+        }
+
+        public List<InventoryItem> FilterCollectableForRoom(RoomInfo roomInfo) {
+            RavenhillResourceService resourceService = engine.GetService<IResourceService>() as RavenhillResourceService;
+            return resourceService.GetCollectables(roomInfo.roomData.id).Where(collectable => {
+                return ((int)collectable.roomLevel <= (int)roomInfo.roomLevel);
+            }).Select(collectable => new InventoryItem(collectable, 1)).ToList();
+        }
+
+        private void ApplySessionResults(SearchSession session ) {
+            if(session.searchStatus == SearchStatus.success ) {
+                List<DropItem> dropItems = new List<DropItem> {
+                    new DropItem(DropType.silver, session.roomData.silverReward),
+                    new DropItem(DropType.exp, session.roomData.expReward)
+                };
+                foreach(InventoryItem item in session.roomDropList ) {
+                    dropItems.Add(new DropItem(DropType.item, 1, item.data));
+                }
+
+                engine.Cast<RavenhillEngine>().DropItems(dropItems, null, () => {
+                    return (gameModeName == GameModeName.map || gameModeName == GameModeName.hallway) &&
+                        (!viewService.hasModals) && (viewService.ExistView(RavenhillViewType.hud));
+                });
+
+                roomManager.AddProgress(session.roomId);
+                roomManager.RollSearchMode(session.roomId);
+
+            }
         }
 
 
@@ -127,58 +161,5 @@ namespace Casual.Ravenhill {
         #endregion
     }
 
-    public class SearchSession : GameElement {
-        public RoomInfo roomInfo { get; private set; }
-        public SearchStatus searchStatus { get; private set; }
-        public int searchTime { get; private set; }
-        public bool isStarted { get; private set; }
-        public List<InventoryItem> roomDropList { get; } = new List<InventoryItem>();
 
-        public SearchSession() {
-        }
-
-        private void SetRoomInfo(RoomInfo roomInfo) {
-            this.roomInfo = roomInfo;
-        }
-
-        private void SetSearchStatus(SearchStatus status ) {
-            searchStatus = status;
-        }
-
-        private void SetSearchTime(int time ) {
-            searchTime = time;
-        }
-
-        public void StartSession(RoomInfo roomInfo) {
-            if(!isStarted) {
-                SetRoomInfo(roomInfo);
-                roomDropList.Clear();
-                isStarted = true;
-                engine.GetService<IEventService>()?.SendEvent(new SearchSessionStartedEventArgs(this));
-            }
-        }
-
-        public void EndSession(SearchStatus status, int time, List<InventoryItem> drops) {
-            if(isStarted) {
-                SetSearchStatus(status);
-                SetSearchTime(time);
-                roomDropList.Clear();
-                roomDropList.AddRange(drops);
-                isStarted = false;
-                engine.GetService<IEventService>()?.SendEvent(new SearchSessionEndedEventArgs(this));
-            }
-        }
-
-        
-
-        public string roomId {
-            get => roomInfo?.id ?? string.Empty;
-        }
-
-        public RoomData roomData {
-            get {
-                return roomInfo?.roomData ?? null;
-            }
-        }
-    }
 }

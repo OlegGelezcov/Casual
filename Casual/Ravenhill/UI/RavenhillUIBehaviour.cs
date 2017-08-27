@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Casual.Ravenhill.UI {
-    public abstract class RavenhillUIBehaviour : RavenhillBaseListenerBehaviour {
+    public abstract class RavenhillUIBehaviour : RavenhillGameBehaviour {
 
 
     }

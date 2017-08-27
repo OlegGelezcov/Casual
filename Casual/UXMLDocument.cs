@@ -107,14 +107,16 @@ namespace Casual {
             return defaultValue;
         }
 
-        public float GetFloat(string name) {
+        public float GetFloat(string name, float defaultValue = 0.0f) {
             string strVal = GetString(name);
             float val;
             if (float.TryParse(strVal, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out val)) {
                 return val;
             }
-            return 0.0f;
+            return defaultValue;
         }
+
+        
 
         public T GetEnum<T>(string name) {
             return GetEnum<T>(name, default(T));

@@ -8,6 +8,7 @@ namespace Casual.Ravenhill.UI {
 
         private UpdateTimer healthUpdateTimer { get; } = new UpdateTimer();
 
+#pragma warning disable 0649
         [SerializeField]
         private Image m_AvatarIconImage;
 
@@ -138,10 +139,10 @@ namespace Casual.Ravenhill.UI {
         private Button m_AchievmentButton;
 
         private Button achievmentButton => m_AchievmentButton;
+#pragma warning restore 0649
 
 
 
-        public override string listenerName => "hud";
 
         public override RavenhillViewType viewType => RavenhillViewType.hud;
 
@@ -150,6 +151,7 @@ namespace Casual.Ravenhill.UI {
         public override int siblingIndex => -10;
 
         public override void Setup(object data = null) {
+            Debug.Log("show HUD");
             base.Setup(data);
             healthUpdateTimer.Setup(1, UpdateHealthTimer);
             UpdatePlayerAvatar();
@@ -182,6 +184,7 @@ namespace Casual.Ravenhill.UI {
 
             storeButton.SetListener(() => {
                 Debug.Log("show store");
+                viewService.ShowView(RavenhillViewType.store, InventoryTab.Foods);
             });
 
             collectionsButton.SetListener(() => {
@@ -190,6 +193,7 @@ namespace Casual.Ravenhill.UI {
 
             inventoryButton.SetListener(() => {
                 Debug.Log("show inventory");
+                viewService.ShowView(RavenhillViewType.inventory, InventoryTab.Foods);
             });
 
             socialButton.SetListener(() => {
@@ -225,30 +229,68 @@ namespace Casual.Ravenhill.UI {
 
         public override void OnEnable() {
             base.OnEnable();
-            AddHandler(GameEventName.player_avatar_changed, (args) => {
-                UpdatePlayerAvatar();
-            });
-            AddHandler(GameEventName.player_exp_changed, (args) => {
-                UpdateExp();
-            });
-            AddHandler(GameEventName.player_level_changed, (args) => {
-                UpdateLevel();
-            });
-            AddHandler(GameEventName.player_name_changed, (args) => {
-                UpdateName();
-            });
-            AddHandler(GameEventName.player_health_changed, (args) => {
-                UpdateHealthText();
-            });
-            AddHandler(GameEventName.player_max_health_changed, (args) => {
-                UpdateHealthText();
-            });
-            AddHandler(GameEventName.player_gold_changed, (args) => {
-                UpdateGold();
-            });
-            AddHandler(GameEventName.player_silver_changed, (args) => {
-                UpdateSilver();
-            });
+
+            RavenhillEvents.PlayerAvatarChanged += OnAvatarChanged;
+            RavenhillEvents.PlayerExpChanged += OnPlayerExpChanged;
+            RavenhillEvents.PlayerLevelChanged += OnPlayerLevelChanged;
+            RavenhillEvents.PlayerNameChanged += OnPlayerNameChanged;
+            RavenhillEvents.PlayerHealthChanged += OnPlayerHealthChanged;
+            RavenhillEvents.PlayerMaxHealthChanged += OnPlayerMaxHealthChanged;
+            RavenhillEvents.PlayerGoldChanged += OnPlayerGoldChanged;
+            RavenhillEvents.PlayerSilverChanged += OnPlayerSilverChanged;
+            RavenhillEvents.SaveableLoaded += OnSaveableLoaded;
+        }
+
+        public override void OnDisable() {
+            base.OnDisable();
+
+            RavenhillEvents.PlayerAvatarChanged -= OnAvatarChanged;
+            RavenhillEvents.PlayerExpChanged -= OnPlayerExpChanged;
+            RavenhillEvents.PlayerLevelChanged -= OnPlayerLevelChanged;
+            RavenhillEvents.PlayerNameChanged -= OnPlayerNameChanged;
+            RavenhillEvents.PlayerHealthChanged -= OnPlayerHealthChanged;
+            RavenhillEvents.PlayerMaxHealthChanged -= OnPlayerMaxHealthChanged;
+            RavenhillEvents.PlayerGoldChanged -= OnPlayerGoldChanged;
+            RavenhillEvents.PlayerSilverChanged -= OnPlayerSilverChanged;
+            RavenhillEvents.SaveableLoaded -= OnSaveableLoaded;
+        }
+
+        private void OnSaveableLoaded(ISaveable saveable ) {
+            if(saveable.saveId == "player") {
+                Setup();
+            }
+        }
+
+        private void OnPlayerSilverChanged(int oldSilver, int newSilver ) {
+            UpdateSilver();
+        }
+
+        private void OnPlayerGoldChanged(int oldGold, int newGold ) {
+            UpdateGold();
+        }
+
+        private void OnPlayerMaxHealthChanged(int oldMaxHealth, int newMaxHealth ) {
+            UpdateHealthText();
+        }
+
+        private void OnPlayerHealthChanged(float oldHealth, float newHealth ) {
+            UpdateHealthText();
+        }
+
+        private void OnPlayerNameChanged(string oldName, string newName ) {
+            UpdateName();
+        }
+
+        private void OnPlayerLevelChanged(int oldLevel, int newLevel ) {
+            UpdateLevel();
+        }
+
+        private void OnPlayerExpChanged(int oldExp, int newExp ) {
+            UpdateExp();
+        }
+
+        private void OnAvatarChanged(string oldAvatar, string newAvatar ) {
+            UpdatePlayerAvatar();
         }
 
         public override void Update() {
@@ -282,7 +324,7 @@ namespace Casual.Ravenhill.UI {
 
         private void UpdateHealthText() {
             healthText.postfix = "/" + playerService.maxHealth.ToString();
-            healthText.SetValue(playerService.health);
+            healthText.SetValue(Mathf.FloorToInt(playerService.health));
         }
 
         private void UpdateHealthTimer() {

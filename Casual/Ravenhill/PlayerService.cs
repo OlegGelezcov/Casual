@@ -2,7 +2,8 @@
 using UnityEngine;
 
 namespace Casual.Ravenhill {
-    public class PlayerService : RavenhillBaseListenerBehaviour, IPlayerService, ISaveable {
+
+    public class PlayerService : RavenhillGameBehaviour, IPlayerService, ISaveable {
 
         private const int kBaseMaxHealth = 100;
         private const int kHealthRestoreInterval = 180;
@@ -25,9 +26,49 @@ namespace Casual.Ravenhill {
 
         public int maxHealth { get; private set; } = kBaseMaxHealth;
 
-        public int health { get; private set; } = kBaseMaxHealth;
+        public float health { get; private set; } = kBaseMaxHealth;
 
         public float healthTimer { get; set; } = kHealthRestoreInterval;
+
+        private Inventory inventory { get; } = new Inventory();
+        private Wishlist wishlist { get; } = new Wishlist();
+
+        #region Wishlist
+        public bool AddToWishlist(CollectableData data) {
+            return wishlist.Add(data);
+        }
+
+        public bool RemoveFromWishlist(CollectableData data ) {
+            return wishlist.Remove(data);
+        }
+
+        public bool IsWishlistContains(CollectableData data) {
+            return wishlist.IsContains(data);
+        }
+
+        public bool IsWishlistFull {
+            get {
+                return wishlist.IsFull;
+            }
+        }
+        #endregion
+
+        public int GetItemCount(InventoryItemData data) {
+            return inventory.ItemCount(data.type, data.id);
+        }
+
+        public void AddItem(InventoryItem item) {
+            inventory.AddItem(item);
+        }
+
+        public bool RemoveItem(InventoryItemType type, string id, int count) {
+            return inventory.RemoveItem(type, id, count);
+        }
+
+        public void UseItem(InventoryItemData data ) {
+            Debug.Log($"Use item: {data.type}");
+        }
+
 
         public override void Start() {
             base.Start();
@@ -47,25 +88,25 @@ namespace Casual.Ravenhill {
             int oldCount = maxHealth;
             maxHealth += count;
             if(oldCount != maxHealth ) {
-                eventService.SendEvent(new PlayerMaxHealthChangedEventArgs(oldCount, maxHealth));
+                RavenhillEvents.OnPlayerMaxHealthChanged(oldCount, maxHealth);
             }
         }
 
-        public void AddHealth(int count ) {
-            int oldCount = health;
+        public void AddHealth(float count ) {
+            float oldCount = health;
             health += Mathf.Abs(count);
             health = Mathf.Clamp(health, 0, maxHealth);
-            if(oldCount != health) {
-                eventService.SendEvent(new PlayerHealthChangedEventArgs(oldCount, health));
+            if(!Mathf.Approximately(oldCount, health)) {
+                RavenhillEvents.OnPlayerHealthChanged(oldCount, health);
             }
         }
 
-        public void RemoveHealth(int count) {
-            int oldCount = health;
+        public void RemoveHealth(float count) {
+            float oldCount = health;
             health -= Mathf.Abs(count);
             health = Mathf.Clamp(health, 0, maxHealth);
-            if(oldCount != health ) {
-                eventService.SendEvent(new PlayerHealthChangedEventArgs(oldCount, health));
+            if(!Mathf.Approximately(oldCount, health)) {
+                RavenhillEvents.OnPlayerHealthChanged(oldCount, health);
             }
         }
 
@@ -82,11 +123,36 @@ namespace Casual.Ravenhill {
             }
         }
 
+        public void RemoveCoins(PriceData coins ) {
+            switch(coins.type ) {
+                case MoneyType.gold: {
+                        RemoveGold(coins.price);
+                    }
+                    break;
+                case MoneyType.silver: {
+                        RemoveSilver(coins.price);
+                    }
+                    break;
+            }
+        }
+
+        public bool HasCoins(PriceData coins ) {
+            switch(coins.type) {
+                case MoneyType.gold: {
+                        return gold >= coins.price;
+                    }
+                case MoneyType.silver: {
+                        return silver >= coins.price;
+                    }
+            }
+            return false;
+        }
+
         public void AddSilver(int count ) {
             int oldCount = silver;
             silver += count;
             if(oldCount != silver ) {
-                eventService.SendEvent(new PlayerSilverChangedEventArgs(oldCount, silver));
+                RavenhillEvents.OnPlayerSilverChanged(oldCount, silver);
             }
         }
 
@@ -95,7 +161,17 @@ namespace Casual.Ravenhill {
             int oldCount = silver;
             silver = count;
             if(oldCount != silver ) {
-                eventService.SendEvent(new PlayerSilverChangedEventArgs(oldCount, silver));
+                RavenhillEvents.OnPlayerSilverChanged(oldCount, silver);
+            }
+        }
+
+        public void RemoveSilver(int count) {
+            if(silver >= count ) {
+                int oldSilver = silver;
+                silver -= count;
+                if(oldSilver != silver ) {
+                    RavenhillEvents.OnPlayerSilverChanged(oldSilver, silver);
+                }
             }
         }
 
@@ -103,7 +179,7 @@ namespace Casual.Ravenhill {
             int oldCount = gold;
             gold += count;
             if(oldCount != gold ) {
-                eventService.SendEvent(new PlayerGoldChangedEventArgs(oldCount, gold));
+                RavenhillEvents.OnPlayerGoldChanged(oldCount, gold);
             }
         }
 
@@ -111,7 +187,17 @@ namespace Casual.Ravenhill {
             int oldCount = gold;
             gold = count;
             if(oldCount != gold ) {
-                eventService.SendEvent(new PlayerGoldChangedEventArgs(oldCount, gold));
+                RavenhillEvents.OnPlayerGoldChanged(oldCount, gold);
+            }
+        }
+
+        public void RemoveGold(int count ) {
+            if(gold >= count ) {
+                int oldCount = gold;
+                gold -= count;
+                if (oldCount != gold) {
+                    RavenhillEvents.OnPlayerGoldChanged(oldCount, gold);
+                }
             }
         }
 
@@ -121,9 +207,10 @@ namespace Casual.Ravenhill {
             exp += count;
             int newLevel = level;
             if(oldExp != exp ) {
-                eventService.SendEvent(new PlayerExpChangedEventArgs(oldExp, exp));
+                RavenhillEvents.OnPlayerExpChanged(oldExp, exp);
+
                 if(oldExp != newLevel ) {
-                    eventService.SendEvent(new PlayerLevelChangedEventArgs(prevLevel, newLevel));
+                    RavenhillEvents.OnPlayerLevelChanged(prevLevel, newLevel);
                 }
             }
         }
@@ -134,9 +221,10 @@ namespace Casual.Ravenhill {
             exp = count;
             int newLevel = level;
             if (oldExp != exp) {
-                eventService.SendEvent(new PlayerExpChangedEventArgs(oldExp, exp));
+                RavenhillEvents.OnPlayerExpChanged(oldExp, exp);
+
                 if (oldExp != newLevel) {
-                    eventService.SendEvent(new PlayerLevelChangedEventArgs(prevLevel, newLevel));
+                    RavenhillEvents.OnPlayerLevelChanged(prevLevel, newLevel);
                 }
             }
         }
@@ -145,7 +233,7 @@ namespace Casual.Ravenhill {
             string oldAvatar = avatarId;
             avatarId = avatar.id;
             if(oldAvatar != avatarId ) {
-                eventService.SendEvent(new PlayerAvatarChangedEventArgs(oldAvatar, avatarId));
+                RavenhillEvents.OnPlayerAvatarChanged(oldAvatar, avatarId);
             }
         }
 
@@ -153,8 +241,20 @@ namespace Casual.Ravenhill {
             string oldName = playerName;
             playerName = newName;
             if(oldName != playerName ) {
-                eventService.SendEvent(new PlayerNameChangedEventArgs(oldName, playerName));
+                RavenhillEvents.OnPlayerNameChanged(oldName, playerName);
             }
+        }
+
+        public void AddToInventory(InventoryItem item) {
+            inventory.AddItem(item);
+        }
+
+        public bool RemoveFromInventory(InventoryItemType type, string id, int count ) {
+            return inventory.RemoveItem(type, id, count);
+        }
+
+        public int ItemCount(InventoryItemType type, string id) {
+            return inventory.ItemCount(type, id);
         }
 
         public void Setup(object data) {
@@ -169,6 +269,14 @@ namespace Casual.Ravenhill {
             playerElement.AddAttribute("avatar", avatarId);
             playerElement.AddAttribute("silver", silver);
             playerElement.AddAttribute("gold", gold);
+            playerElement.AddAttribute("health", health);
+            playerElement.AddAttribute("maxhealth", maxHealth);
+            playerElement.AddAttribute("time", Utility.unixTime);
+
+            playerElement.Add(inventory.GetSave());
+            playerElement.Add(wishlist.GetSave());
+            
+            Debug.Log($"SAVE PLAYER: {playerElement.ToString()}".Colored(ColorType.yellow));
             return playerElement.ToString();
         }
 
@@ -176,6 +284,7 @@ namespace Casual.Ravenhill {
             if (string.IsNullOrEmpty(saveStr)) {
                 InitSave();
             } else {
+                Debug.Log($"LOAD PLAYER {saveStr}");
                 UXMLDocument document = UXMLDocument.FromXml(saveStr);
                 UXMLElement playerElement = document.Element(saveId);
                 exp = playerElement.GetInt("exp", 0);
@@ -183,6 +292,37 @@ namespace Casual.Ravenhill {
                 avatarId = playerElement.GetString("avatar", "Avatar1");
                 silver = playerElement.GetInt("silver", 0);
                 gold = playerElement.GetInt("gold", 0);
+                health = playerElement.GetFloat("health", kBaseMaxHealth);
+                maxHealth = playerElement.GetInt("maxhealth", kBaseMaxHealth);
+                int time = playerElement.GetInt("time", 0);
+                if(time > 0 ) {
+                    int interval = Utility.unixTime - time;
+                    if(interval < 0 ) {
+                        interval = 0;
+                    }
+                    float restoreSpeed = 1.0f / (float)kHealthRestoreInterval;
+                    float restoreCount = restoreSpeed * time;
+                    health += restoreCount;
+                    health = Mathf.Clamp(health, 0, maxHealth);
+                }
+
+
+                var inventoryElement = playerElement.Element("inventory");
+                if(inventoryElement != null ) {
+                    inventory.Load(inventoryElement);
+                } else {
+                    inventory.InitSave();
+                }
+
+                var wishlistElement = playerElement.Element("wishlist");
+                if(wishlistElement != null ) {
+                    wishlist.Load(wishlistElement); 
+                } else {
+                    wishlist.InitSave();
+                }
+
+                Debug.Log($"Player Loaded: exp-{exp}, name-{playerName}, avatar-{avatarId}, silver-{silver}, gold-{gold}");
+
                 isLoaded = true;
             }
             return true;
@@ -194,6 +334,7 @@ namespace Casual.Ravenhill {
             avatarId = "Avatar1";
             silver = 0;
             gold = 0;
+            inventory.InitSave();
             isLoaded = true;
         }
 
@@ -209,7 +350,5 @@ namespace Casual.Ravenhill {
 
         public bool isLoaded { get; private set; } = false; 
         #endregion
-
-        public override string listenerName => "player";
     }
 }

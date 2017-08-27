@@ -10,8 +10,10 @@ namespace Casual.UI {
     using UnityEngine;
 
     public abstract class VectorBaseAnim : MonoBehaviour {
+#pragma warning disable 0649
         [SerializeField]
         private MCEaseType m_EaseType;
+#pragma warning restore 0649
 
         protected bool m_Started = false;
         private EasingFunction m_CachedFunction;
@@ -63,11 +65,12 @@ namespace Casual.UI {
                 data.CompleteTimedActions(normTimer);
 
                 if (m_Timer >= m_Data.duration) {
+                    StopAnim();
+                    OnAnimationEnd();
                     if (m_Data.endAction != null) {
                         m_Data.endAction();
                     }
-                    StopAnim();
-                    OnAnimationEnd();
+
                 }
             }
         }
@@ -148,11 +151,12 @@ namespace Casual.UI {
                 data.CompleteTimedActions(normTimer);
 
                 if (m_Timer >= m_Data.duration) {
+                    StopAnim();
+                    OnAnimationEnd();
                     if (m_Data.endAction != null) {
                         m_Data.endAction();
                     }
-                    StopAnim();
-                    OnAnimationEnd();
+
                 }
             }
         }
@@ -228,11 +232,11 @@ namespace Casual.UI {
                 float normTimer = Mathf.Clamp01(m_Timer / m_Data.duration);
                 data.CompleteTimedActions(normTimer);
                 if (m_Timer >= m_Data.duration) {
+                    StopAnim();
+                    OnAnimationEnd();
                     if (m_Data.endAction != null) {
                         m_Data.endAction();
                     }
-                    StopAnim();
-                    OnAnimationEnd();
                 }
             }
         }

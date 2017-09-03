@@ -168,6 +168,17 @@ namespace Casual {
         public static T RandomElement<T>(this List<T> list) {
             return list[UnityEngine.Random.Range(0, list.Count - 1)];
         }
+
+        public static bool IsValid(this string str) {
+            return !string.IsNullOrEmpty(str);
+        }
+
+        public static string GetPointerObjectName(this PointerEventData eventData ) {
+            if(eventData.pointerCurrentRaycast.gameObject != null ) {
+                return eventData.pointerCurrentRaycast.gameObject.name;
+            }
+            return string.Empty;
+        }
     }
 
     public enum ColorType {

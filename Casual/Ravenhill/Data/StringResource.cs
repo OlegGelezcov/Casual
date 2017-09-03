@@ -25,6 +25,10 @@ namespace Casual.Ravenhill.Data {
 
         public string GetString(string key) {
 
+            if(!key.IsValid()) {
+                return string.Empty;
+            }
+
             uint hash = JenkinsHash(key);
             if(stringCache.ContainsKey(hash)) {
                 return stringCache[hash];

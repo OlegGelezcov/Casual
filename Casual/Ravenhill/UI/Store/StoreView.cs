@@ -94,11 +94,19 @@ namespace Casual.Ravenhill.UI {
             inventoryButton.SetListener(() => {
                 engine.StartCoroutine(CorOpenInventory(currentTab));
             });
+
+            bankButton.SetListener(() => engine.StartCoroutine(CorOpenBank()));
+        }
+
+        private System.Collections.IEnumerator CorOpenBank() {
+            Close();
+            yield return new WaitForSeconds(0.3f);
+            viewService.ShowView(RavenhillViewType.bank);
         }
 
         private System.Collections.IEnumerator CorOpenInventory(InventoryTab tab) {
             Close();
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.3f);
             viewService.ShowView(RavenhillViewType.inventory, tab);
         }
     }

@@ -102,6 +102,25 @@ namespace Casual.Ravenhill {
 
         }
 
+        public override void ShowViewWithDelay(RavenhillViewType viewType, float delay, object data = null) {
+            Debug.Log($"SHow view {viewType} with delay {delay}");
+            engine.StartCoroutine(CorShowViewWithDelay(viewType, delay, data));
+        }
+
+        private System.Collections.IEnumerator CorShowViewWithDelay(RavenhillViewType type, float delay, object data) {
+            yield return new WaitForSeconds(delay);
+            ShowView(type, data);
+        }
+
+        public override void ShowViewWithCondition(RavenhillViewType viewType, Func<bool> predicate, object data = null) {
+            engine.StartCoroutine(CorShowViewWithCondition(viewType, predicate, data));
+        }
+
+        private System.Collections.IEnumerator CorShowViewWithCondition(RavenhillViewType viewType, Func<bool> predicate, object data = null) {
+            yield return new WaitUntil(predicate);
+            ShowView(viewType, data);
+        }
+
         public override  GameObject ShowView(RavenhillViewType type, object data = null ) {
             GameObject resultObject = null;
 
@@ -144,6 +163,14 @@ namespace Casual.Ravenhill {
             }
         }
 
+        public override void RemoveView(RavenhillViewType viewType, float delay) {
+            engine.StartCoroutine(CorRemoveView(viewType, delay));
+        }
+
+        private System.Collections.IEnumerator CorRemoveView(RavenhillViewType viewType, float delay) {
+            yield return new WaitForSeconds(delay);
+            RemoveView(viewType);
+        }
 
 
         public override void RemoveAll() {

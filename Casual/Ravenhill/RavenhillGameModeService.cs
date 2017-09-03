@@ -10,10 +10,38 @@ namespace Casual.Ravenhill {
         public SearchSession searchSession { get; private set; } = new SearchSession();
         public RoomMode roomMode { get; private set; } = RoomMode.normal;
         public RoomManager roomManager { get; } = new RoomManager();
+        public int searchCounter { get; private set; } = 0;
+        public string lastSearchRoomId { get; set; } = string.Empty;
 
         public override void Start() {
             base.Start();
             engine.GetService<ISaveService>().Register(this);
+        }
+
+        public override void OnEnable() {
+            base.OnEnable();
+            RavenhillEvents.SearchSessionEnded += OnSearchSessionEnded;
+        }
+
+        public override void OnDisable() {
+            base.OnDisable();
+            RavenhillEvents.SearchSessionEnded -= OnSearchSessionEnded;
+        }
+
+        private void OnSearchSessionEnded(SearchSession session ) {
+            if(session.isSearchSuccessed) {
+                searchCounter++;
+                lastSearchRoomId = session.roomId;
+
+                RavenhillEvents.OnSearchCounterChanged(searchCounter);
+            }
+        }
+
+        public void ResetSearchCounter() {
+            if(searchCounter > 0 ) {
+                searchCounter = 0;
+                RavenhillEvents.OnSearchCounterChanged(searchCounter);
+            }
         }
 
 
@@ -34,11 +62,47 @@ namespace Casual.Ravenhill {
             List<InventoryItem> drops = null;
             if(status == SearchStatus.success) {
                 drops = GenerateRoomDrop(searchSession.roomData, GetRoomInfo(searchSession.roomData.id).roomLevel);
+
+                var questItems = TryGenerateQuestItems();
+                if(questItems.Count > 0 ) {
+                    drops.AddRange(questItems);
+                }
+
             } else {
                 drops = new List<InventoryItem>();
             }
 
             searchSession.EndSession(status, time, drops);
+        }
+
+        private List<InventoryItem> TryGenerateQuestItems() {
+            var questService = engine.GetService<IQuestService>().Cast<QuestService>();
+            var resourceService = engine.GetService<IResourceService>().Cast<RavenhillResourceService>();
+
+            List<InventoryItem> items = new List<InventoryItem>();
+
+            foreach(QuestInfo quest in questService.startedQuestList ) {
+                if(quest.IsValidData) {
+                    if(quest.type == QuestType.find_collection_element ) {
+                        LastSearchRoomCondition roomCondition = quest.GetCompleteCondition<LastSearchRoomCondition>();
+                        HasCollectableCondition collectableCondtion = quest.GetCompleteCondition<HasCollectableCondition>();
+                        if(collectableCondtion != null ) {
+                            var collectableItem = resourceService.GetCollectable(collectableCondtion.id);
+                            if(collectableItem != null ) {
+                                if(roomCondition != null ) {
+                                    if(searchSession.roomId == roomCondition.id ) {
+                                        items.Add(new InventoryItem(collectableItem, 1));
+                                    }
+                                } else {
+                                    items.Add(new InventoryItem(collectableItem, 1));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return items;
+
         }
 
         public void ExitSessionRoom() {
@@ -138,6 +202,31 @@ namespace Casual.Ravenhill {
             return collectablesReady && chargersReady;
         }
 
+        public bool IsStoryCollectionReadyToCharge(StoryCollectionData collection ) {
+            bool hasCollectables = true;
+
+            RavenhillResourceService resourceService = engine.GetService<IResourceService>().Cast<RavenhillResourceService>();
+            PlayerService playerService = engine.GetService<IPlayerService>().Cast<PlayerService>();
+
+            foreach (string collectableId in collection.collectables ) {
+                StoryCollectableData collectableData = resourceService.GetStoryCollectable(collectableId);
+                int playerCount = playerService.GetItemCount(collectableData);
+                if(playerCount <= 0 ) {
+                    hasCollectables = false;
+                    break;
+                }
+            }
+
+            bool hasCharger = true;
+            StoryChargerData chargerData = resourceService.GetStoryCharger(collection.chargerId);
+            int playerChargerCount = playerService.GetItemCount(chargerData);
+            if(playerChargerCount <= 0 ) {
+                hasCharger = false;
+            }
+
+            return hasCollectables && hasCharger;
+        }
+
         public void ChargeCollection(CollectionData collectionData) {
             PlayerService playerService = engine.GetService<IPlayerService>().Cast<PlayerService>();
             foreach (string collectableId in collectionData.collectableIds) {
@@ -152,6 +241,8 @@ namespace Casual.Ravenhill {
             engine.Cast<RavenhillEngine>().DropItems(collectionData.rewards, null, () => !viewService.hasModals);
         }
 
+       
+
 
         #region ISaveable
         public string saveId => "gamemode";
@@ -162,6 +253,9 @@ namespace Casual.Ravenhill {
             UXMLWriteElement writeElement = new UXMLWriteElement(saveId);
             writeElement.AddAttribute("room_mode", roomMode.ToString());
             writeElement.Add(roomManager.GetSave());
+            writeElement.AddAttribute("search_counter", searchCounter);
+            writeElement.AddAttribute("last_search_room", lastSearchRoomId);
+
             return writeElement.ToString();
         }
 
@@ -182,6 +276,8 @@ namespace Casual.Ravenhill {
                     roomManager.InitSave();
                 }
 
+                searchCounter = gameModeElement.GetInt("search_counter", 0);
+                lastSearchRoomId = gameModeElement.GetString("last_search_room", string.Empty);
                 isLoaded = true;
             }
             return true;
@@ -190,6 +286,8 @@ namespace Casual.Ravenhill {
         public void InitSave() {
             roomMode = RoomMode.normal;
             roomManager.InitSave();
+            searchCounter = 0;
+            lastSearchRoomId = string.Empty;
             isLoaded = true;
         }
 

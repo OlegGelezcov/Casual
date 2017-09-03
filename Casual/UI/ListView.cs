@@ -164,4 +164,10 @@ namespace Casual.UI {
             base.Setup(data);
         }
     }
+
+    public class QuestListView : ListView<QuestData> {
+        public override void Setup(ListViewData data) {
+            base.Setup(data);
+        }
+    }
 }

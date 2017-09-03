@@ -8,6 +8,9 @@
         StoryCharger = 5,
         Ingredient = 6,
         Collection = 7,
-        Collectable = 8
+        Collectable = 8,
+        StoryCollection = 9,
+        StoryCollectable = 10
+
     }
 }

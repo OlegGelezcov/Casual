@@ -53,6 +53,14 @@ namespace Casual.Ravenhill {
         private Dictionary<string, StoryChargerData> storyChargers { get; } = new Dictionary<string, StoryChargerData>();
         private Dictionary<string, IngredientData> ingredients { get; } = new Dictionary<string, IngredientData>();
         private Dictionary<string, CollectableData> collectables { get; } = new Dictionary<string, CollectableData>();
+        private Dictionary<string, BankProductData> bankProducts { get; } = new Dictionary<string, BankProductData>();
+        private Dictionary<string, StoryCollectionData> storyCollections { get; } = new Dictionary<string, StoryCollectionData>();
+        private Dictionary<string, StoryCollectableData> storyCollectables { get; } = new Dictionary<string, StoryCollectableData>();
+        private Dictionary<string, JournalEntryData> journal { get; } = new Dictionary<string, JournalEntryData>();
+        private Dictionary<string, QuestData> quests { get; } = new Dictionary<string, QuestData>();
+        private Dictionary<string, QuestOwnerData> questOwners { get; } = new Dictionary<string, QuestOwnerData>();
+        private Dictionary<string, StoreItemData> storeItems { get; } = new Dictionary<string, StoreItemData>();
+        private Dictionary<string, VideoData> videos { get; } = new Dictionary<string, VideoData>();
 
         public CachedSprite expSprite;
         public CachedSprite healthSprite;
@@ -114,6 +122,14 @@ namespace Casual.Ravenhill {
             LoadStoryChargers();
             LoadIngredients();
             LoadCollectables();
+            LoadBank();
+            LoadStoryCollectables();
+            LoadStoryCollections();
+            LoadJournal();
+            LoadQuestOwners();
+            LoadQuests();
+            LoadStoreItems();
+            LoadVideos();
 
             LoadCollections();
             LoadMiscSprites();
@@ -145,6 +161,100 @@ namespace Casual.Ravenhill {
         private void PreloadSprites() {
             spriteObjectCache.Load(new Dictionary<string, string> {
                 ["transparent"] = "Sprites/transparent"
+            });
+        }
+
+        private void LoadVideos() {
+            var document = new UXMLDocument(resourcePathDictionary["videos"]);
+            videos.Clear();
+
+            document.Element("videos").Elements("video").ForEach(element => {
+                VideoData videoData = new VideoData();
+                videoData.Load(element);
+                videos[videoData.id] = videoData;
+            });
+        }
+
+        private void LoadStoreItems() {
+            var document = new UXMLDocument(resourcePathDictionary["store_items"]);
+            storeItems.Clear();
+
+            document.Element("store_items").Elements("item").ForEach(element => {
+                StoreItemData data = new StoreItemData();
+                data.Load(element);
+                storeItems[data.id] = data;
+            });
+
+        }
+
+        private void LoadQuestOwners() {
+            var document = new UXMLDocument(resourcePathDictionary["owners"]);
+
+            questOwners.Clear();
+            document.Element("owners").Elements("owner").ForEach(ownerElement => {
+                QuestOwnerData data = new QuestOwnerData();
+                data.Load(ownerElement);
+                questOwners[data.id] = data;
+            });
+        }
+
+        private void LoadQuests() {
+            var document = new UXMLDocument(resourcePathDictionary["quests"]);
+
+            quests.Clear();
+            document.Element("quests").Elements("quest").ForEach(questElement => {
+                QuestData questData = new QuestData();
+                questData.Load(questElement);
+                quests[questData.id] = questData;
+            });
+            Debug.Log($"total quests loaded: {quests.Count}".Colored(ColorType.yellow));
+        }
+
+        private void LoadJournal() {
+            var document = new UXMLDocument(resourcePathDictionary["journal"]);
+
+            journal.Clear();
+            document.Element("journal").Elements("entry").ForEach(entryElement => {
+                JournalEntryData data = new JournalEntryData();
+                data.Load(entryElement);
+                journal[data.id] = data;
+            });
+
+        }
+
+        private void LoadStoryCollectables() {
+            UXMLDocument document = new UXMLDocument();
+            document.Load(resourcePathDictionary["story_collectables"]);
+
+            storyCollectables.Clear();
+            document.Element("story_collectables").Elements("collectable").ForEach(ce => {
+                StoryCollectableData data = new StoryCollectableData();
+                data.Load(ce);
+                storyCollectables[data.id] = data;
+            });
+        }
+
+        private void LoadStoryCollections() {
+            UXMLDocument document = new UXMLDocument();
+            document.Load(resourcePathDictionary["story_collections"]);
+
+            storyCollections.Clear();
+            document.Element("story_collections").Elements("collection").ForEach(ce => {
+                StoryCollectionData data = new StoryCollectionData();
+                data.Load(ce);
+                storyCollections[data.id] = data;
+            });
+        }
+
+        private void LoadBank() {
+            UXMLDocument document = new UXMLDocument();
+            document.Load(resourcePathDictionary["bank"]);
+
+            bankProducts.Clear();
+            document.Element("bank").Elements("product").ForEach(productElement => {
+                BankProductData data = new BankProductData();
+                data.Load(productElement);
+                bankProducts[data.id] = data;
             });
         }
 
@@ -352,6 +462,12 @@ namespace Casual.Ravenhill {
             return null;
         }
 
+        public QuestOwnerData GetQuestOwner(string id) {
+            return questOwners.GetOrDefault(id);
+        }
+
+
+
         public RoomData GetRoomDataBySceneName(string sceneName, RoomMode roomMode) {
             foreach (var kvp in roomDataDictionary) {
                 if (sceneName == kvp.Value.GetScene(roomMode)) {
@@ -367,6 +483,22 @@ namespace Casual.Ravenhill {
             } else {
                 return transparent;
             }
+        }
+
+        public Sprite GetSprite(QuestOwnerData questOwner, RoomMode mode) {
+            if(mode == RoomMode.normal) {
+                return GetSprite(questOwner);
+            } else {
+                return GetSprite(questOwner.id + "_scary", questOwner.iconScary);
+            }
+        }
+
+        public Sprite GetSprite(string key, string path ) {
+            var sprite = spriteObjectCache.GetObject(key, path);
+            if(sprite == null ) {
+                sprite = transparent;
+            }
+            return sprite;
         }
 
         public Sprite GetSprite(InventoryItem item) {
@@ -464,6 +596,35 @@ namespace Casual.Ravenhill {
             return ingredients.Values.Where(data => data.IsValidRoom(roomId)).ToList();
         }
 
+        public BankProductData GetBankProduct(string id) {
+            return bankProducts.GetOrDefault(id);
+        }
+
+        public StoryCollectionData GetStoryCollection(string id ) {
+            return storyCollections.GetOrDefault(id);
+        }
+
+        public StoryCollectableData GetStoryCollectable(string id ) {
+            return storyCollectables.GetOrDefault(id);
+        }
+
+        public JournalEntryData GetJournalEntry(string id) {
+            return journal.GetOrDefault(id);
+        }
+
+        public QuestData GetQuest(string id) {
+            return quests.GetOrDefault(id);
+        }
+
+        public StoreItemData GetStoreItem(string id) {
+            return storeItems.GetOrDefault(id);
+        }
+
+        public VideoData GetVideoData(string id) {
+            return videos.GetOrDefault(id);
+        }
+
+
         public List<WeaponData> weaponList => new List<WeaponData>(weapons.Values);
 
         public List<ChargerData> chargerList => new List<ChargerData>(chargers.Values);
@@ -480,6 +641,22 @@ namespace Casual.Ravenhill {
 
         public List<CollectionData> collectionList =>
             new List<CollectionData>(collections.Values).OrderBy(c => c.id).ToList();
+
+        public List<BankProductData> bankProductList => new List<BankProductData>(bankProducts.Values);
+
+        public List<StoryCollectionData> storyCollectionList => new List<StoryCollectionData>(storyCollections.Values);
+
+        public List<StoryCollectableData> storyCollectableList => new List<StoryCollectableData>(storyCollectables.Values);
+
+        public List<JournalEntryData> journalList => new List<JournalEntryData>(journal.Values);
+
+        public List<QuestData> questList => new List<QuestData>(quests.Values);
+
+        public List<QuestOwnerData> questOwnerList => new List<QuestOwnerData>(questOwners.Values);
+
+        public List<StoreItemData> storeItemList => new List<StoreItemData>(storeItems.Values);
+
+        public List<VideoData> videoList => new List<VideoData>(videos.Values);
 
         public List<InventoryItemData> marketItems {
             get {
@@ -524,6 +701,12 @@ namespace Casual.Ravenhill {
                 case InventoryItemType.Weapon: {
                         return GetWeapon(id);
                     }
+                case InventoryItemType.StoryCollection: {
+                        return GetStoryCollection(id);
+                    }
+                case InventoryItemType.StoryCollectable: {
+                        return GetStoryCollectable(id);
+                    }
                 default: {
                         throw new System.NotImplementedException($"{type}");
                     }
@@ -532,6 +715,10 @@ namespace Casual.Ravenhill {
 
         public string GetRoomLevelName(RoomLevel roomLevel) {
             return GetString(roomLevelNameTable[roomLevel]);
+        }
+
+        public QuestData GetQuest(JournalEntryData entryData ) {
+            return quests.Values.Where(quest => quest.journalId == entryData.id).FirstOrDefault();
         }
 
         public Sprite GetPriceSprite(PriceData price) {

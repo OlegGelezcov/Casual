@@ -172,14 +172,17 @@ namespace Casual.Ravenhill.UI {
 
             addGoldButton.SetListener(() => {
                 Debug.Log("add gold ");
+                viewService.ShowView(RavenhillViewType.bank);
             });
 
             addSilverButton.SetListener(() => {
                 Debug.Log("add silver");
+                viewService.ShowView(RavenhillViewType.bank);
             });
 
             bankButton.SetListener(() => {
                 Debug.Log("show bank");
+                viewService.ShowView(RavenhillViewType.bank);
             });
 
             storeButton.SetListener(() => {
@@ -212,6 +215,7 @@ namespace Casual.Ravenhill.UI {
 
             dialogButton.SetListener(() => {
                 Debug.Log("show dialogs");
+                viewService.ShowView(RavenhillViewType.famehall);
             });
 
             questButton.SetListener(() => {
@@ -220,6 +224,7 @@ namespace Casual.Ravenhill.UI {
 
             journalButton.SetListener(() => {
                 Debug.Log("show journal");
+                viewService.ShowView(RavenhillViewType.journal);
             });
 
             achievmentButton.SetListener(() => {

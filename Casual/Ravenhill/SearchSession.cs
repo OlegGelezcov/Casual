@@ -60,6 +60,11 @@ namespace Casual.Ravenhill {
         }
 
 
+        public bool isSearchSuccessed {
+            get {
+                return (searchStatus == SearchStatus.success);
+            }
+        }
 
         public string roomId {
             get => roomInfo?.id ?? string.Empty;

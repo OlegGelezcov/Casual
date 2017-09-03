@@ -1,4 +1,5 @@
 ﻿using Casual.Ravenhill.Data;
+using Casual.Ravenhill.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +51,9 @@ namespace Casual.Ravenhill {
             //engine.GetService<IDebugCommandService>().Add("createmapcharacter", new CreateMapCharacterCommand("createmapcharacter"));
             Add("exitroomview", new ExitRoomViewCommand("exitroomview"));
             Add("test", new TestCommand("test"));
+            Add("journal", new JournalCommand("journal"));
+            Add("show", new ShowCommand("show"));
+            Add("clear", new ClearCommand("clear"));
         }
 
 
@@ -188,8 +192,115 @@ namespace Casual.Ravenhill {
                         engine.Cast<RavenhillEngine>().DropItems(dropItems);
                     }
                     return true;
+                    
             }
             return false;
+        }
+    }
+
+    public class JournalCommand : BaseCommand {
+        public JournalCommand(string commandName)
+            : base(commandName) { }
+
+        public override bool Execute(string source) {
+            string actionName = GetToken(source, 1).ToLower();
+
+            switch(actionName) {
+                case "fill": {
+                        foreach(var entryData in resourceService.journalList ) {
+                            engine.GetService<IJournalService>().AddEntry(new JournalEntryInfo(entryData.id));
+                        }
+                        return true;
+                    }
+                case "end": {
+                        foreach(var entryData in resourceService.journalList) {
+                            engine.GetService<IJournalService>().OpenEndText(entryData.id);
+                        }
+                        engine.GetService<IDebugService>().AddMessage("all entries opens end text", ColorType.brown);
+                        return true;
+                    }
+            }
+            return false;
+        }
+    }
+
+    public class ShowCommand : BaseCommand {
+        public ShowCommand(string commandName)
+            : base(commandName) { }
+
+        public override bool Execute(string source) {
+            string viewName = GetToken(source, 1).ToLower();
+            switch(viewName) {
+                case "quest_dialog_view": {
+                        ShowQuestDialogView();
+                    }
+                    break;
+                case "quest_start_view": {
+                        ShowQuestStartView();
+                    }
+                    break;
+                case "quest_end_view": {
+                        ShowQuestEndView();
+                    }
+                    break;
+                case "video": {
+                        ShowVideoView();
+                    }
+                    break;
+            }
+            return true;
+        }
+
+        private void ShowVideoView() {
+            VideoView.Data data = new VideoView.Data {
+                id = resourceService.videoList.RandomElement().id,
+                completeAction = () => {
+                    Debug.Log($"test video");
+                }
+            };
+            viewService.ShowView(RavenhillViewType.video_view, data);
+        }
+
+        private void ShowQuestDialogView() {
+            QuestData quest = resourceService.questList.RandomElement();
+            bool isStart = false;
+            if(UnityEngine.Random.Range(0, 10) % 2 == 0 ) {
+                isStart = true;
+            }
+
+            QuestDialogView.Data initData = new QuestDialogView.Data { quest = quest, isStart = isStart };
+            viewService.ShowView(RavenhillViewType.quest_dialog_view, initData);
+        }
+
+        private void ShowQuestStartView() {
+            QuestData quest = resourceService.questList.RandomElement();
+            viewService.ShowViewWithDelay(RavenhillViewType.quest_start_view, 1.0f, quest);
+        }
+
+        private void ShowQuestEndView( ) {
+            viewService.ShowViewWithDelay(RavenhillViewType.quest_end_view, 0.5f, resourceService.questList.RandomElement());
+        }
+    }
+
+    public class ClearCommand : BaseCommand {
+        public ClearCommand(string commandName)
+            : base(commandName) { }
+
+        public override bool Execute(string source) {
+            string whatClear = GetToken(source, 1);
+            switch(whatClear) {
+                case "journal": {
+                        engine.GetService<IJournalService>().Cast<JournalService>().InitSave();
+                        engine.GetService<IDebugService>().AddMessage("journal cleared....");
+                    }
+                    break;
+                case "quests": {
+                        engine.GetService<IQuestService>().Cast<QuestService>().InitSave();
+                        engine.GetService<IDebugService>().AddMessage("quests cleared....");
+                    }
+                    break;
+            }
+            return true;
         }
     }
 }

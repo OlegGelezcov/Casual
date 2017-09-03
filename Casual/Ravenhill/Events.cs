@@ -47,6 +47,49 @@ namespace Casual.Ravenhill {
         public static event System.Action<CollectableData> AddedToWishlist;
         public static event System.Action<CollectableData> RemovedFromWishlist;
 
+        public static event System.Action<JournalEntryInfo> JournalEntryAdded;
+        public static event System.Action<JournalEntryInfo> JournalEntryRemoved;
+        public static event System.Action<JournalEntryInfo> JournalEntryEndTextOpened;
+        public static event System.Action<JournalEntryInfo> JournalEntryEndTextClosed;
+
+        public static event System.Action<int> SearchCounterChanged;
+
+        public static event System.Action<QuestInfo> QuestCompleted;
+        public static event System.Action<QuestInfo> QuestStarted;
+        public static event System.Action<QuestInfo> QuestRewarded;
+
+        public static void OnQuestRewarded(QuestInfo quest) {
+            QuestRewarded?.Invoke(quest);
+        }
+
+        public static void OnQuestStarted(QuestInfo quest) {
+            QuestStarted?.Invoke(quest);
+        }
+
+        public static void OnQuestCompleted(QuestInfo quest) {
+            QuestCompleted?.Invoke(quest);
+        }
+
+        public static void OnSearchCounterChanged(int counter) {
+            SearchCounterChanged?.Invoke(counter);
+        }
+
+        public static void OnJournalEntryAdded(JournalEntryInfo info) {
+            JournalEntryAdded?.Invoke(info);
+        }
+
+        public static void OnJournalEntryRemoved(JournalEntryInfo info) {
+            JournalEntryRemoved?.Invoke(info);
+        }
+
+        public static void OnJournalEntryEndTextOpened(JournalEntryInfo info ) {
+            JournalEntryEndTextOpened?.Invoke(info);
+        }
+
+        public static void OnJournalEntryEndTextClosed(JournalEntryInfo info) {
+            JournalEntryEndTextClosed?.Invoke(info);
+        }
+
         public static void OnAddedToWishlist(CollectableData data) {
             AddedToWishlist?.Invoke(data);
         }

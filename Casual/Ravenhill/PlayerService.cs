@@ -62,6 +62,8 @@ namespace Casual.Ravenhill {
             return inventory.ItemCount(data.type, data.id);
         }
 
+
+
         public void AddItem(InventoryItem item) {
             inventory.AddItem(item);
         }
@@ -264,6 +266,19 @@ namespace Casual.Ravenhill {
 
         public void Setup(object data) {
 
+        }
+
+        public bool Buy(StoreItemData data ) {
+            if(HasCoins(data.price)) {
+                RemoveCoins(data.price);
+                var itemData = resourceService.GetInventoryItemData(data.itemType, data.itemId);
+                if(itemData != null ) {
+                    AddItem(new InventoryItem(itemData, data.count));
+                    Debug.Log($"After buy StoreItemData items was added {data.count}{itemData.id}");
+                    return true;
+                }
+            }
+            return false;
         }
 
         #region ISaveable

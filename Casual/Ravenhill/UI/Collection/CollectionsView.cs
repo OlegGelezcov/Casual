@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Casual.Ravenhill.UI {
-    public partial class CollectionsView : RavenhillBaseView {
+    public partial class CollectionsView : RavenhillCloseableView {
 
         public override RavenhillViewType viewType => RavenhillViewType.collections;
 
@@ -26,7 +26,7 @@ namespace Casual.Ravenhill.UI {
         }
     }
 
-    public partial class CollectionsView : RavenhillBaseView {
+    public partial class CollectionsView : RavenhillCloseableView {
 
         [SerializeField]
         private CollectionListView listView;

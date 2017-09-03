@@ -36,9 +36,38 @@
             Load(element);
         }
 
+        public DropItem ToDropItem() {
+            switch(type) {
+                case MoneyType.gold: {
+                        return new DropItem(DropType.gold, gold);
+                    }
+                case MoneyType.silver: {
+                        return new DropItem(DropType.silver, silver);
+                    }
+                default:
+                    throw new UnityEngine.UnityException("Invalid price type");
+            }
+        }
+
         public void Load(UXMLElement element) {
             silver = element.GetInt("silver", 0);
             gold = element.GetInt("gold", 0);
+        }
+
+
+        /// <summary>
+        /// Add amount of money to current value
+        /// </summary>
+        /// <param name="count"></param>
+        public PriceData Extend(int count) {
+            switch(type) {
+                case MoneyType.gold:
+                    return new PriceData(silver, gold + count);
+                case MoneyType.silver:
+                    return new PriceData(silver + count, gold);
+                default:
+                    throw new System.InvalidOperationException();
+            }
         }
 
         public int price {

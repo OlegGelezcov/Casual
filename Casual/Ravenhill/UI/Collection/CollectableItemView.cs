@@ -58,13 +58,13 @@ namespace Casual.Ravenhill.UI {
             RavenhillEvents.InventoryChanged -= OnInventoryChanged;
         }
 
-        private void OnWishlistAdded(CollectableData data) {
+        private void OnWishlistAdded(CollectableData wishdata) {
             if(data != null ) {
                 Setup(data);
             }
         }
 
-        private void OnWishlistRemoved(CollectableData data) {
+        private void OnWishlistRemoved(CollectableData wishdata) {
             if(data != null ) {
                 Setup(data);
             }

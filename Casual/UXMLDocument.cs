@@ -19,6 +19,12 @@ namespace Casual {
             return document;
         }
 
+        public UXMLDocument() { }
+
+        public UXMLDocument(string assetPath) {
+            Load(assetPath);
+        }
+
 #if UNITY_IOS
         private XmlDocument m_Document;
 #else

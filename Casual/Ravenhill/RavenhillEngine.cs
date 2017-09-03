@@ -91,6 +91,11 @@ namespace Casual.Ravenhill {
             Register<IPlayerService, PlayerService>(FindObjectOfType<PlayerService>());
             Register<IDebugService, DebugService>(FindObjectOfType<DebugService>());
             Register<INetService, NetService>(FindObjectOfType<NetService>());
+            Register<IOfferService, OfferService>(FindObjectOfType<OfferService>());
+            Register<IPurchaseService, PurchaseService>(FindObjectOfType<PurchaseService>());
+            Register<IJournalService, JournalService>(FindObjectOfType<JournalService>());
+            Register<IQuestService, QuestService>(FindObjectOfType<QuestService>());
+            Register<IVideoService, VideoService>(FindObjectOfType<VideoService>());
         }
 
         protected virtual void SetupServices() {
@@ -102,6 +107,11 @@ namespace Casual.Ravenhill {
             GetService<IPlayerService>().Setup(null);
             GetService<IDebugService>().Setup(null);
             GetService<INetService>().Setup(null);
+            GetService<IOfferService>().Setup(null);
+            GetService<IPurchaseService>().Setup(null);
+            GetService<IJournalService>().Setup(null);
+            GetService<IQuestService>().Setup(null);
+            GetService<IVideoService>().Setup(null);
         }
 
         public void LoadScene(string roomId  ) {   

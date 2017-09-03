@@ -36,6 +36,10 @@ namespace Casual.Ravenhill.Net {
         public void ShareWishlist(List<CollectableData> collectables ) {
             Debug.Log($"Share items: {collectables.Count}");
         }
+
+        public void Ask(InventoryItemData data) {
+            Debug.Log($"ask item {data.id}");
+        }
     }
 
     public interface INetService : IService {

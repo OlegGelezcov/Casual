@@ -12,6 +12,14 @@ namespace Casual.Ravenhill {
         enter_room_view = 3,
         inventory = 4,
         store = 5,
-        collections = 6
+        collections = 6,
+        bank = 7,
+        famehall = 8,
+        journal = 9,
+        quest_dialog_view = 10,
+        quest_start_view = 11,
+        quest_end_view = 12,
+        story_collection_charge_view = 13,
+        video_view = 14
     }
 }

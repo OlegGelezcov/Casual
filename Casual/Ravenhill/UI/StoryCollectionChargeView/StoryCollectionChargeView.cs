@@ -68,7 +68,9 @@ namespace Casual.Ravenhill.UI {
                 if(ravenhillGameModeService.IsStoryCollectionReadyToCharge(storyCollectionData)) {
                     chargeButton.interactable = true;
                     chargeButton.SetListener(() => {
-
+                        engine.GetService<IVideoService>().PlayVideo(storyCollectionData.videoId, () => {
+                            ravenhillGameModeService.ChargeStoryCollection(storyCollectionData);
+                        });
                     });
                 } else {
                     chargeButton.interactable = false;

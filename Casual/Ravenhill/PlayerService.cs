@@ -72,6 +72,10 @@ namespace Casual.Ravenhill {
             return inventory.RemoveItem(type, id, count);
         }
 
+        public void RemoveItems(InventoryItemType type) {
+            inventory.RemoveItems(type);
+        }
+
         public void UseItem(InventoryItemData data ) {
             Debug.Log($"Use item: {data.type}");
         }
@@ -253,11 +257,11 @@ namespace Casual.Ravenhill {
         }
 
         public void AddToInventory(InventoryItem item) {
-            inventory.AddItem(item);
+            AddItem(item);
         }
 
         public bool RemoveFromInventory(InventoryItemType type, string id, int count ) {
-            return inventory.RemoveItem(type, id, count);
+            return RemoveItem(type, id, count);
         }
 
         public int ItemCount(InventoryItemType type, string id) {

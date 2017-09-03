@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Casual.Ravenhill {
     public interface IVideoService : IService {
-        void PlayVideo(string id);
+        void PlayVideo(string id, System.Action completeAction);
     }
 }

@@ -200,5 +200,23 @@ namespace Casual.Ravenhill {
                 yield return new WaitForSeconds(delay);
             }
         }
+
+        public void Run(System.Action action, float delay) {
+            StartCoroutine(CorRun(action, delay));
+        }
+
+        public void Run(System.Action action, System.Func<bool> predicate) {
+            StartCoroutine(CorRun(action, predicate));
+        }
+
+        private System.Collections.IEnumerator CorRun(System.Action action, float delay) {
+            yield return new WaitForSeconds(delay);
+            action?.Invoke();
+        }
+
+        private System.Collections.IEnumerator CorRun(System.Action action, System.Func<bool> predicate) {
+            yield return new WaitUntil(predicate);
+            action?.Invoke();
+        }
     }
 }

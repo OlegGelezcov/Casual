@@ -58,6 +58,12 @@ namespace Casual.Ravenhill {
         public static event System.Action<QuestInfo> QuestStarted;
         public static event System.Action<QuestInfo> QuestRewarded;
 
+        public static event System.Action<StoryCollectionData> StoryCollectionCharged;
+
+        public static void OnStoryCollectionCharged(StoryCollectionData storyCollectionData ) {
+            StoryCollectionCharged?.Invoke(storyCollectionData);
+        }
+
         public static void OnQuestRewarded(QuestInfo quest) {
             QuestRewarded?.Invoke(quest);
         }

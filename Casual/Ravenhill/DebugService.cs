@@ -192,9 +192,28 @@ namespace Casual.Ravenhill {
                         engine.Cast<RavenhillEngine>().DropItems(dropItems);
                     }
                     return true;
+                case "storycharge": {
+                        TestStoryCharge();
+                    }
+                    return true;
                     
             }
             return false;
+        }
+
+        private void TestStoryCharge() {
+            PlayerService player = engine.GetService<IPlayerService>().Cast<PlayerService>();
+            player.RemoveItems(InventoryItemType.StoryCollection);
+            player.RemoveItems(InventoryItemType.StoryCollectable);
+            player.RemoveItems(InventoryItemType.StoryCharger);
+
+            foreach(StoryCollectableData data in resourceService.storyCollectableList) {
+                player.AddItem(new InventoryItem(data, 1));
+            }
+            resourceService.storyChargerList.ForEach(c => {
+                player.AddItem(new InventoryItem(c, 1))
+            });
+            engine.GetService<IDebugService>().AddMessage("story test prepared", ColorType.brown);
         }
     }
 

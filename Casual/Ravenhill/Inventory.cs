@@ -46,6 +46,18 @@ namespace Casual.Ravenhill {
             return false;
         }
 
+        public void RemoveItems(InventoryItemType type) {
+            if(items.ContainsKey(type)) {
+                Dictionary<string, InventoryItem> toDelete = new Dictionary<string, InventoryItem>();
+                foreach(var kvp in items[type]) {
+                    toDelete.Add(kvp.Key, kvp.Value);
+                }
+                foreach(var kvp in toDelete) {
+                    RemoveItem(kvp.Value.data.type, kvp.Key, kvp.Value.count);
+                }
+            }
+        }
+
         public int ItemCount(InventoryItemType type, string id ) {
             Dictionary<string, InventoryItem> filtered = null;
             if(items.TryGetValue(type, out filtered)) {

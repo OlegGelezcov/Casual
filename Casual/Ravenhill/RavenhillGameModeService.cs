@@ -241,7 +241,18 @@ namespace Casual.Ravenhill {
             engine.Cast<RavenhillEngine>().DropItems(collectionData.rewards, null, () => !viewService.hasModals);
         }
 
-       
+        public void ChargeStoryCollection(StoryCollectionData collectionData) {
+            PlayerService playerService = engine.GetService<IPlayerService>().Cast<PlayerService>();
+            RavenhillResourceService resourceService = engine.GetService<IResourceService>().Cast<RavenhillResourceService>();
+
+            StoryChargerData chargerData = resourceService.GetStoryCharger(collectionData.chargerId);
+
+            if(playerService.GetItemCount(chargerData) > 0 ) {
+                playerService.RemoveItem(InventoryItemType.StoryCharger, chargerData.id, 1);
+                playerService.AddItem(new InventoryItem(collectionData, 1));
+                RavenhillEvents.OnStoryCollectionCharged(collectionData);
+            }
+        }
 
 
         #region ISaveable

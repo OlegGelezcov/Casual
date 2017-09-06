@@ -81,6 +81,8 @@
     <Compile Include="Ravenhill\Data\ISellable.cs" />
     <Compile Include="Ravenhill\Data\JournalEntryData.cs" />
     <Compile Include="Ravenhill\Data\LevelExpTable.cs" />
+    <Compile Include="Ravenhill\Data\NpcData.cs" />
+    <Compile Include="Ravenhill\Data\NpcType.cs" />
     <Compile Include="Ravenhill\Data\PriceData.cs" />
     <Compile Include="Ravenhill\Data\QuestData.cs" />
     <Compile Include="Ravenhill\Data\QuestOwnerData.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="Ravenhill\Editor\XmlTools.cs" />
     <Compile Include="Ravenhill\Events.cs" />
     <Compile Include="Ravenhill\IJournalService.cs" />
+    <Compile Include="Ravenhill\INpcService.cs" />
     <Compile Include="Ravenhill\Inventory.cs" />
     <Compile Include="Ravenhill\IPlayerService.cs" />
     <Compile Include="Ravenhill\ISearchableObject.cs" />
@@ -115,6 +118,7 @@
     <Compile Include="Ravenhill\Net\NetPlayer.cs" />
     <Compile Include="Ravenhill\Net\NetRoomScore.cs" />
     <Compile Include="Ravenhill\Net\NetService.cs" />
+    <Compile Include="Ravenhill\NpcService.cs" />
     <Compile Include="Ravenhill\Offers\IOfferService.cs" />
     <Compile Include="Ravenhill\Offers\OfferService.cs" />
     <Compile Include="Ravenhill\PlayerService.cs" />

@@ -60,6 +60,17 @@ namespace Casual.Ravenhill {
 
         public static event System.Action<StoryCollectionData> StoryCollectionCharged;
 
+        public static event System.Action<string, NpcInfo> NpcCreated;
+        public static event System.Action<string, NpcData> NpcRemoved;
+
+        public static void OnNpcCreated(string roomId, NpcInfo npc) {
+            NpcCreated?.Invoke(roomId, npc);
+        }
+
+        public static void OnNpcRemoved(string roomId, NpcData npc ) {
+            NpcRemoved?.Invoke(roomId, npc);
+        }
+
         public static void OnStoryCollectionCharged(StoryCollectionData storyCollectionData ) {
             StoryCollectionCharged?.Invoke(storyCollectionData);
         }

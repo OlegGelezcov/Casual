@@ -62,6 +62,7 @@ namespace Casual.Ravenhill {
         private Dictionary<string, StoreItemData> storeItems { get; } = new Dictionary<string, StoreItemData>();
         private Dictionary<string, VideoData> videos { get; } = new Dictionary<string, VideoData>();
         private Dictionary<string, BuffData> buffs { get; } = new Dictionary<string, BuffData>();
+        private Dictionary<string, NpcData> npcs { get; } = new Dictionary<string, NpcData>();
 
         public CachedSprite expSprite;
         public CachedSprite healthSprite;
@@ -132,6 +133,8 @@ namespace Casual.Ravenhill {
             LoadStoreItems();
             LoadVideos();
             LoadBuffs();
+            LoadNpcs();
+
 
             LoadCollections();
             LoadMiscSprites();
@@ -163,6 +166,17 @@ namespace Casual.Ravenhill {
         private void PreloadSprites() {
             spriteObjectCache.Load(new Dictionary<string, string> {
                 ["transparent"] = "Sprites/transparent"
+            });
+        }
+
+        private void LoadNpcs() {
+            UXMLDocument document = new UXMLDocument(resourcePathDictionary["npcs"]);
+            npcs.Clear();
+
+            document.Element("npcs").Elements("npc").ForEach(npcElement => {
+                NpcData npcData = new NpcData();
+                npcData.Load(npcElement);
+                npcs[npcData.id] = npcData;
             });
         }
 
@@ -641,6 +655,10 @@ namespace Casual.Ravenhill {
             return buffs.GetOrDefault(id);
         }
 
+        public NpcData GetNpc(string id ) {
+            return npcs.GetOrDefault(id);
+        }
+
         public List<WeaponData> weaponList => new List<WeaponData>(weapons.Values);
 
         public List<ChargerData> chargerList => new List<ChargerData>(chargers.Values);
@@ -675,6 +693,10 @@ namespace Casual.Ravenhill {
         public List<VideoData> videoList => new List<VideoData>(videos.Values);
 
         public List<BuffData> buffList => new List<BuffData>(buffs.Values);
+
+        public List<NpcData> npcList => new List<NpcData>(npcs.Values);
+
+        public List<RoomData> roomList => new List<RoomData>(roomDataDictionary.Values);
 
         public List<InventoryItemData> marketItems {
             get {

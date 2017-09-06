@@ -179,6 +179,26 @@ namespace Casual {
             }
             return string.Empty;
         }
+
+        public static List<T> Shuffled<T>(this List<T> source) {
+            if(source == null || source.Count == 0 ) {
+                return new List<T>();
+            }
+            if(source.Count == 1 ) {
+                return new List<T>(source);
+            }
+
+            List<T> result = new List<T>(source);
+            int n = result.Count;
+            while(n > 1) {
+                n--;
+                int k = UnityEngine.Random.Range(0, n);
+                T value = result[k];
+                result[k] = result[n];
+                result[n] = value;
+            }
+            return result;
+        }
     }
 
     public enum ColorType {

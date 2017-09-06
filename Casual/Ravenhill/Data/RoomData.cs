@@ -1,4 +1,6 @@
-﻿namespace Casual.Ravenhill.Data {
+﻿using System.Collections.Generic;
+
+namespace Casual.Ravenhill.Data {
     public class RoomData : IconData {
 
         public int level { get; private set; }
@@ -12,6 +14,7 @@
         public string scaryScene { get; private set; }
         public bool isSpecial { get; private set; }
         public int floor { get; private set; }
+        public List<string> linkedRooms { get; } = new List<string>();
 
         public override void Load(UXMLElement element) {
             base.Load(element);
@@ -26,6 +29,8 @@
             scene = element.GetString("scene");
             isSpecial = element.GetBool("special", false);
             floor = element.GetInt("floor", 0);
+            linkedRooms.Clear();
+            linkedRooms.AddRange(element.GetStringArray("linked"));
         }
 
         public string GetScene(RoomMode mode) {

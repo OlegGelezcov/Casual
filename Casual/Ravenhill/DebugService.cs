@@ -54,6 +54,7 @@ namespace Casual.Ravenhill {
             Add("journal", new JournalCommand("journal"));
             Add("show", new ShowCommand("show"));
             Add("clear", new ClearCommand("clear"));
+            Add("add", new AddCommand("add"));
         }
 
 
@@ -180,16 +181,7 @@ namespace Casual.Ravenhill {
             string testType = GetToken(source, 1);
             switch(testType) {
                 case "drop": {
-                        List<DropItem> dropItems = new List<DropItem>();
-                        foreach(ToolData toolData in resourceService.toolList ) {
-                            dropItems.Add(new DropItem(DropType.item, 1, toolData));
-                        }
-                        dropItems.Add(new DropItem(DropType.exp, 10));
-                        dropItems.Add(new DropItem(DropType.gold, 10));
-                        dropItems.Add(new DropItem(DropType.health, 10));
-                        dropItems.Add(new DropItem(DropType.max_health, 10));
-                        dropItems.Add(new DropItem(DropType.silver, 10));
-                        engine.Cast<RavenhillEngine>().DropItems(dropItems);
+                        TestDrop();
                     }
                     return true;
                 case "storycharge": {
@@ -199,6 +191,19 @@ namespace Casual.Ravenhill {
                     
             }
             return false;
+        }
+
+        private void TestDrop() {
+            List<DropItem> dropItems = new List<DropItem>();
+            foreach (ToolData toolData in resourceService.toolList) {
+                dropItems.Add(new DropItem(DropType.item, 1, toolData));
+            }
+            dropItems.Add(new DropItem(DropType.exp, 10));
+            dropItems.Add(new DropItem(DropType.gold, 10));
+            dropItems.Add(new DropItem(DropType.health, 10));
+            dropItems.Add(new DropItem(DropType.max_health, 10));
+            dropItems.Add(new DropItem(DropType.silver, 10));
+            engine.Cast<RavenhillEngine>().DropItems(dropItems);
         }
 
         private void TestStoryCharge() {
@@ -211,7 +216,7 @@ namespace Casual.Ravenhill {
                 player.AddItem(new InventoryItem(data, 1));
             }
             resourceService.storyChargerList.ForEach(c => {
-                player.AddItem(new InventoryItem(c, 1))
+                player.AddItem(new InventoryItem(c, 1));
             });
             engine.GetService<IDebugService>().AddMessage("story test prepared", ColorType.brown);
         }
@@ -316,6 +321,39 @@ namespace Casual.Ravenhill {
                 case "quests": {
                         engine.GetService<IQuestService>().Cast<QuestService>().InitSave();
                         engine.GetService<IDebugService>().AddMessage("quests cleared....");
+                    }
+                    break;
+            }
+            return true;
+        }
+    }
+
+    public class AddCommand : BaseCommand {
+        public AddCommand(string commandName)
+            : base(commandName) {
+
+        }
+
+        public override bool Execute(string source) {
+            var player = engine.GetService<IPlayerService>().Cast<PlayerService>();
+            string type = GetToken(source, 1);
+            switch(type) {
+                case "bonus": {
+                        resourceService.bonusList.ForEach((b) => {
+                            player.AddItem(new InventoryItem(b, 1));
+                        });
+                    }
+                    break;
+                case "tool": {
+                        resourceService.toolList.ForEach(t => {
+                            player.AddItem(new InventoryItem(t, 1));
+                        });
+                    }
+                    break;
+                case "food": {
+                        resourceService.foodList.ForEach(f => {
+                            player.AddItem(new InventoryItem(f, 1));
+                        });
                     }
                     break;
             }

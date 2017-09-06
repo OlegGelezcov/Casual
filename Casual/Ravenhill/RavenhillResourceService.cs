@@ -61,6 +61,7 @@ namespace Casual.Ravenhill {
         private Dictionary<string, QuestOwnerData> questOwners { get; } = new Dictionary<string, QuestOwnerData>();
         private Dictionary<string, StoreItemData> storeItems { get; } = new Dictionary<string, StoreItemData>();
         private Dictionary<string, VideoData> videos { get; } = new Dictionary<string, VideoData>();
+        private Dictionary<string, BuffData> buffs { get; } = new Dictionary<string, BuffData>();
 
         public CachedSprite expSprite;
         public CachedSprite healthSprite;
@@ -130,6 +131,7 @@ namespace Casual.Ravenhill {
             LoadQuests();
             LoadStoreItems();
             LoadVideos();
+            LoadBuffs();
 
             LoadCollections();
             LoadMiscSprites();
@@ -161,6 +163,17 @@ namespace Casual.Ravenhill {
         private void PreloadSprites() {
             spriteObjectCache.Load(new Dictionary<string, string> {
                 ["transparent"] = "Sprites/transparent"
+            });
+        }
+
+        private void LoadBuffs() {
+            var document = new UXMLDocument(resourcePathDictionary["buffs"]);
+            buffs.Clear();
+
+            document.Element("buffs").Elements("buff").ForEach(element => {
+                BuffData buffData = new BuffData();
+                buffData.Load(element);
+                buffs[buffData.id] = buffData;
             });
         }
 
@@ -624,6 +637,9 @@ namespace Casual.Ravenhill {
             return videos.GetOrDefault(id);
         }
 
+        public BuffData GetBuff(string id) {
+            return buffs.GetOrDefault(id);
+        }
 
         public List<WeaponData> weaponList => new List<WeaponData>(weapons.Values);
 
@@ -657,6 +673,8 @@ namespace Casual.Ravenhill {
         public List<StoreItemData> storeItemList => new List<StoreItemData>(storeItems.Values);
 
         public List<VideoData> videoList => new List<VideoData>(videos.Values);
+
+        public List<BuffData> buffList => new List<BuffData>(buffs.Values);
 
         public List<InventoryItemData> marketItems {
             get {

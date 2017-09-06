@@ -25,7 +25,7 @@ namespace Casual.Ravenhill {
                     new VideoView.Data {
                         id = id,
                         completeAction = completeAction
-                    );
+                    });
 
             } else if( Application.isMobilePlatform ){
                 Handheld.PlayFullScreenMovie(videoData.streamingAsset, Color.black, FullScreenMovieControlMode.CancelOnInput);

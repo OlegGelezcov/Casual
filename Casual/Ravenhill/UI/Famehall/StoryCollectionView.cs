@@ -28,7 +28,7 @@ namespace Casual.Ravenhill.UI {
             presentTrigger.SetEventTriggerClick(p => {
                 PointerEventData pointerData = p as PointerEventData;
                 if(pointerData.GetPointerObjectName() == presentTrigger.name) {
-                    engine.GetService<IVideoService>().PlayVideo(collection.videoId);
+                    engine.GetService<IVideoService>().PlayVideo(collection.videoId, ()=>Debug.Log("hey"));
                 }
                 presentImage.gameObject.GetOrAdd<RectTransformAnimScale>().StartAnim(new MCFloatAnimData {
                     duration = 0.15f,

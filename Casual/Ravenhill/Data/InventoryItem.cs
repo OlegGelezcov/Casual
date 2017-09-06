@@ -1,4 +1,6 @@
-﻿namespace Casual.Ravenhill.Data {
+﻿using UnityEngine;
+
+namespace Casual.Ravenhill.Data {
     public class InventoryItem : RavenhillGameElement, IIdObject, ISaveElement  {
         public InventoryItemData data { get; private set; }
         public int count { get; private set; }
@@ -39,15 +41,21 @@
         }
 
         public void Load(UXMLElement element) {
-            string curId = element.GetString("id", string.Empty);
+            string curid = element.GetString("id", string.Empty);
             InventoryItemType type = element.GetEnum<InventoryItemType>("type");
-            int count = element.GetInt("count", 0);
-            if(string.IsNullOrEmpty(id)) {
+            count = element.GetInt("count", 0);
+
+            Debug.Log($"loaded item {curid}-{type}-{count}".Colored(ColorType.green));
+
+            if(string.IsNullOrEmpty(curid)) {
                 InitSave();
             } else {
-                data = resourceService.GetInventoryItemData(type, id);
+                data = resourceService.GetInventoryItemData(type, curid);
                 if(data == null ) {
+                    Debug.Log($"item data is null {curid}-{type}".Colored(ColorType.fuchsia));
                     InitSave();
+                } else {
+                    Debug.Log($"item data not null {curid}-{type}".Colored(ColorType.grey));
                 }
             }
         }

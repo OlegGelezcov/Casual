@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Casual.Ravenhill {
     public class Inventory : RavenhillGameElement, ISaveElement {
@@ -11,9 +12,15 @@ namespace Casual.Ravenhill {
         private readonly Dictionary<InventoryItemType, Dictionary<string, InventoryItem>> items = new Dictionary<InventoryItemType, Dictionary<string, InventoryItem>>();
 
         public void AddItem(InventoryItem item) {
-            if(items.ContainsKey(item.data.type)) {
+            AddItemImpl(item);
+            RavenhillEvents.OnInventoryItemAdded(item.data.type, item.id, item.count);
+            RavenhillEvents.OnInventoryChanged(item.data.type, item.id, item.count);
+        }
+
+        private void AddItemImpl(InventoryItem item) {
+            if (items.ContainsKey(item.data.type)) {
                 Dictionary<string, InventoryItem> filtered = items[item.data.type];
-                if(filtered.ContainsKey(item.id)) {
+                if (filtered.ContainsKey(item.id)) {
                     filtered[item.id].AddCount(item.count);
                 } else {
                     filtered.Add(item.id, item);
@@ -23,8 +30,6 @@ namespace Casual.Ravenhill {
                     [item.id] = item
                 });
             }
-            RavenhillEvents.OnInventoryItemAdded(item.data.type, item.id, item.count);
-            RavenhillEvents.OnInventoryChanged(item.data.type, item.id, item.count);
         }
 
         public bool RemoveItem(InventoryItemType type, string id, int count) {
@@ -78,6 +83,7 @@ namespace Casual.Ravenhill {
         }
 
         public void InitSave() {
+            Debug.Log($"Inventory.InitSave()".Colored(ColorType.red));
             items.Clear();
         }
 
@@ -87,13 +93,18 @@ namespace Casual.Ravenhill {
                 InventoryItem item = new InventoryItem();
                 item.Load(itemElement);
                 if(item.count > 0 && item.data != null) {
+
+                    /*
                     if(items.ContainsKey(item.data.type)) {
                         items[item.data.type][item.id] = item;
                     } else {
                         items.Add(item.data.type, new Dictionary<string, InventoryItem> {
                             [item.id] = item
                         });
-                    }
+                    }*/
+                    AddItemImpl(item);
+                } else {
+                    Debug.Log($"Inventory: ITEM DATA COUNT OR DATA NULL {item.count} - {item.data}".Colored(ColorType.red));
                 }
             }
         }

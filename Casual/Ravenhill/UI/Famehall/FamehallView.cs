@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Casual.Ravenhill.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 
@@ -18,6 +15,20 @@ namespace Casual.Ravenhill.UI {
         public override void Setup(object data = null) {
             base.Setup(data);
             storyCollectionViews.ToList().ForEach(view => view.Setup());
+        }
+
+        public override void OnEnable() {
+            base.OnEnable();
+            RavenhillEvents.StoryCollectionCharged += OnStoryCollectionCharged;
+        }
+
+        public override void OnDisable() {
+            base.OnDisable();
+            RavenhillEvents.StoryCollectionCharged -= OnStoryCollectionCharged;
+        }
+
+        private void OnStoryCollectionCharged(StoryCollectionData data) {
+            Setup();
         }
     }
 

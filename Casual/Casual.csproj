@@ -61,7 +61,10 @@
     <Compile Include="ISaveElement.cs" />
     <Compile Include="ISaveService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Ravenhill\AchievmentInfo.cs" />
+    <Compile Include="Ravenhill\AchievmentService.cs" />
     <Compile Include="Ravenhill\BaseSearchableObject.cs" />
+    <Compile Include="Ravenhill\Data\AchievmentData.cs" />
     <Compile Include="Ravenhill\Data\BankProductData.cs" />
     <Compile Include="Ravenhill\Data\BuffData.cs" />
     <Compile Include="Ravenhill\Data\CollectableData.cs" />
@@ -106,6 +109,7 @@
     <Compile Include="Ravenhill\Editor\XmlTools.cs" />
     <Compile Include="Ravenhill\Events.cs" />
     <Compile Include="Ravenhill\HallwayNpc.cs" />
+    <Compile Include="Ravenhill\IAchievmentService.cs" />
     <Compile Include="Ravenhill\IJournalService.cs" />
     <Compile Include="Ravenhill\INpcService.cs" />
     <Compile Include="Ravenhill\Inventory.cs" />

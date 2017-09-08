@@ -63,6 +63,7 @@ namespace Casual.Ravenhill {
         private Dictionary<string, VideoData> videos { get; } = new Dictionary<string, VideoData>();
         private Dictionary<string, BuffData> buffs { get; } = new Dictionary<string, BuffData>();
         private Dictionary<string, NpcData> npcs { get; } = new Dictionary<string, NpcData>();
+        private Dictionary<string, AchievmentData> achievments { get; } = new Dictionary<string, AchievmentData>();
 
         public CachedSprite expSprite;
         public CachedSprite healthSprite;
@@ -134,7 +135,7 @@ namespace Casual.Ravenhill {
             LoadVideos();
             LoadBuffs();
             LoadNpcs();
-
+            LoadAchievments();
 
             LoadCollections();
             LoadMiscSprites();
@@ -170,6 +171,17 @@ namespace Casual.Ravenhill {
             });
         }
 
+        private void LoadAchievments() {
+            UXMLDocument document = new UXMLDocument(resourcePathDictionary["achievments"]);
+            achievments.Clear();
+
+            document.Element("achievments").Elements("achievment").ForEach(achievmentElement => {
+                AchievmentData achievmentData = new AchievmentData();
+                achievmentData.Load(achievmentElement);
+                achievments[achievmentData.id] = achievmentData;
+            });
+
+        }
         private void LoadNpcs() {
             UXMLDocument document = new UXMLDocument(resourcePathDictionary["npcs"]);
             npcs.Clear();
@@ -660,6 +672,10 @@ namespace Casual.Ravenhill {
             return npcs.GetOrDefault(id);
         }
 
+        public AchievmentData GetAchievment(string id) {
+            return achievments.GetOrDefault(id);
+        }
+
         public List<WeaponData> weaponList => new List<WeaponData>(weapons.Values);
 
         public List<ChargerData> chargerList => new List<ChargerData>(chargers.Values);
@@ -698,6 +714,14 @@ namespace Casual.Ravenhill {
         public List<NpcData> npcList => new List<NpcData>(npcs.Values);
 
         public List<RoomData> roomList => new List<RoomData>(roomDataDictionary.Values);
+
+        public List<AchievmentData> achievmentList {
+            get {
+                var list = new List<AchievmentData>(achievments.Values);
+                var result = list.OrderBy(a => a.id).ToList();
+                return result;
+            }
+        }
 
         public List<InventoryItemData> marketItems {
             get {

@@ -67,6 +67,11 @@ namespace Casual.Ravenhill {
 
         public static event System.Action<string> SceneLoaded;
 
+        public static event System.Action<AchievmentInfo, AchievmentTierData> TierAchieved;
+
+        public static void OnTierAchieved(AchievmentInfo info, AchievmentTierData data) {
+            TierAchieved?.Invoke(info, data);
+        }
 
         public static void OnSceneLoaded(string sceneName ) {
             SceneLoaded?.Invoke(sceneName);

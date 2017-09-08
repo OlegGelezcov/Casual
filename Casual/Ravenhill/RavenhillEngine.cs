@@ -99,6 +99,7 @@ namespace Casual.Ravenhill {
             Register<IQuestService, QuestService>(FindObjectOfType<QuestService>());
             Register<IVideoService, VideoService>(FindObjectOfType<VideoService>());
             Register<INpcService, NpcService>(FindObjectOfType<NpcService>());
+            Register<IAchievmentService, AchievmentService>(FindObjectOfType<AchievmentService>());
         }
 
         protected virtual void SetupServices() {
@@ -116,6 +117,7 @@ namespace Casual.Ravenhill {
             GetService<IQuestService>().Setup(null);
             GetService<IVideoService>().Setup(null);
             GetService<INpcService>().Setup(null);
+            GetService<IAchievmentService>().Setup(null);
         }
 
         public void LoadScene(string roomId  ) {

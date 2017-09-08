@@ -20,6 +20,9 @@ namespace Casual.Ravenhill {
         quest_start_view = 11,
         quest_end_view = 12,
         story_collection_charge_view = 13,
-        video_view = 14
+        video_view = 14,
+        kill_enemy_view = 15,
+        patient_reward_view = 16,
+        loader_view = 17
     }
 }

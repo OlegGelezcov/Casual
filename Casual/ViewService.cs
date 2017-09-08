@@ -14,6 +14,10 @@ namespace Casual {
         void RemoveView(RavenhillViewType viewType, float delay);
         void RemoveAll();
         bool ExistView(RavenhillViewType viewType);
+        float LastViewRemovedTime { get; }
+        float LastViewRemoveInterval { get; }
+        bool noModals { get; }
+        GameObject GetView(RavenhillViewType viewType);
     }
 
     public abstract class ViewSerive : GameElement, IViewService {
@@ -35,6 +39,22 @@ namespace Casual {
         public abstract void ShowViewWithCondition(RavenhillViewType viewType, System.Func<bool> predicate, object data = null);
 
         public abstract void RemoveView(RavenhillViewType viewType, float delay);
+
+        public abstract float LastViewRemovedTime { get; }
+
+        public float LastViewRemoveInterval {
+            get {
+                return (Time.time - LastViewRemovedTime);
+            }
+        }
+
+        public bool noModals {
+            get {
+                return (!hasModals);
+            }
+        }
+
+        public abstract GameObject GetView(RavenhillViewType viewType);
     }
 
 

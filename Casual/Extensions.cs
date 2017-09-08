@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Casual.Ravenhill.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -199,6 +200,14 @@ namespace Casual {
             }
             return result;
         }
+
+        public static void SetAlpha(this Graphic target, float alpha) {
+            Color old = target.color;
+            Color newColor = new Color(old.r, old.g, old.b, alpha);
+            target.color = newColor;
+        }
+
+        
     }
 
     public enum ColorType {

@@ -105,6 +105,7 @@
     <Compile Include="Ravenhill\DebugService.cs" />
     <Compile Include="Ravenhill\Editor\XmlTools.cs" />
     <Compile Include="Ravenhill\Events.cs" />
+    <Compile Include="Ravenhill\HallwayNpc.cs" />
     <Compile Include="Ravenhill\IJournalService.cs" />
     <Compile Include="Ravenhill\INpcService.cs" />
     <Compile Include="Ravenhill\Inventory.cs" />
@@ -114,6 +115,9 @@
     <Compile Include="Ravenhill\IWishlist.cs" />
     <Compile Include="Ravenhill\JournalEntryInfo.cs" />
     <Compile Include="Ravenhill\JournalService.cs" />
+    <Compile Include="Ravenhill\LoadRoomArrow.cs" />
+    <Compile Include="Ravenhill\Map\MapNpc.cs" />
+    <Compile Include="Ravenhill\Map\NpcWalkArea.cs" />
     <Compile Include="Ravenhill\Map\RoomMapPlank.cs" />
     <Compile Include="Ravenhill\Net\NetPlayer.cs" />
     <Compile Include="Ravenhill\Net\NetRoomScore.cs" />
@@ -183,8 +187,13 @@
     <Compile Include="Ravenhill\UI\Journal\JournalQuestsView.cs" />
     <Compile Include="Ravenhill\UI\Journal\JournalView.cs" />
     <Compile Include="Ravenhill\UI\Journal\QuestListItemView.cs" />
+    <Compile Include="Ravenhill\UI\KillEnemyView\KillEnemyView.cs" />
     <Compile Include="Ravenhill\UI\ListItemViews\InventoryItemShortView.cs" />
+    <Compile Include="Ravenhill\UI\LoaderView\LoaderView.cs" />
+    <Compile Include="Ravenhill\UI\MapBuffs\RoomBuffsView.cs" />
+    <Compile Include="Ravenhill\UI\MapBuffs\RoomMapBuffView.cs" />
     <Compile Include="Ravenhill\UI\Map\RoomMapUIView.cs" />
+    <Compile Include="Ravenhill\UI\PatientRewardView\PatientRewardView.cs" />
     <Compile Include="Ravenhill\UI\QuestDialogView\QuestDialogView.cs" />
     <Compile Include="Ravenhill\UI\QuestEndView\QuestEndView.cs" />
     <Compile Include="Ravenhill\UI\QuestStartView\QuestStartView.cs" />

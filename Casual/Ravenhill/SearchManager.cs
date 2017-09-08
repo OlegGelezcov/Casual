@@ -82,19 +82,40 @@ namespace Casual.Ravenhill {
                 }
             }
             numberToFind = notFoundedObjects.Count;
-            ActivateIndices();
+            StartCoroutine(CorActivate());
         }
 
-        private void ActivateIndices() {
+        private bool isActivationNotStarted = true;
+
+        private System.Collections.IEnumerator CorActivate() {
+            yield return new WaitUntil(() => isActivationNotStarted);
+            StartCoroutine(ActivateIndices());
+        }
+
+        private System.Collections.IEnumerator ActivateIndices() {
+            isActivationNotStarted = false;
             int numberToActivate = maxActiveObjects - activeObjects.Count;
             int notFoundedCount = notFoundedObjects.Count;
 
             for(int i = 0; i < Mathf.Min(numberToActivate, notFoundedCount); i++ ) {
+
+                yield return new WaitUntil(() => {
+                    var sobj = viewService.GetView(RavenhillViewType.search_pan);
+                    if(sobj) {
+                        var searchPan = sobj.GetComponentInChildren<SearchPan>();
+                        if(searchPan ) {
+                            return searchPan.HasEmptySlot;
+                        }
+                    }
+                    return false;
+                });
+
                 SearchObjectData firstData = notFoundedObjects[0];
                 notFoundedObjects.RemoveAt(0);
                 activeObjects.Add(firstData);
                 ActivateObject(firstData);
             }
+            isActivationNotStarted = true;
         }
 
         private void ActivateObject(SearchObjectData data) {
@@ -115,7 +136,8 @@ namespace Casual.Ravenhill {
                 EndSearch(status: SearchStatus.success, showExitRoomView: true);
             } else {
                 Debug.Log("ACTIVATE NEXT");
-                ActivateIndices();
+                //ActivateIndices();
+                StartCoroutine(CorActivate());
             }
         }
 

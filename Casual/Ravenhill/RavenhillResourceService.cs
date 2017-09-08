@@ -159,7 +159,8 @@ namespace Casual.Ravenhill {
                 ["search_text"] = "Prefabs/UI/Misc/search_text",
                 ["search_object_particles"] = "Prefabs/Effects/search_object_particles",
                 ["found_search_object"] = "Prefabs/Effects/found_search_object",
-                ["drop_object"] = "Prefabs/UI/Misc/drop_object"
+                ["drop_object"] = "Prefabs/UI/Misc/drop_object",
+                ["map_npc"] = "Prefabs/map_npc"
             });
         }
 

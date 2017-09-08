@@ -63,6 +63,19 @@ namespace Casual.Ravenhill {
         public static event System.Action<string, NpcInfo> NpcCreated;
         public static event System.Action<string, NpcData> NpcRemoved;
 
+        public static event System.Action ExitCurrentScene;
+
+        public static event System.Action<string> SceneLoaded;
+
+
+        public static void OnSceneLoaded(string sceneName ) {
+            SceneLoaded?.Invoke(sceneName);
+        }
+
+        public static void OnExitCurrentScene() {
+            ExitCurrentScene?.Invoke();
+        }
+
         public static void OnNpcCreated(string roomId, NpcInfo npc) {
             NpcCreated?.Invoke(roomId, npc);
         }

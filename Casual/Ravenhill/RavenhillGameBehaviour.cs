@@ -4,9 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Casual.Ravenhill {
     public class RavenhillGameBehaviour : GameBehaviour {
+
+        protected readonly float kClickDelayAfterRemoveView = 0.5f;
 
         private CanvasService m_CanvasService;
 
@@ -85,6 +89,21 @@ namespace Casual.Ravenhill {
                 }
                 return m_PlayerService;
             }
+        }
+
+        protected bool IsHittedOnMe2D(Vector2 position ) {
+            return (Utility.RayHitObjectName2D(position) == gameObject.name);
+        }
+
+        protected bool IsValidTouchOnMe(Vector2 position ) {
+            if(viewService.noModals && (!EventSystem.current.IsPointerOverGameObject())) {
+                if(viewService.LastViewRemoveInterval >= kClickDelayAfterRemoveView) {
+                    if(IsHittedOnMe2D(position)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

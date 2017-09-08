@@ -14,6 +14,10 @@ namespace Casual.Ravenhill.UI.Map {
 
         [SerializeField]
         private EventTrigger m_EventTrigger;
+
+        [SerializeField]
+        private RoomBuffsView buffsView;
+
 #pragma warning restore 0649
 
         private float viewRemovedLastTime { get; set; } = 0;
@@ -49,6 +53,7 @@ namespace Casual.Ravenhill.UI.Map {
             });
             rectTransformBinding = gameObject.GetOrAdd<RectTransformBinding>();
             rectTransformBinding.Bind(bindParent, offset, 0.02f);
+            buffsView.Setup(roomId);
         }
 
         public void SetOffset(Vector2 newOffset) {
@@ -61,11 +66,15 @@ namespace Casual.Ravenhill.UI.Map {
         public override void OnEnable() {
             base.OnEnable();
             RavenhillEvents.ViewRemoved += OnViewRemoved;
+            RavenhillEvents.NpcCreated += OnNpcCreated;
+            RavenhillEvents.NpcRemoved += OnNpcRemoved;
         }
 
         public override void OnDisable() {
             base.OnDisable();
             RavenhillEvents.ViewRemoved -= OnViewRemoved;
+            RavenhillEvents.NpcCreated -= OnNpcCreated;
+            RavenhillEvents.NpcRemoved -= OnNpcRemoved;
         }
 
 
@@ -77,6 +86,14 @@ namespace Casual.Ravenhill.UI.Map {
             get {
                 return (Time.time - viewRemovedLastTime);
             }
+        }
+
+        private void OnNpcCreated(string roomId, NpcInfo info ) {
+            buffsView.Setup(this.roomId);
+        }
+
+        private void OnNpcRemoved(string roomId, NpcData mpcData ) {
+            buffsView.Setup(this.roomId);
         }
     }
 }

@@ -120,6 +120,10 @@ namespace Casual.Ravenhill {
             return roomManager.GetRoomInfo(roomId);
         }
 
+        public bool IsUnlocked(string roomId ) {
+            return roomManager.IsUnlocked(roomId);
+        }
+
         //Algorithm of generation room drop...
         public List<InventoryItem> GenerateRoomDrop(RoomData roomData, RoomLevel roomLevel) {
                 

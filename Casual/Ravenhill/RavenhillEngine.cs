@@ -54,6 +54,8 @@ namespace Casual.Ravenhill {
                             }
                         }
                     }
+
+                    RavenhillEvents.OnSceneLoaded(scene.name);
                 };
 
 
@@ -96,6 +98,7 @@ namespace Casual.Ravenhill {
             Register<IJournalService, JournalService>(FindObjectOfType<JournalService>());
             Register<IQuestService, QuestService>(FindObjectOfType<QuestService>());
             Register<IVideoService, VideoService>(FindObjectOfType<VideoService>());
+            Register<INpcService, NpcService>(FindObjectOfType<NpcService>());
         }
 
         protected virtual void SetupServices() {
@@ -112,15 +115,24 @@ namespace Casual.Ravenhill {
             GetService<IJournalService>().Setup(null);
             GetService<IQuestService>().Setup(null);
             GetService<IVideoService>().Setup(null);
+            GetService<INpcService>().Setup(null);
         }
 
-        public void LoadScene(string roomId  ) {   
-            var roomData = GetService<IResourceService>().Cast<RavenhillResourceService>().GetRoomData(roomId);
+        public void LoadScene(string roomId  ) {
+            if (!GetService<IViewService>().ExistView(RavenhillViewType.loader_view)) {
+                GetService<IViewService>().ShowView(RavenhillViewType.loader_view, new LoaderView.Data {
+                    delay = 0.72f,
+                    action = () => {
+                        var roomData = GetService<IResourceService>().Cast<RavenhillResourceService>().GetRoomData(roomId);
 
-            if(roomData != null ) {
-                var gameModeService = GetService<IGameModeService>()?.Cast<RavenhillGameModeService>();
-                gameModeService.ChangeRoom(roomId);
-                SceneManager.LoadSceneAsync(roomData.GetScene(gameModeService.roomMode));
+                        if (roomData != null) {
+                            RavenhillEvents.OnExitCurrentScene();
+                            var gameModeService = GetService<IGameModeService>()?.Cast<RavenhillGameModeService>();
+                            gameModeService.ChangeRoom(roomId);
+                            SceneManager.LoadSceneAsync(roomData.GetScene(gameModeService.roomMode));
+                        }
+                    }
+                });
             }
         }
 

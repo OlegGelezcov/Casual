@@ -121,5 +121,7 @@ namespace Casual.Ravenhill.UI {
             var slot = FindEmptySlot();
             slot?.CreateText(searchObjectData);
         }
+
+        public bool HasEmptySlot => FindEmptySlot() != null;
     }
 }

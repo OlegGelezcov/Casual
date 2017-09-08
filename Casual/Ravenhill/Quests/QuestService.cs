@@ -16,7 +16,7 @@ namespace Casual.Ravenhill {
 
         
 
-        private readonly List<QuestInfo> tempQuestList = new List<QuestInfo>();
+        //private readonly List<QuestInfo> tempQuestList = new List<QuestInfo>();
 
         public override void Start() {
             base.Start();
@@ -25,8 +25,9 @@ namespace Casual.Ravenhill {
 
 
         private int TryCompleteQuests() {
-            tempQuestList.Clear();
-            foreach(var questPair in startedQuests ) {
+            List<QuestInfo> tempQuestList = new List<QuestInfo>();
+
+            foreach (var questPair in startedQuests ) {
                 var quest = questPair.Value;
                 if(quest.CheckCompleteConditions(this)) {
                     tempQuestList.Add(quest);
@@ -74,8 +75,9 @@ namespace Casual.Ravenhill {
 
         private int TryStartQuests() {
             Debug.Log($"not started quests count = {notStartedQuests.Count}");
-            tempQuestList.Clear();
-            foreach(var questPair in notStartedQuests ) {
+            List<QuestInfo> tempQuestList = new List<QuestInfo>();
+
+            foreach (var questPair in notStartedQuests ) {
                 var quest = questPair.Value;
                 if(quest.CheckStartConditions(this)) {
                     tempQuestList.Add(quest);

@@ -19,6 +19,10 @@ namespace Casual.Ravenhill {
             }
         }
 
+        public bool IsUnlocked(string roomId ) {
+            return GetRoomInfo(roomId).isUnlocked;
+        }
+
         public void RollSearchMode(string roomId) {
             GetRoomInfo(roomId).RollSearchMode();
         }

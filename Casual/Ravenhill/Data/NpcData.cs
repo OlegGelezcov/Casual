@@ -8,6 +8,13 @@ namespace Casual.Ravenhill.Data {
         public List<DropItem> rewards { get; } = new List<DropItem>();
         public string buffId { get; private set; } = string.Empty;
         public string weaponId { get; private set; } = string.Empty;
+        public string largeIconPath { get; private set; } = string.Empty;
+
+        public string largeIconKey {
+            get {
+                return "largeicon_" + id;
+            }
+        }
 
         public override void Load(UXMLElement element) {
             base.Load(element);
@@ -23,6 +30,7 @@ namespace Casual.Ravenhill.Data {
             if(element.HasAttribute("weapon")) {
                 weaponId = element.GetString("weapon");
             }
+            largeIconPath = element.GetString("large_icon");
         }
     }
 }

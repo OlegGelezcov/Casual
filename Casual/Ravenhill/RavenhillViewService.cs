@@ -11,6 +11,9 @@ namespace Casual.Ravenhill {
         private Dictionary<RavenhillViewType, GameObject> cachedPrefabs { get; } = new Dictionary<RavenhillViewType, GameObject>();
         private Dictionary<RavenhillViewType, GameObject> openedViews { get; } = new Dictionary<RavenhillViewType, GameObject>();
         private Dictionary<RavenhillViewType, string> prefabPath { get; } = new Dictionary<RavenhillViewType, string>();
+        private float lastViewRemovedTime = 0.0f;
+
+        public override float LastViewRemovedTime => lastViewRemovedTime;
 
         public override void Setup(object data) {
             if(data != null ) {
@@ -18,9 +21,13 @@ namespace Casual.Ravenhill {
             }
         }
 
+        public override GameObject GetView(RavenhillViewType viewType) {
+            return openedViews.GetOrDefault(viewType);
+        }
+
         public override bool hasModals => (modalCount > 0);
 
-        public bool noModals => (!hasModals);
+        //public bool noModals => (!hasModals);
 
         private int modalCount {
             get {
@@ -157,7 +164,7 @@ namespace Casual.Ravenhill {
                     } else {
                         GameObject.Destroy(instance);
                     }
-
+                    lastViewRemovedTime = Time.time;
                     RavenhillEvents.OnViewRemoved(viewType);
                 }
             }

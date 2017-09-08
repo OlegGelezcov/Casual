@@ -10,6 +10,7 @@ namespace Casual.Ravenhill {
     public class NpcService : RavenhillGameBehaviour, INpcService, ISaveable {
 
         private readonly Dictionary<string, NpcInfo> npcs = new Dictionary<string, NpcInfo>();
+        private readonly List<MapNpc> mapNpcs = new List<MapNpc>();
 
         public void Setup(object data) {
         }
@@ -22,11 +23,13 @@ namespace Casual.Ravenhill {
         public override void OnEnable() {
             base.OnEnable();
             RavenhillEvents.GameModeChanged += OnGameModeChanged;
+            RavenhillEvents.ExitCurrentScene += OnExitCurrentScene;
         }
 
         public override void OnDisable() {
             base.OnDisable();
             RavenhillEvents.GameModeChanged -= OnGameModeChanged;
+            RavenhillEvents.ExitCurrentScene -= OnExitCurrentScene;
         }
 
         private void OnGameModeChanged(GameModeName oldGameMode, GameModeName newGameMode ) {
@@ -34,6 +37,52 @@ namespace Casual.Ravenhill {
                 TryGenerateNPCs();
             }
         }
+
+        private void OnExitCurrentScene() {
+            if(ravenhillGameModeService.gameModeName == GameModeName.map ) {
+                ClearMapNpcs();
+            }
+        }
+
+        private void ClearMapNpcs() {
+            mapNpcs.ForEach(obj => {
+                if (obj != null && obj.gameObject != null) {
+                    Destroy(obj.gameObject);
+                }
+            });
+            mapNpcs.Clear();
+        }
+
+        private void CreateMapNpcs() {
+            ClearMapNpcs();
+            engine.Cast<RavenhillEngine>().Run(() => {
+                GameObject prefab = resourceService.GetCachedPrefab("map_npc");
+
+                Debug.Log("===========Before creating map npc============");
+                Debug.Log(GetNpcsString());
+
+                foreach (var pair in Npcs) {
+                    if (!pair.Value.IsEmpty) {
+                        GameObject instance = Instantiate<GameObject>(prefab);
+                        MapNpc mapNpc = instance.GetComponent<MapNpc>();
+                        mapNpc.Setup(pair.Value);
+                        mapNpcs.Add(mapNpc);
+                    }
+                }
+            }, () => isLoaded);
+        }
+
+        
+
+      
+        private string GetNpcsString() {
+            System.Text.StringBuilder stringBuilder = new StringBuilder();
+            foreach(var pair in Npcs ) {
+                stringBuilder.AppendLine($"{pair.Key} => {pair.Value.ToString()}");
+            }
+            return stringBuilder.ToString();
+        }
+
 
         private void TryGenerateNPCs() {
             foreach(var pair in Npcs) {
@@ -52,12 +101,26 @@ namespace Casual.Ravenhill {
                     }
                 }
             }
+
+            if(ravenhillGameModeService.gameModeName == GameModeName.map ) {
+                CreateMapNpcs();
+            }
+        }
+
+        private void RemoveMapNpc(string roomId ) {
+            var target = mapNpcs.Find(npc => npc.RoomId == roomId);
+            if(target != null && target.gameObject) {
+                mapNpcs.Remove(target);
+                Destroy(target.gameObject);
+                target = null;
+            }
         }
 
         public void RemoveNpc(string roomId ) {
             var dict = Npcs;
             if(dict.ContainsKey(roomId)) {
                 if(!dict[roomId].IsEmpty) {
+                    RemoveMapNpc(roomId);
                     NpcData targetData = dict[roomId].Data;
                     npcs[roomId].RemoveNpc();
                     RavenhillEvents.OnNpcRemoved(roomId, targetData);
@@ -78,6 +141,29 @@ namespace Casual.Ravenhill {
                 }
             }
             return result;
+        }
+
+        public bool HasNpc(string npcId, string roomId ) {
+            foreach(var pair in Npcs ) {
+                if(pair.Key == roomId) {
+                    if(!pair.Value.IsEmpty ) {
+                        if(pair.Value.NpcId == npcId ) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        public NpcInfo GetNpc(string npcId, string roomId ) {
+            foreach(var pair in Npcs ) {
+                var info = pair.Value;
+                if(info.RoomId == roomId && info.NpcId == npcId ) {
+                    return info;
+                }
+            }
+            return null;
         }
 
 
@@ -106,11 +192,14 @@ namespace Casual.Ravenhill {
             foreach(var pair in npcs ) {
                 root.Add(pair.Value.GetSave());
             }
+            Debug.Log($"NPC SAVE: {root.ToString()}");
             return root.ToString();
         }
 
         public bool Load(string saveStr) {
             if(saveStr.IsValid()) {
+                Debug.Log($"LOAD NPC from {saveStr}");
+
                 UXMLDocument document = new UXMLDocument();
                 document.Parse(saveStr);
 
@@ -150,6 +239,12 @@ namespace Casual.Ravenhill {
 
         private NpcData data;
 
+        public string NpcId => Data?.id ?? string.Empty;
+
+        public override string ToString() {
+            return $"{roomId}-{NpcId}";
+        }
+
         public NpcInfo(string roomId = "", NpcData data = null) {
             this.roomId = roomId;
             this.data = data;
@@ -172,6 +267,7 @@ namespace Casual.Ravenhill {
                 return roomId;
             }
         }
+
 
         public void SetNpc(NpcData data) {
             this.data = data;
@@ -196,6 +292,7 @@ namespace Casual.Ravenhill {
                 string npcId = element.GetString("npc_id");
                 if(npcId.IsValid()) {
                     data = resourceService.GetNpc(npcId);
+                    Debug.Log($"Loaded npc {roomId}: {data.id}");
                 } else {
                     InitSave();
                 }

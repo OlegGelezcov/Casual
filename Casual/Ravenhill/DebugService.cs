@@ -271,6 +271,15 @@ namespace Casual.Ravenhill {
                         ShowVideoView();
                     }
                     break;
+                case "achievment_rank_view": {
+                        ShowAchievmentRankView();
+                    }
+                    break;
+                case "msgbox": {
+                        int btnCount = GetInt(source, 2);
+                        ShowMsgBox(btnCount);
+                    }
+                    break;
             }
             return true;
         }
@@ -303,6 +312,50 @@ namespace Casual.Ravenhill {
 
         private void ShowQuestEndView( ) {
             viewService.ShowViewWithDelay(RavenhillViewType.quest_end_view, 0.5f, resourceService.questList.RandomElement());
+        }
+
+        private void ShowAchievmentRankView() {
+            AchievmentRankView.Data data = new AchievmentRankView.Data {
+                info = engine.GetService<IAchievmentService>().GetAchievment(resourceService.GetAchievment("A0001")),
+                tier = resourceService.GetAchievment("A0001").tiers[0]
+            };
+            viewService.ShowView(RavenhillViewType.achievment_rank_view, data);
+            engine.GetService<IDebugService>().AddMessage("Show achievment rank view", ColorType.aqua);
+        }
+
+        private void ShowMsgBox(int btnCount = 1) {
+            if(btnCount == 1) {
+                MessageBoxView.Data data = new MessageBoxView.Data {
+                    content = "This is test content for debug",
+                    textPanColor = ControlColor.red,
+                    buttonConfigs = new ButtonConfig[] {
+                            new ButtonConfig {
+                                 buttonName = "First",
+                                  color = ControlColor.green,
+                                   action = () => Debug.Log("first action")
+                            }
+                       }
+                };
+                viewService.ShowView(RavenhillViewType.message_box_view, data);
+            } else if(btnCount == 2 ) {
+                MessageBoxView.Data data = new MessageBoxView.Data {
+                    content = "This is test content for debug",
+                    textPanColor = ControlColor.red,
+                    buttonConfigs = new ButtonConfig[] {
+                            new ButtonConfig {
+                                 buttonName = "First",
+                                  color = ControlColor.green,
+                                   action = () => Debug.Log("first action")
+                            },
+                            new ButtonConfig {
+                                buttonName = "Second",
+                                color = ControlColor.yellow,
+                                action = () => Debug.Log("Second action")
+                            }
+                       }
+                };
+                viewService.ShowView(RavenhillViewType.message_box_view, data);
+            }
         }
     }
 

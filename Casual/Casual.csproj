@@ -201,6 +201,12 @@
     <Compile Include="Ravenhill\UI\MapBuffs\RoomBuffsView.cs" />
     <Compile Include="Ravenhill\UI\MapBuffs\RoomMapBuffView.cs" />
     <Compile Include="Ravenhill\UI\Map\RoomMapUIView.cs" />
+    <Compile Include="Ravenhill\UI\MessageBox\ActionButton.cs" />
+    <Compile Include="Ravenhill\UI\MessageBox\ColoredActionButtonCollection.cs" />
+    <Compile Include="Ravenhill\UI\MessageBox\ButtonSetup.cs" />
+    <Compile Include="Ravenhill\UI\MessageBox\ColoredImageCollection.cs" />
+    <Compile Include="Ravenhill\UI\MessageBox\ControlColor.cs" />
+    <Compile Include="Ravenhill\UI\MessageBox\MessageBoxView.cs" />
     <Compile Include="Ravenhill\UI\PatientRewardView\PatientRewardView.cs" />
     <Compile Include="Ravenhill\UI\QuestDialogView\QuestDialogView.cs" />
     <Compile Include="Ravenhill\UI\QuestEndView\QuestEndView.cs" />

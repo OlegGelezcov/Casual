@@ -23,6 +23,7 @@ namespace Casual.Ravenhill {
         video_view = 14,
         kill_enemy_view = 15,
         patient_reward_view = 16,
-        loader_view = 17
+        loader_view = 17,
+        achievments_view = 18
     }
 }

@@ -28,6 +28,10 @@ namespace Casual.Ravenhill {
             return achievments.ContainsKey(data.id);
         }
 
+        public bool IsTierUnlocked(AchievmentData data, int tier) {
+            return GetAchievment(data).IsUnlocked(tier);
+        }
+
         public string saveId => "achievments";
 
         public bool isLoaded { get; private set; } = false;

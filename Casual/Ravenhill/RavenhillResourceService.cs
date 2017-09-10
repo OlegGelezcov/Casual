@@ -167,7 +167,12 @@ namespace Casual.Ravenhill {
 
         private void PreloadSprites() {
             spriteObjectCache.Load(new Dictionary<string, string> {
-                ["transparent"] = "Sprites/transparent"
+                ["transparent"] = "Sprites/transparent",
+                ["medal_1"] = "Sprites/Misc/medal_1",
+                ["medal_2"] = "Sprites/Misc/medal_2",
+                ["medal_3"] = "Sprites/Misc/medal_3",
+                ["medal_4"] = "Sprites/Misc/medal_4",
+                ["medal_5"] = "Sprites/Misc/medal_5"
             });
         }
 

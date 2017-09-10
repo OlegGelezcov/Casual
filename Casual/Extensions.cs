@@ -208,6 +208,9 @@ namespace Casual {
         }
 
         
+        public static string ReplaceVar(this string source, string pattern, object what) {
+            return source.Replace(pattern, what.ToString());
+        }
     }
 
     public enum ColorType {

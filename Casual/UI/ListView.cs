@@ -170,4 +170,11 @@ namespace Casual.UI {
             base.Setup(data);
         }
     }
+
+    public class AchievmentListView : ListView<AchievmentData> {
+        public override void Setup(ListViewData data) {
+            base.Setup(data);
+            Debug.Log("Setup Achievment List View...");
+        }
+    }
 }

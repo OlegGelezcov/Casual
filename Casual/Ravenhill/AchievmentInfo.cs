@@ -1,4 +1,5 @@
 ﻿using Casual.Ravenhill.Data;
+using UnityEngine;
 
 namespace Casual.Ravenhill {
     public class AchievmentInfo : RavenhillGameElement, ISaveElement {
@@ -41,6 +42,45 @@ namespace Casual.Ravenhill {
         public bool IsMaxTier => Tier == MAX_TIER;
 
         public int CompletionPercent => (int)(100.0f * ((float)Count / (float)Data.TotalCount));
+
+        //public int MyDiff {
+        //    get {
+        //        return Count - CurrentTierBaseCount;
+        //    }
+        //}
+
+        //public int FullDiff {
+        //    get {
+        //        if(Tier > 0 && Tier < MAX_TIER ) {
+        //            int nextTierValue = Data.GetTier(Tier + 1).count;
+        //            return nextTierValue - CurrentTierBaseCount;
+        //        }
+        //        return Data.GetTier(MAX_TIER).count - Data.GetTier(MAX_TIER - 1).count;
+        //    }
+        //}
+
+        //public int CurrentTierBaseCount {
+        //    get {
+        //        AchievmentTierData currentTier = Data.GetTier(Tier);
+        //        return (currentTier == null) ? 0 : currentTier.count;
+        //    }
+        //}
+        //public float CurrentTierProgress {
+        //    get {
+        //        if(Tier >= MAX_TIER ) {
+        //            return 1.0f;
+        //        }
+        //        AchievmentTierData currentTier = Data.GetTier(Tier);
+        //        int currentTierValue = (currentTier == null) ? 0 : currentTier.count;
+        //        int nextTierValue = Data.GetTier(Tier + 1).count;
+        //        int myDiff = Count - currentTierValue;
+        //        if(myDiff < 0 ) {
+        //            myDiff = 0;
+        //        }
+        //        int baseDiff = nextTierValue - currentTierValue;
+        //        return Mathf.Clamp01((float)myDiff / (float)baseDiff);
+        //    }
+        //}
 
         public bool IsUnlocked(int tierLevel) {
             return tierLevel <= Tier;

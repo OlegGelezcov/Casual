@@ -229,6 +229,7 @@ namespace Casual.Ravenhill.UI {
 
             achievmentButton.SetListener(() => {
                 Debug.Log("show achievments");
+                viewService.ShowView(RavenhillViewType.achievments_view);
             });
 
 

@@ -6,5 +6,6 @@ namespace Casual.Ravenhill {
         AchievmentInfo GetAchievment(AchievmentData data);
         AchievmentInfo GetAchievment(string id);
         bool IsTierUnlocked(AchievmentData data, int tier);
+        void RewardAchievment(string id);
     }
 }

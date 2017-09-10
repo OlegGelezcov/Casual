@@ -163,6 +163,7 @@
     <Compile Include="Ravenhill\Test\TestColoredObjectAnim.cs" />
     <Compile Include="Ravenhill\UI\Achievments\AchievmentListItemView.cs" />
     <Compile Include="Ravenhill\UI\Achievments\AchievmentMedalView.cs" />
+    <Compile Include="Ravenhill\UI\Achievments\AchievmentRankView.cs" />
     <Compile Include="Ravenhill\UI\Achievments\AchievmentsView.cs" />
     <Compile Include="Ravenhill\UI\Bank\BankProductView.cs" />
     <Compile Include="Ravenhill\UI\Bank\BankSpecialProductView.cs" />

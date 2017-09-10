@@ -32,6 +32,18 @@ namespace Casual.Ravenhill {
             return GetAchievment(data).IsUnlocked(tier);
         }
 
+        public void RewardAchievment(string id) {
+            AchievmentInfo info = GetAchievment(id);
+            if(info.HasReward) {
+                AchievmentTierData nextTierData = info.NextTier;
+                if(nextTierData != null ) {
+                    engine.Cast<RavenhillEngine>().DropItems(new List<DropItem> { nextTierData.rewardItem });
+                    info.GoToNextTier();
+                    RavenhillEvents.OnAchievmentRewarded(info.Data, nextTierData);
+                }
+            }
+        }
+
         public string saveId => "achievments";
 
         public bool isLoaded { get; private set; } = false;

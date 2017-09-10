@@ -24,6 +24,7 @@ namespace Casual.Ravenhill {
         kill_enemy_view = 15,
         patient_reward_view = 16,
         loader_view = 17,
-        achievments_view = 18
+        achievments_view = 18,
+        achievment_rank_view = 19
     }
 }

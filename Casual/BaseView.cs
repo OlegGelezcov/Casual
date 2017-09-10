@@ -26,7 +26,7 @@ namespace Casual {
         public abstract bool isModal { get; }
         public abstract int siblingIndex { get; }
 
-        public virtual void Setup(object data = null) { }
+        public virtual void Setup(object objdata = null) { }
         public virtual void OnViewWillBeClosed() { }
 
         public virtual void FadeOut(bool destroy = true ) {

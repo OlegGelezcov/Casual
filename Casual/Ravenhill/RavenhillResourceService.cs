@@ -176,6 +176,18 @@ namespace Casual.Ravenhill {
             });
         }
 
+        private Dictionary<int, string> medalTable { get; } = new Dictionary<int, string> {
+            [1] = "medal_1",
+            [2] = "medal_2",
+            [3] = "medal_3",
+            [4] = "medal_4",
+            [5] = "medal_5"
+        };
+
+        public string GetMedalKey(int tier) {
+            return medalTable.GetOrDefault(tier, string.Empty);
+        }
+
         private void LoadAchievments() {
             UXMLDocument document = new UXMLDocument(resourcePathDictionary["achievments"]);
             achievments.Clear();
@@ -540,6 +552,14 @@ namespace Casual.Ravenhill {
 
         public Sprite GetSprite(string key, string path ) {
             var sprite = spriteObjectCache.GetObject(key, path);
+            if(sprite == null ) {
+                sprite = transparent;
+            }
+            return sprite;
+        }
+
+        public Sprite GetSprite(string key) {
+            var sprite = spriteObjectCache.GetObject(key);
             if(sprite == null ) {
                 sprite = transparent;
             }

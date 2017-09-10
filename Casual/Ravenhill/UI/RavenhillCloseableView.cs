@@ -18,8 +18,8 @@ namespace Casual.Ravenhill.UI {
             viewService.RemoveView(viewType);
         }
 
-        public override void Setup(object data = null) {
-            base.Setup(data);
+        public override void Setup(object objdata = null) {
+            base.Setup(objdata);
             closeButton?.SetListener(Close);
         }
     }

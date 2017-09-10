@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Casual.Ravenhill.UI {
+﻿namespace Casual.Ravenhill.UI {
     using Casual.Ravenhill.Data;
     using Casual.UI;
     using UnityEngine;
@@ -12,8 +6,11 @@ namespace Casual.Ravenhill.UI {
 
     public partial class AchievmentListItemView : ListItemView<AchievmentData> {
 
+        private AchievmentData data;
+
         public override void Setup(AchievmentData data) {
             base.Setup(data);
+            this.data = data;
 
             achievmentIconImage.overrideSprite = resourceService.GetSprite(data);
             achievmentNameText.text = resourceService.GetString(data.nameId);
@@ -45,12 +42,21 @@ namespace Casual.Ravenhill.UI {
             if(aInfo.HasReward ) {
                 takeButton.ActivateSelf();
                 takeButton.SetListener(() => {
+                    /*
                     if (aInfo.HasReward && nextTierData != null) {
                         engine.Cast<RavenhillEngine>().DropItems(new List<DropItem> { aInfo.NextTier.rewardItem });
                         aInfo.GoToNextTier();
                         Setup(data);
                         RavenhillEvents.OnAchievmentRewarded(data, nextTierData);
+                    }*/
+                    //engine.GetService<IAchievmentService>().RewardAchievment(data.id);
+                    if(aInfo.HasReward && nextTierData != null ) {
+                        viewService.ShowView(RavenhillViewType.achievment_rank_view, new AchievmentRankView.Data {
+                            info = aInfo,
+                            tier = nextTierData
+                        });
                     }
+
                 });
             } else {
                 takeButton.DeactivateSelf();
@@ -60,6 +66,24 @@ namespace Casual.Ravenhill.UI {
         private void ClearRewardView() {
             rewardIconImage.overrideSprite = resourceService.transparent;
             rewardCountText.text = string.Empty;
+        }
+
+        public override void OnEnable() {
+            base.OnEnable();
+            RavenhillEvents.AchievmentRewarded += OnAchievmentRewarded;
+        }
+
+        public override void OnDisable() {
+            base.OnDisable();
+            RavenhillEvents.AchievmentRewarded -= OnAchievmentRewarded;
+        }
+
+        private void OnAchievmentRewarded(AchievmentData achievmentData, AchievmentTierData tierData ) {
+            if(data != null ) {
+                if(data.id == achievmentData.id ) {
+                    Setup(data);
+                }
+            }
         }
     }
 

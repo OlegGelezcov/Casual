@@ -165,6 +165,9 @@
     <Compile Include="Ravenhill\UI\Achievments\AchievmentMedalView.cs" />
     <Compile Include="Ravenhill\UI\Achievments\AchievmentRankView.cs" />
     <Compile Include="Ravenhill\UI\Achievments\AchievmentsView.cs" />
+    <Compile Include="Ravenhill\UI\AddCollectableItemNoteView\CollectableAddedNoteView.cs" />
+    <Compile Include="Ravenhill\UI\AddCollectableItemNoteView\NoteCollectableView.cs" />
+    <Compile Include="Ravenhill\UI\AddCollectableItemNoteView\NoteCollectionView.cs" />
     <Compile Include="Ravenhill\UI\Bank\BankProductView.cs" />
     <Compile Include="Ravenhill\UI\Bank\BankSpecialProductView.cs" />
     <Compile Include="Ravenhill\UI\Bank\BankView.cs" />

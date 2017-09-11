@@ -84,7 +84,7 @@ namespace Casual.Ravenhill.UI {
                 }
             });
 
-            combineUpdateTimer.Setup(0.5f, () => {
+            combineUpdateTimer.Setup(0.5f, (delta) => {
                 if(bonusData != null ) {
                     combineButton.interactable = ravenhillGameModeService.IsAlchemyReadyToCharge(bonusData);
                 }

@@ -72,6 +72,17 @@ namespace Casual.Ravenhill {
 
         public static event System.Action<BonusData> AlchemyCharged;
 
+        public static event System.Action<BuffInfo> BuffAdded;
+        public static event System.Action<BuffInfo> BuffRemoved;
+
+        public static void OnBuffRemoved(BuffInfo buff ) {
+            BuffRemoved?.Invoke(buff);
+        }
+
+        public static void OnBuffAdded(BuffInfo buff ) {
+            BuffAdded?.Invoke(buff);
+        }
+
         public static void OnAlchemyCharged(BonusData data ) {
             AlchemyCharged?.Invoke(data);
         }

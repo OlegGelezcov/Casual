@@ -45,7 +45,7 @@ namespace Casual.Ravenhill.UI {
                 }
             });
 
-            wishButtonTimer.Setup(0.5f, () => {
+            wishButtonTimer.Setup(0.5f, (delta) => {
                 if (data != null) {
                     wishButton.interactable = (!playerService.IsWishlistFull && !playerService.IsWishlistContains(data));
                 } else {

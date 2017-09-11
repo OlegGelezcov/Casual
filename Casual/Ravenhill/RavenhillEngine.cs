@@ -10,10 +10,12 @@ namespace Casual.Ravenhill {
 
     public class RavenhillEngine : CasualEngine {
 
-
+        private const string FOCUS_LOST_TIME = "FOCUS_LOST_TIME";
         private const string kMapRoomId = "r0";
 
         private bool m_IsServicesRegistered = false;
+        private bool isLostFocusIntervalReceived = false;
+        private int lostFocusInterval = 0;
 
         public string listenerName => "engine";
 
@@ -177,9 +179,35 @@ namespace Casual.Ravenhill {
             }
         }
 
+        private void SaveLostFocusInterval() {
+            PlayerPrefs.SetInt(FOCUS_LOST_TIME, Utility.unixTime);
+            isLostFocusIntervalReceived = false;
+        }
+
+        private void LoadLostFocusInterval() {
+            if (!isLostFocusIntervalReceived) {
+                if (PlayerPrefs.HasKey(FOCUS_LOST_TIME)) {
+                    int lostTime = PlayerPrefs.GetInt(FOCUS_LOST_TIME);
+                    lostFocusInterval = Utility.unixTime - lostTime;
+                    Debug.Log($"Load Lost Focus interval {lostFocusInterval}".Colored(ColorType.brown));
+                }
+                isLostFocusIntervalReceived = true;
+            }
+        }
+
+        public int LostFocusInterval {
+            get {
+                LoadLostFocusInterval();
+                return lostFocusInterval;
+            }
+        }
+
         private void OnApplicationFocus(bool focus) {
             if (!focus) {
                 GetService<ISaveService>().Save();
+                SaveLostFocusInterval();
+            } else {
+                LoadLostFocusInterval();
             }
         }
 

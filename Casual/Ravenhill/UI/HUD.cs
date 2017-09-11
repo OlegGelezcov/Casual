@@ -335,7 +335,7 @@ namespace Casual.Ravenhill.UI {
             healthText.SetValue(Mathf.FloorToInt(playerService.health));
         }
 
-        private void UpdateHealthTimer() {
+        private void UpdateHealthTimer(float realDelta) {
             healthTimerText.text = Utility.FormatMS(playerService.healthTimer);
         }
 

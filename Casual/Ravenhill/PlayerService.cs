@@ -33,6 +33,8 @@ namespace Casual.Ravenhill {
 
         private Inventory inventory { get; } = new Inventory();
         private Wishlist wishlist { get; } = new Wishlist();
+        private BuffManager buffs { get; } = new BuffManager();
+
 
         #region Wishlist
         public bool AddToWishlist(InventoryItemData data) {
@@ -93,6 +95,11 @@ namespace Casual.Ravenhill {
                 healthTimer += kHealthRestoreInterval;
                 AddHealth(1);
             }
+            buffs.Update();
+        }
+
+        public void OnApplicationFocus(bool focus) {
+            buffs.OnApplicationFocus(focus);
         }
 
         public void AddMaxHealth(int count ) {
@@ -299,6 +306,7 @@ namespace Casual.Ravenhill {
 
             playerElement.Add(inventory.GetSave());
             playerElement.Add(wishlist.GetSave());
+            playerElement.Add(buffs.GetSave());
             
             Debug.Log($"SAVE PLAYER: {playerElement.ToString()}".Colored(ColorType.yellow));
             return playerElement.ToString();
@@ -343,6 +351,13 @@ namespace Casual.Ravenhill {
                     wishlist.Load(wishlistElement); 
                 } else {
                     wishlist.InitSave();
+                }
+
+                var buffsElement = playerElement.Element("buffs");
+                if(buffsElement != null ) {
+                    buffs.Load(buffsElement);
+                } else {
+                    buffs.InitSave();
                 }
 
                 Debug.Log($"Player Loaded: exp-{exp}, name-{playerName}, avatar-{avatarId}, silver-{silver}, gold-{gold}");

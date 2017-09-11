@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Casual.Ravenhill.Data {
 
     public class BonusData : InventoryItemData {
         public override PriceData price { get; protected set; }
         public int interval { get; private set; }
+        public float value { get; private set; }
         public Dictionary<string, int> ingredients { get; private set; }
 
         public override void Load(UXMLElement element) {
             base.Load(element);
             price = new PriceData(element);
             ingredients = new Dictionary<string, int>();
+            value = element.GetFloat("value");
 
             element.Element("formula").Elements("ingredient").ForEach(ingredientElement => {
                 string ingredientId = ingredientElement.GetString("id");

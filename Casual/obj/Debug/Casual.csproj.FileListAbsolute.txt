@@ -6,3 +6,4 @@ C:\development\Casual\Casual\obj\Debug\Casual.pdb
 C:\dev\Casual\Casual\obj\Debug\Casual.csprojResolveAssemblyReference.cache
 C:\dev\Casual\Casual\obj\Debug\Casual.dll
 C:\dev\Casual\Casual\obj\Debug\Casual.pdb
+C:\dev\Casual\Casual\obj\Debug\Casual.csproj.CoreCompileInputs.cache

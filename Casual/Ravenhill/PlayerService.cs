@@ -35,15 +35,15 @@ namespace Casual.Ravenhill {
         private Wishlist wishlist { get; } = new Wishlist();
 
         #region Wishlist
-        public bool AddToWishlist(CollectableData data) {
+        public bool AddToWishlist(InventoryItemData data) {
             return wishlist.Add(data);
         }
 
-        public bool RemoveFromWishlist(CollectableData data ) {
+        public bool RemoveFromWishlist(InventoryItemData data ) {
             return wishlist.Remove(data);
         }
 
-        public bool IsWishlistContains(CollectableData data) {
+        public bool IsWishlistContains(InventoryItemData data) {
             return wishlist.IsContains(data);
         }
 
@@ -53,7 +53,7 @@ namespace Casual.Ravenhill {
             }
         }
 
-        public List<CollectableData> WishItems => wishlist.collectableList;
+        public List<InventoryItemData> WishItems => wishlist.itemList;
 
         public int WishlistCount => wishlist.Count;
         #endregion

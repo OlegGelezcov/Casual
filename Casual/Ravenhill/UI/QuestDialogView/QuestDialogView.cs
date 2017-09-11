@@ -33,6 +33,8 @@ namespace Casual.Ravenhill.UI{
                 throw new ArgumentException($"invalid QuestDialogView init data, must be typeof {typeof(Data).FullName}");
             }
 
+            Debug.Log("Show quest dialog....");
+
             QuestOwnerData owner = resourceService.GetQuestOwner(initData.quest.ownerId);
 
             if(owner != null ) {
@@ -59,6 +61,8 @@ namespace Casual.Ravenhill.UI{
                             if(initData.isStart ) {
                                 Debug.Log($"Call show quest start view after quest dialog view");
                                 viewService.ShowViewWithDelay(RavenhillViewType.quest_start_view, 0.5f, initData.quest);
+                            } else {
+                                viewService.ShowViewWithDelay(RavenhillViewType.quest_end_view, 0.5f, initData.quest);
                             }
                         }
                     }

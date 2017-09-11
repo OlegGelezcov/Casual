@@ -2,20 +2,20 @@
 using UnityEngine;
 
 namespace Casual.Ravenhill.UI {
-    public class SearchTextSlot : RavenhillGameBehaviour {
+    public class SearchTextSlot : RavenhillUIBehaviour {
 
         private SearchText searchText { get; set; }
         public bool isEmpty => (searchText == null);
 
 
-        public void DestroyText() {
+        private void DestroyText() {
             if(!isEmpty) {
                 Destroy(searchText.gameObject);
                 searchText = null;
             }
         }
 
-        public void CreateText(SearchObjectData searchObjectData) {
+        private void CreateText(SearchObjectData searchObjectData) {
             DestroyText();
 
             GameObject searchTextGameObject = Instantiate<GameObject>(engine.GetService<IResourceService>().GetCachedPrefab("search_text"));
@@ -40,5 +40,37 @@ namespace Casual.Ravenhill.UI {
             }
         }
 
+        public void Setup() {
+            if(isEmpty ) {
+                var searchManager = FindObjectOfType<SearchManager>();
+                SearchObjectData data = null;
+                if(searchManager.TryActivateNext(out data)) {
+                    CreateText(data);
+                }
+            }
+        }
+
+        public override void OnEnable() {
+            base.OnEnable();
+            RavenhillEvents.SearchTextStroked += OnSearchTextStroked;
+        }
+
+        public override void OnDisable() {
+            base.OnDisable();
+            RavenhillEvents.SearchTextStroked -= OnSearchTextStroked;
+        }
+
+        private void OnSearchTextStroked(SearchText searchText, SearchObjectData data) {
+            if (!isEmpty) {
+                if (this.searchText == searchText) {
+                    DestroyText();
+                    var searchManager = FindObjectOfType<SearchManager>();
+                    SearchObjectData sdata = null;
+                    if (searchManager.TryActivateNext(out sdata)) {
+                        CreateText(sdata);
+                    }
+                }
+            }
+        }
     }
 }

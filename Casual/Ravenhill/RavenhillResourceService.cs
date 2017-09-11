@@ -707,7 +707,12 @@ namespace Casual.Ravenhill {
 
         public List<StoryChargerData> storyChargerList => new List<StoryChargerData>(storyChargers.Values);
 
-        public List<BonusData> bonusList => new List<BonusData>(bonuses.Values);
+        public List<BonusData> bonusList {
+            get {
+                List<BonusData> list = new List<BonusData>(bonuses.Values);
+                return list.OrderBy(b => b.id).ToList();
+            }
+        }
 
         public List<ToolData> toolList => new List<ToolData>(tools.Values);
 
@@ -717,6 +722,8 @@ namespace Casual.Ravenhill {
 
         public List<CollectionData> collectionList =>
             new List<CollectionData>(collections.Values).OrderBy(c => c.id).ToList();
+
+        public List<CollectableData> collectableList => new List<CollectableData>(collectables.Values);
 
         public List<BankProductData> bankProductList => new List<BankProductData>(bankProducts.Values);
 

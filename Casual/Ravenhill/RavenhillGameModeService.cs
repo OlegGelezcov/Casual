@@ -2,6 +2,7 @@
 using Casual.Ravenhill.Data;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Casual.Ravenhill {
     public class RavenhillGameModeService : GameModeService, ISaveable {
@@ -13,6 +14,10 @@ namespace Casual.Ravenhill {
         public int searchCounter { get; private set; } = 0;
         public string lastSearchRoomId { get; set; } = string.Empty;
 
+        private readonly Queue<CollectableData> receivedCollectables = new Queue<CollectableData>();
+        private bool collectableViewStarted = false;
+        private float updateCollectableTimer = 1.0f;
+
         public override void Start() {
             base.Start();
             engine.GetService<ISaveService>().Register(this);
@@ -21,11 +26,49 @@ namespace Casual.Ravenhill {
         public override void OnEnable() {
             base.OnEnable();
             RavenhillEvents.SearchSessionEnded += OnSearchSessionEnded;
+            RavenhillEvents.InventoryItemAdded += OnInventoryItemAdded;
         }
 
         public override void OnDisable() {
             base.OnDisable();
             RavenhillEvents.SearchSessionEnded -= OnSearchSessionEnded;
+            RavenhillEvents.InventoryItemAdded -= OnInventoryItemAdded;
+        }
+
+        private void OnInventoryItemAdded(InventoryItemType type, string itemId, int count ) {
+            if(type == InventoryItemType.Collectable ) {
+                RavenhillResourceService resourceService = engine.GetService<IResourceService>().Cast<RavenhillResourceService>();
+                CollectableData data = resourceService.GetCollectable(itemId);
+                if(data != null ) {
+                    receivedCollectables.Enqueue(data);
+                    //StopCoroutine("CorShowReceivedCollectables");
+                    //StartCoroutine(CorShowReceivedCollectables(data));
+                }
+            }
+        }
+
+
+        private System.Collections.IEnumerator CorShowReceivedCollectables(CollectableData data) {
+            RavenhillViewService viewService = engine.GetService<IViewService>().Cast<RavenhillViewService>();
+            yield return new WaitUntil(() => (!viewService.ExistView(RavenhillViewType.collectable_added_note_view)));
+
+            viewService.ShowView(RavenhillViewType.collectable_added_note_view, data);
+            yield return new WaitUntil(() => (!viewService.ExistView(RavenhillViewType.collectable_added_note_view)));
+            yield return new WaitForSeconds(0.3f);
+            collectableViewStarted = false;
+        }
+
+        public override void Update() {
+            base.Update();
+            updateCollectableTimer -= Time.deltaTime;
+            if(updateCollectableTimer <= 0.0f ) {
+                updateCollectableTimer += 1.0f;
+                if(!collectableViewStarted && receivedCollectables.Count > 0 ) {
+                    var data = receivedCollectables.Dequeue();
+                    collectableViewStarted = true;
+                    StartCoroutine(CorShowReceivedCollectables(data));
+                }
+            }
         }
 
         private void OnSearchSessionEnded(SearchSession session ) {
@@ -178,6 +221,22 @@ namespace Casual.Ravenhill {
             }
         }
 
+        public bool IsAlchemyReadyToCharge(BonusData bonus ) {
+            bool alchemyReady = true;
+
+            RavenhillResourceService resourceService = engine.GetService<IResourceService>().Cast<RavenhillResourceService>();
+            PlayerService playerService = engine.GetService<IPlayerService>().Cast<PlayerService>();
+
+            foreach(var pair in bonus.ingredients ) {
+                int playerCount = playerService.GetItemCount(resourceService.GetIngredient(pair.Key));
+                if(playerCount < pair.Value ) {
+                    alchemyReady = false;
+                    break;
+                }
+            }
+            return alchemyReady;
+        }
+
         public bool IsCollectionReadyToCharge(CollectionData collection ) {
             bool collectablesReady = true;
 
@@ -229,6 +288,21 @@ namespace Casual.Ravenhill {
             }
 
             return hasCollectables && hasCharger;
+        }
+
+        public void ChargeAlchemy(BonusData bonus ) {
+
+            RavenhillResourceService resourceService = engine.GetService<IResourceService>().Cast<RavenhillResourceService>();
+            PlayerService playerService = engine.GetService<IPlayerService>().Cast<PlayerService>();
+
+            foreach(var pair in bonus.ingredients ) {
+                IngredientData ingredientData = resourceService.GetIngredient(pair.Key);
+                playerService.RemoveItem(ingredientData.type, ingredientData.id, pair.Value);
+            }
+
+            playerService.AddItem(new InventoryItem(bonus, 1));
+            //engine.Cast<RavenhillEngine>().DropItems(new List<DropItem> { new DropItem(DropType.item, 1, bonus )});
+            RavenhillEvents.OnAlchemyCharged(bonus);
         }
 
         public void ChargeCollection(CollectionData collectionData) {

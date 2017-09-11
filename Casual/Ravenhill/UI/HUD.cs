@@ -232,7 +232,7 @@ namespace Casual.Ravenhill.UI {
                 viewService.ShowView(RavenhillViewType.achievments_view);
             });
 
-
+            avatarButton.SetListener(() => viewService.ShowView(RavenhillViewType.avatars_view));
         }
 
         public override void OnEnable() {

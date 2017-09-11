@@ -7,6 +7,7 @@ namespace Casual.Ravenhill.Data {
         public override PriceData price { get; protected set; }
         public float prob { get; private set; }
         public List<string> rooms { get; } = new List<string>();
+        public string bonusId { get; private set; }
 
         public override void Load(UXMLElement element) {
             base.Load(element);
@@ -16,6 +17,7 @@ namespace Casual.Ravenhill.Data {
             foreach(string roomId in element.GetString("drop_rooms").Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries)) {
                 rooms.Add(roomId);
             }
+            bonusId = element.GetString("bonus_id");
         }
 
         public override InventoryItemType type => InventoryItemType.Ingredient;

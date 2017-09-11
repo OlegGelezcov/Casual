@@ -7,10 +7,10 @@ namespace Casual.Ravenhill {
 
         private const int kMaxSize = 5;
 
-        private Dictionary<string, CollectableData> collectables { get; } = new Dictionary<string, CollectableData>();
+        private Dictionary<string, InventoryItemData> collectables { get; } = new Dictionary<string, InventoryItemData>();
 
         #region IWishlist
-        public bool Add(CollectableData data) {
+        public bool Add(InventoryItemData data) {
             if(!collectables.ContainsKey(data.id)) {
                 if(collectables.Count < kMaxSize ) {
                     collectables.Add(data.id, data);
@@ -20,11 +20,11 @@ namespace Casual.Ravenhill {
             }
             return false;
         }
-        public bool IsContains(CollectableData data) {
+        public bool IsContains(InventoryItemData data) {
             return collectables.ContainsKey(data.id);
         }
 
-        public bool Remove(CollectableData data) {
+        public bool Remove(InventoryItemData data) {
             bool success = collectables.Remove(data.id);
             if(success ) {
                 RavenhillEvents.OnRemovedFromWishlist(data);
@@ -64,9 +64,9 @@ namespace Casual.Ravenhill {
         } 
         #endregion
 
-        public List<CollectableData> collectableList {
+        public List<InventoryItemData> itemList {
             get {
-                List<CollectableData> list = new List<CollectableData>(collectables.Values);
+                List<InventoryItemData> list = new List<InventoryItemData>(collectables.Values);
                 return list.OrderBy(c => c.id).ToList();
             }
         }

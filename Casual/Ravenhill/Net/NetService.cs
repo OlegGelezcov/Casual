@@ -33,8 +33,8 @@ namespace Casual.Ravenhill.Net {
             
         }
 
-        public void ShareWishlist(List<CollectableData> collectables ) {
-            Debug.Log($"Share items: {collectables.Count}");
+        public void ShareWishlist(List<InventoryItemData> items ) {
+            Debug.Log($"Share items: {items.Count}");
         }
 
         public void Ask(InventoryItemData data) {

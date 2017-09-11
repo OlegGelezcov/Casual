@@ -280,8 +280,17 @@ namespace Casual.Ravenhill {
                         ShowMsgBox(btnCount);
                     }
                     break;
+                case "alchemy": {
+                        ShowAlchemy();
+                    }
+                    break;
             }
             return true;
+        }
+
+        private void ShowAlchemy() {
+            viewService.ShowView(RavenhillViewType.alchemy_view);
+            engine.GetService<IDebugService>().AddMessage("Show alchemy view", ColorType.black);
         }
 
         private void ShowVideoView() {
@@ -407,6 +416,10 @@ namespace Casual.Ravenhill {
                         resourceService.foodList.ForEach(f => {
                             player.AddItem(new InventoryItem(f, 1));
                         });
+                    }
+                    break;
+                case "collectable": {
+                        resourceService.collectableList.ForEach(c => player.AddItem(new InventoryItem(c, 1)));
                     }
                     break;
             }

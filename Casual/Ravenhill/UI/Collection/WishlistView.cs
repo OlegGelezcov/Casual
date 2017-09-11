@@ -39,11 +39,11 @@ namespace Casual.Ravenhill.UI {
             RavenhillEvents.RemovedFromWishlist -= OnWishItemRemoved;
         }
 
-        private void OnWishItemAdded(CollectableData data) {
+        private void OnWishItemAdded(InventoryItemData data) {
             Setup();
         }
 
-        private void OnWishItemRemoved(CollectableData data) {
+        private void OnWishItemRemoved(InventoryItemData data) {
             Setup();
         }
     }

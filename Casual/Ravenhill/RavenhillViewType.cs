@@ -27,6 +27,8 @@ namespace Casual.Ravenhill {
         achievments_view = 18,
         achievment_rank_view = 19,
         message_box_view = 20,
-        collectable_added_note_view = 21
+        collectable_added_note_view = 21,
+        alchemy_view = 22,
+        avatars_view = 23
     }
 }

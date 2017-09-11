@@ -64,6 +64,7 @@
     <Compile Include="Ravenhill\AchievmentInfo.cs" />
     <Compile Include="Ravenhill\AchievmentService.cs" />
     <Compile Include="Ravenhill\BaseSearchableObject.cs" />
+    <Compile Include="Ravenhill\Buffs.cs" />
     <Compile Include="Ravenhill\Data\AchievmentData.cs" />
     <Compile Include="Ravenhill\Data\BankProductData.cs" />
     <Compile Include="Ravenhill\Data\BuffData.cs" />
@@ -168,6 +169,11 @@
     <Compile Include="Ravenhill\UI\AddCollectableItemNoteView\CollectableAddedNoteView.cs" />
     <Compile Include="Ravenhill\UI\AddCollectableItemNoteView\NoteCollectableView.cs" />
     <Compile Include="Ravenhill\UI\AddCollectableItemNoteView\NoteCollectionView.cs" />
+    <Compile Include="Ravenhill\UI\Alchemy\AlchemyBonusView.cs" />
+    <Compile Include="Ravenhill\UI\Alchemy\AlchemyIngredientView.cs" />
+    <Compile Include="Ravenhill\UI\Alchemy\AlchemyView.cs" />
+    <Compile Include="Ravenhill\UI\AvatarView\AvatarItemView.cs" />
+    <Compile Include="Ravenhill\UI\AvatarView\AvatarsView.cs" />
     <Compile Include="Ravenhill\UI\Bank\BankProductView.cs" />
     <Compile Include="Ravenhill\UI\Bank\BankSpecialProductView.cs" />
     <Compile Include="Ravenhill\UI\Bank\BankView.cs" />
@@ -210,6 +216,7 @@
     <Compile Include="Ravenhill\UI\MessageBox\ColoredImageCollection.cs" />
     <Compile Include="Ravenhill\UI\MessageBox\ControlColor.cs" />
     <Compile Include="Ravenhill\UI\MessageBox\MessageBoxView.cs" />
+    <Compile Include="Ravenhill\UI\NameIconView.cs" />
     <Compile Include="Ravenhill\UI\PatientRewardView\PatientRewardView.cs" />
     <Compile Include="Ravenhill\UI\QuestDialogView\QuestDialogView.cs" />
     <Compile Include="Ravenhill\UI\QuestEndView\QuestEndView.cs" />

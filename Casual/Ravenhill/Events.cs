@@ -44,8 +44,8 @@ namespace Casual.Ravenhill {
         public static event System.Action<InventoryItemType, string, int> InventoryItemAdded;
         public static event System.Action<InventoryItemType, string, int> InventoryItemRemoved;
 
-        public static event System.Action<CollectableData> AddedToWishlist;
-        public static event System.Action<CollectableData> RemovedFromWishlist;
+        public static event System.Action<InventoryItemData> AddedToWishlist;
+        public static event System.Action<InventoryItemData> RemovedFromWishlist;
 
         public static event System.Action<JournalEntryInfo> JournalEntryAdded;
         public static event System.Action<JournalEntryInfo> JournalEntryRemoved;
@@ -69,6 +69,12 @@ namespace Casual.Ravenhill {
 
         public static event System.Action<AchievmentInfo, AchievmentTierData> TierAchieved;
         public static event System.Action<AchievmentData, AchievmentTierData> AchievmentRewarded;
+
+        public static event System.Action<BonusData> AlchemyCharged;
+
+        public static void OnAlchemyCharged(BonusData data ) {
+            AlchemyCharged?.Invoke(data);
+        }
 
         public static void OnAchievmentRewarded(AchievmentData achievmentData, AchievmentTierData tierData ) {
             AchievmentRewarded?.Invoke(achievmentData, tierData);
@@ -130,11 +136,11 @@ namespace Casual.Ravenhill {
             JournalEntryEndTextClosed?.Invoke(info);
         }
 
-        public static void OnAddedToWishlist(CollectableData data) {
+        public static void OnAddedToWishlist(InventoryItemData data) {
             AddedToWishlist?.Invoke(data);
         }
 
-        public static void OnRemovedFromWishlist(CollectableData data) {
+        public static void OnRemovedFromWishlist(InventoryItemData data) {
             RemovedFromWishlist?.Invoke(data);
         }
 

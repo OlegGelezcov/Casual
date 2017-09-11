@@ -5,7 +5,7 @@ using UnityEngine.UI;
 namespace Casual.Ravenhill.UI {
     public partial class WishItemView : RavenhillUIBehaviour {
 
-        public void Setup(CollectableData data ) {
+        public void Setup(InventoryItemData data ) {
             if(data == null ) {
                 iconImage.overrideSprite = resourceService.transparent;
                 removeWishButton.DeactivateSelf();

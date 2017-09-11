@@ -88,6 +88,7 @@ namespace Casual.Ravenhill {
             tempQuestList.ForEach(quest => notStartedQuests.Remove(quest.id));
             tempQuestList.ForEach(quest => startedQuests[quest.id] = quest);
             tempQuestList.ForEach(quest => quest.Start());
+            Debug.Log($"Count of nearly started quests: {tempQuestList.Count}");
             return count;
         }
 
@@ -246,6 +247,7 @@ namespace Casual.Ravenhill {
 
             root.Add(startedRoot);
             root.Add(completedRoot);
+            Debug.Log($"QUESTS SAVE, NOT STARTED: {notStartedQuests.Count}, STARTED: {startedQuests.Count}, COMPLETED: {completedQuests.Count}".Colored(ColorType.yellow));
             return root.ToString();
         }
 
@@ -295,6 +297,8 @@ namespace Casual.Ravenhill {
                         notStartedQuests.Add(questData.id, new QuestInfo(questData));
                     }
                 });
+
+                Debug.Log($"QUESTS LOAD, NOT STARTED: {notStartedQuests.Count}, STARTED: {startedQuests.Count}, COMPLETED: {completedQuests.Count}".Colored(ColorType.yellow));
                 isLoaded = true;
             }
             return isLoaded;

@@ -63,28 +63,32 @@ namespace Casual.Ravenhill.UI {
 
             RavenhillEvents.SearchObjectCollected += OnSearchObjectCollected;
             RavenhillEvents.SearchProgressChanged += OnSearchProgressChanged;
-            RavenhillEvents.SearchObjectActivated += OnSearchTextActivated;
-            RavenhillEvents.SearchTextStroked += OnSearchTextStroked;
+            //RavenhillEvents.SearchObjectActivated += OnSearchTextActivated;
+            //RavenhillEvents.SearchTextStroked += OnSearchTextStroked;
         }
 
         public override void OnDisable() {
             base.OnDisable();
             RavenhillEvents.SearchObjectCollected -= OnSearchObjectCollected;
             RavenhillEvents.SearchProgressChanged -= OnSearchProgressChanged;
-            RavenhillEvents.SearchObjectActivated -= OnSearchTextActivated;
-            RavenhillEvents.SearchTextStroked -= OnSearchTextStroked;
+            //RavenhillEvents.SearchObjectActivated -= OnSearchTextActivated;
+            //RavenhillEvents.SearchTextStroked -= OnSearchTextStroked;
         }
 
         public override void Setup(object data = null) {
             base.Setup(data);
 
+            /*
             var searchManager = FindObjectOfType<SearchManager>();
+
+
             var activeSearchObjects = searchManager?.activeObjects ?? new List<Data.SearchObjectData>();
 
             foreach(var activeObject in activeSearchObjects) {
                 var slot = FindEmptySlot();
                 slot?.CreateText(activeObject);
-            }
+            }*/
+            slots.ToList().ForEach((slot) => slot.Setup());
 
             SearchSession session = data as SearchSession;
             searchTimerView?.StartTimer(session.roomInfo.currentRoomSetting.searchTime);
@@ -102,25 +106,25 @@ namespace Casual.Ravenhill.UI {
 
         }
 
-        private void OnSearchTextStroked(SearchText searchText, SearchObjectData data) {
-            var slot = FindSlot(data);
-            slot?.DestroyText();
-        }
+        //private void OnSearchTextStroked(SearchText searchText, SearchObjectData data) {
+        //    var slot = FindSlot(data);
+        //    slot?.DestroyText();
+        //}
 
         private void OnSearchObjectCollected(SearchObjectData data, ISearchableObject searchable ) {
             var slot = FindSlot(data);
             slot?.Stroke();
         }
 
-        private void OnSearchTextActivated(SearchObjectData data, BaseSearchableObject searchable) {
-            StartCoroutine(CorCreateSearchTextSlotText(data));
-        }
+        //private void OnSearchTextActivated(SearchObjectData data, BaseSearchableObject searchable) {
+        //    StartCoroutine(CorCreateSearchTextSlotText(data));
+        //}
 
-        private System.Collections.IEnumerator CorCreateSearchTextSlotText(SearchObjectData searchObjectData ) {
-            yield return new WaitUntil(() => FindEmptySlot() != null);
-            var slot = FindEmptySlot();
-            slot?.CreateText(searchObjectData);
-        }
+        //private System.Collections.IEnumerator CorCreateSearchTextSlotText(SearchObjectData searchObjectData ) {
+        //    yield return new WaitUntil(() => FindEmptySlot() != null);
+        //    var slot = FindEmptySlot();
+        //    slot?.CreateText(searchObjectData);
+        //}
 
         public bool HasEmptySlot => FindEmptySlot() != null;
     }

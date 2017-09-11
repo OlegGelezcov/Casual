@@ -5,6 +5,7 @@ namespace Casual.Ravenhill.UI {
     using Casual.Ravenhill.Data;
     using Casual.UI;
     using UnityEngine;
+    using UnityEngine.UI;
 
     public partial class CollectableAddedNoteView : RavenhillBaseView {
 
@@ -35,6 +36,9 @@ namespace Casual.Ravenhill.UI {
             }
 
             collectionView.Setup(collectionData);
+
+            collectionNameText.text = resourceService.GetString(collectionData.nameId);
+
             StartCoroutine(CorEffect());
         }
 
@@ -75,5 +79,8 @@ namespace Casual.Ravenhill.UI {
 
         [SerializeField]
         private NoteCollectionView collectionView;
+
+        [SerializeField]
+        private Text collectionNameText;
     }
 }

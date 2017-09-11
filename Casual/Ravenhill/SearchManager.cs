@@ -51,10 +51,8 @@ namespace Casual.Ravenhill {
 
         public override void Start() {
             base.Start();
-            
-
+           
             SearchSession session = ravenhillGameModeService.searchSession;
-
             StartSearch(session.roomInfo.currentRoomSetting.searchObjectCount);
             engine.GetService<IViewService>().ShowView(RavenhillViewType.search_pan, session);
         }
@@ -62,61 +60,75 @@ namespace Casual.Ravenhill {
         public void StartSearch(int maxCount) {
             RavenhillEvents.OnSearchStarted();
 
-            ActivateGroup(maxCount);
-        }
-
-        private void ActivateGroup(int maxObjectCount) {
             int groupIndex = UnityEngine.Random.Range(0, searchGroups.Length);
             searchGroups[groupIndex].gameObject.SetActive(true);
             activeGroup = searchGroups[groupIndex];
 
-            currentSearchObjects = activeGroup.Activate(maxObjectCount);
+            currentSearchObjects = activeGroup.Activate(maxCount);
 
             RavenhillEvents.OnSearchProgressChanged(foundedSearchObjectCount, searchableObjectCount);
             var resourceService = engine.GetService<IResourceService>() as RavenhillResourceService;
             notFoundedObjects.Clear();
-            for(int i = 0; i < currentSearchObjects.Length; i++ ) {
+            for (int i = 0; i < currentSearchObjects.Length; i++) {
                 var searchObjectData = resourceService.GetSearchObjectData(currentSearchObjects[i].id);
-                if(searchObjectData != null ) {
+                if (searchObjectData != null) {
                     notFoundedObjects.Add(searchObjectData);
                 }
             }
             numberToFind = notFoundedObjects.Count;
-            StartCoroutine(CorActivate());
+            Debug.Log($"Not Founded: {notFoundedObjects.Count}, Active: {activeObjects.Count}, Founded: {foundedObjects.Count}");
         }
 
-        private bool isActivationNotStarted = true;
+        //private void ActivateGroup(int maxObjectCount) {
 
-        private System.Collections.IEnumerator CorActivate() {
-            yield return new WaitUntil(() => isActivationNotStarted);
-            StartCoroutine(ActivateIndices());
-        }
+        //    //StartCoroutine(CorActivate());
+        //}
 
-        private System.Collections.IEnumerator ActivateIndices() {
-            isActivationNotStarted = false;
-            int numberToActivate = maxActiveObjects - activeObjects.Count;
-            int notFoundedCount = notFoundedObjects.Count;
+        //private bool isActivationNotStarted = true;
 
-            for(int i = 0; i < Mathf.Min(numberToActivate, notFoundedCount); i++ ) {
+        //private System.Collections.IEnumerator CorActivate() {
+        //    yield return new WaitUntil(() => isActivationNotStarted);
+        //    StartCoroutine(ActivateIndices());
+        //}
 
-                yield return new WaitUntil(() => {
-                    var sobj = viewService.GetView(RavenhillViewType.search_pan);
-                    if(sobj) {
-                        var searchPan = sobj.GetComponentInChildren<SearchPan>();
-                        if(searchPan ) {
-                            return searchPan.HasEmptySlot;
-                        }
-                    }
-                    return false;
-                });
-
-                SearchObjectData firstData = notFoundedObjects[0];
+        public bool TryActivateNext(out SearchObjectData data) {
+            data = null;
+            if(notFoundedObjects.Count > 0 ) {
+                data = notFoundedObjects[0];
                 notFoundedObjects.RemoveAt(0);
-                activeObjects.Add(firstData);
-                ActivateObject(firstData);
+                activeObjects.Add(data);
+                ActivateObject(data);
+                Debug.Log($"Activated {data.id}");
+                return true;
             }
-            isActivationNotStarted = true;
+            return false;
         }
+
+        //private System.Collections.IEnumerator ActivateIndices() {
+        //    isActivationNotStarted = false;
+        //    int numberToActivate = maxActiveObjects - activeObjects.Count;
+        //    int notFoundedCount = notFoundedObjects.Count;
+
+        //    for(int i = 0; i < Mathf.Min(numberToActivate, notFoundedCount); i++ ) {
+
+        //        yield return new WaitUntil(() => {
+        //            var sobj = viewService.GetView(RavenhillViewType.search_pan);
+        //            if(sobj) {
+        //                var searchPan = sobj.GetComponentInChildren<SearchPan>();
+        //                if(searchPan ) {
+        //                    return searchPan.HasEmptySlot;
+        //                }
+        //            }
+        //            return false;
+        //        });
+
+        //        SearchObjectData firstData = notFoundedObjects[0];
+        //        notFoundedObjects.RemoveAt(0);
+        //        activeObjects.Add(firstData);
+        //        ActivateObject(firstData);
+        //    }
+        //    isActivationNotStarted = true;
+        //}
 
         private void ActivateObject(SearchObjectData data) {
             var targetObject = currentSearchObjects.FirstOrDefault(sObj => sObj.id == data.id);
@@ -134,11 +146,13 @@ namespace Casual.Ravenhill {
             if(isWin) {
                 Debug.Log("EXIT");
                 EndSearch(status: SearchStatus.success, showExitRoomView: true);
-            } else {
-                Debug.Log("ACTIVATE NEXT");
-                //ActivateIndices();
-                StartCoroutine(CorActivate());
-            }
+            } 
+            
+            //else {
+            //    Debug.Log("ACTIVATE NEXT");
+            //    //ActivateIndices();
+            //    StartCoroutine(CorActivate());
+            //}
         }
 
         private bool isWin => foundedSearchObjectCount == numberToFind;

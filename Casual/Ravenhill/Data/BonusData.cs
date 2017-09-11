@@ -26,5 +26,15 @@ namespace Casual.Ravenhill.Data {
         public override InventoryItemType type => InventoryItemType.Bonus;
         public override bool isUsableFromInventory => true;
         public override bool IsSellable => true;
+
+        public int GetIngredientCount(string ingredientId ) {
+            return ingredients.GetOrDefault(ingredientId);
+        }
+
+        public List<string> ingredientList {
+            get {
+                return new List<string>(ingredients.Keys).OrderBy(i => i).ToList();
+            }
+        }
     }
 }

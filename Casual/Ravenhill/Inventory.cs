@@ -17,6 +17,16 @@ namespace Casual.Ravenhill {
             RavenhillEvents.OnInventoryChanged(item.data.type, item.id, item.count);
         }
 
+        public InventoryItem GetItem(InventoryItemData data) {
+            if(items.ContainsKey(data.type)) {
+                Dictionary<string, InventoryItem> filteredItems = items[data.type];
+                if(filteredItems.ContainsKey(data.id)) {
+                    return filteredItems[data.id];
+                }
+            }
+            return null;
+        }
+
         private void AddItemImpl(InventoryItem item) {
             if (items.ContainsKey(item.data.type)) {
                 Dictionary<string, InventoryItem> filtered = items[item.data.type];

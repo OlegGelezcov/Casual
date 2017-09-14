@@ -177,4 +177,11 @@ namespace Casual.UI {
             Debug.Log("Setup Achievment List View...");
         }
     }
+
+    public class BuffListView : ListView<BuffInfo> {
+        public override void Setup(ListViewData data) {
+            base.Setup(data);
+            Debug.Log("Setup Buff List");
+        }
+    }
 }

@@ -63,6 +63,11 @@ namespace Casual {
             return $"{timeSpan.Minutes.ToString("00")}:{timeSpan.Seconds.ToString("00")}";
         }
 
+        public static string FormatHMS(float interval) {
+            TimeSpan timeSpan = TimeSpan.FromSeconds(interval);
+            return $"{timeSpan.Hours.ToString("00")}:{timeSpan.Minutes.ToString("00")}:{timeSpan.Seconds.ToString("00")}";
+        }
+
         public static int TryParseInt(string text, int defaultValue = 0) {
             int ret;
             if(int.TryParse(text, out ret)) {
@@ -99,6 +104,18 @@ namespace Casual {
             float x = UnityEngine.Random.Range(min.x, max.x);
             float y = UnityEngine.Random.Range(min.y, max.y);
             return new Vector2(x, y);
+        }
+
+        public static float Bezier1(float t, float start, float end ) {
+            return Mathf.Lerp(start, end, t);
+        }
+
+        public static Vector3 Bezier1(float t, Vector3 start, Vector3 end ) {
+            return Vector3.Lerp(start, end, t);
+        }
+
+        public static Vector2 Bezier1(float t, Vector2 start, Vector2 end ) {
+            return Vector2.Lerp(start, end, t);
         }
 
         public static Vector2 Bezier2(float t, Vector2 start, Vector2 mid, Vector2 end) {

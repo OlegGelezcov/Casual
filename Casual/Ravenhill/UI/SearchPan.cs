@@ -1,9 +1,5 @@
 ﻿using Casual.Ravenhill.Data;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,16 +27,19 @@ namespace Casual.Ravenhill.UI {
         private Button m_ExitSearchButton;
 
         [SerializeField]
-        private Button m_ClewerToolButton;
+        private BaseToolView[] toolViews;
 
-        [SerializeField]
-        private Button m_DinamiteToolButton;
+        //[SerializeField]
+        //private EyeToolView eyeTollView;
 
-        [SerializeField]
-        private Button m_ClockToolButton;
+        //[SerializeField]
+        //private BombToolView bombToolView;
 
-        [SerializeField]
-        private Button m_EyeToolButton;
+        //[SerializeField]
+        //private ClockToolView clockToolView;
+
+        //[SerializeField]
+        //private ClewerToolView clewerToolView;
 
         [SerializeField]
         private SearchTimerView m_SearchTimerView;
@@ -63,35 +62,31 @@ namespace Casual.Ravenhill.UI {
 
             RavenhillEvents.SearchObjectCollected += OnSearchObjectCollected;
             RavenhillEvents.SearchProgressChanged += OnSearchProgressChanged;
-            //RavenhillEvents.SearchObjectActivated += OnSearchTextActivated;
-            //RavenhillEvents.SearchTextStroked += OnSearchTextStroked;
+            RavenhillEvents.SearchTimerPauseChanged += OnPausedChanged;
         }
 
         public override void OnDisable() {
             base.OnDisable();
             RavenhillEvents.SearchObjectCollected -= OnSearchObjectCollected;
             RavenhillEvents.SearchProgressChanged -= OnSearchProgressChanged;
-            //RavenhillEvents.SearchObjectActivated -= OnSearchTextActivated;
-            //RavenhillEvents.SearchTextStroked -= OnSearchTextStroked;
+            RavenhillEvents.SearchTimerPauseChanged -= OnPausedChanged;
+        }
+
+        private void OnPausedChanged(bool oldPaused, bool newPaused, int interval ) {
+            if(newPaused ) {
+                viewService.ShowView(RavenhillViewType.pause_timer_view, searchTimerView);
+            }
         }
 
         public override void Setup(object data = null) {
             base.Setup(data);
 
-            /*
-            var searchManager = FindObjectOfType<SearchManager>();
-
-
-            var activeSearchObjects = searchManager?.activeObjects ?? new List<Data.SearchObjectData>();
-
-            foreach(var activeObject in activeSearchObjects) {
-                var slot = FindEmptySlot();
-                slot?.CreateText(activeObject);
-            }*/
             slots.ToList().ForEach((slot) => slot.Setup());
 
             SearchSession session = data as SearchSession;
             searchTimerView?.StartTimer(session.roomInfo.currentRoomSetting.searchTime);
+
+            toolViews.ToList().ForEach(tv => tv.Setup());
         }
 
         private SearchTextSlot FindEmptySlot() {

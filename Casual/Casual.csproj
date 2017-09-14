@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\Users\olegg\Documents\Ravenhill\Assets\Plugins\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;RAVENHILL;UNITY_IOS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;RAVENHILL;UNITY_IOS;UNITY_EDITOR</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -44,6 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseView.cs" />
+    <Compile Include="Behaviours\MovingFuncType.cs" />
+    <Compile Include="Behaviours\PositionObject.cs" />
+    <Compile Include="Behaviours\StaticPositionObject.cs" />
+    <Compile Include="Behaviours\TransformBezierMovable.cs" />
+    <Compile Include="Behaviours\TransformPositionObject.cs" />
     <Compile Include="CanvasService.cs" />
     <Compile Include="CasualEngine.cs" />
     <Compile Include="CasualDebug\GizmoObject.cs" />
@@ -64,6 +69,9 @@
     <Compile Include="Ravenhill\AchievmentInfo.cs" />
     <Compile Include="Ravenhill\AchievmentService.cs" />
     <Compile Include="Ravenhill\BaseSearchableObject.cs" />
+    <Compile Include="Ravenhill\Behaviours\BombToolObject.cs" />
+    <Compile Include="Ravenhill\Behaviours\EyeToolObject.cs" />
+    <Compile Include="Ravenhill\Behaviours\MagnifyingGlass.cs" />
     <Compile Include="Ravenhill\Buffs.cs" />
     <Compile Include="Ravenhill\Data\AchievmentData.cs" />
     <Compile Include="Ravenhill\Data\BankProductData.cs" />
@@ -179,6 +187,9 @@
     <Compile Include="Ravenhill\UI\Bank\BankView.cs" />
     <Compile Include="Ravenhill\UI\Bank\ButtonState.cs" />
     <Compile Include="Ravenhill\UI\Bank\IBankContext.cs" />
+    <Compile Include="Ravenhill\UI\BuffsView\BuffsView.cs" />
+    <Compile Include="Ravenhill\UI\BuffsView\BuffView.cs" />
+    <Compile Include="Ravenhill\UI\BuyItemView\BuyItemView.cs" />
     <Compile Include="Ravenhill\UI\Collection\ChargerItemView.cs" />
     <Compile Include="Ravenhill\UI\Collection\CollectableItemView.cs" />
     <Compile Include="Ravenhill\UI\Collection\CollectionChargersView.cs" />
@@ -196,6 +207,7 @@
     <Compile Include="Ravenhill\UI\ExitRoomView\RoomInfoView.cs" />
     <Compile Include="Ravenhill\UI\Famehall\FamehallView.cs" />
     <Compile Include="Ravenhill\UI\Famehall\StoryCollectionView.cs" />
+    <Compile Include="Ravenhill\UI\HintView\HintView.cs" />
     <Compile Include="Ravenhill\UI\HUD.cs" />
     <Compile Include="Ravenhill\UI\Inventory\InventoryItemView.cs" />
     <Compile Include="Ravenhill\UI\Inventory\InventoryView.cs" />
@@ -218,6 +230,7 @@
     <Compile Include="Ravenhill\UI\MessageBox\MessageBoxView.cs" />
     <Compile Include="Ravenhill\UI\NameIconView.cs" />
     <Compile Include="Ravenhill\UI\PatientRewardView\PatientRewardView.cs" />
+    <Compile Include="Ravenhill\UI\PauseView\PauseTimerView.cs" />
     <Compile Include="Ravenhill\UI\QuestDialogView\QuestDialogView.cs" />
     <Compile Include="Ravenhill\UI\QuestEndView\QuestEndView.cs" />
     <Compile Include="Ravenhill\UI\QuestStartView\QuestStartView.cs" />
@@ -225,6 +238,12 @@
     <Compile Include="Ravenhill\UI\RavenhillUIBehaviour.cs" />
     <Compile Include="Ravenhill\UI\RectTransformBinding.cs" />
     <Compile Include="Ravenhill\UI\SearchPan.cs" />
+    <Compile Include="Ravenhill\UI\SearchPan\BaseToolView.cs" />
+    <Compile Include="Ravenhill\UI\SearchPan\BombToolView.cs" />
+    <Compile Include="Ravenhill\UI\SearchPan\ClewerToolView.cs" />
+    <Compile Include="Ravenhill\UI\SearchPan\ClockToolView.cs" />
+    <Compile Include="Ravenhill\UI\SearchPan\EyeToolView.cs" />
+    <Compile Include="Ravenhill\UI\SearchPan\InventoryItemCountText.cs" />
     <Compile Include="Ravenhill\UI\SearchText.cs" />
     <Compile Include="Ravenhill\UI\SearchTextSlot.cs" />
     <Compile Include="Ravenhill\UI\SearchTimerView.cs" />

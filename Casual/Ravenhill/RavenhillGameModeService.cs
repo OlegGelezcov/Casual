@@ -27,12 +27,14 @@ namespace Casual.Ravenhill {
             base.OnEnable();
             RavenhillEvents.SearchSessionEnded += OnSearchSessionEnded;
             RavenhillEvents.InventoryItemAdded += OnInventoryItemAdded;
+            RavenhillEvents.GameModeChanged += OnGameModeChanged;
         }
 
         public override void OnDisable() {
             base.OnDisable();
             RavenhillEvents.SearchSessionEnded -= OnSearchSessionEnded;
             RavenhillEvents.InventoryItemAdded -= OnInventoryItemAdded;
+            RavenhillEvents.GameModeChanged -= OnGameModeChanged;
         }
 
         private void OnInventoryItemAdded(InventoryItemType type, string itemId, int count ) {
@@ -44,6 +46,14 @@ namespace Casual.Ravenhill {
                     //StopCoroutine("CorShowReceivedCollectables");
                     //StartCoroutine(CorShowReceivedCollectables(data));
                 }
+            }
+        }
+
+        private void OnGameModeChanged(GameModeName oldName, GameModeName newName ) {
+            if(newName == GameModeName.map || newName == GameModeName.hallway ) {
+                viewService.ShowView(RavenhillViewType.buffs_view);
+            } else {
+                viewService.RemoveView(RavenhillViewType.buffs_view);
             }
         }
 
@@ -167,6 +177,13 @@ namespace Casual.Ravenhill {
             return roomManager.IsUnlocked(roomId);
         }
 
+        private float GetCollectableProb(CollectableData data) {
+            return data.prob * (1.0f + engine.GetService<IPlayerService>().Cast<PlayerService>().GetValue(BonusType.collectable_prob));
+        }
+
+        private float GetIngredientProb(IngredientData data) {
+            return data.prob * (1.0f + engine.GetService<IPlayerService>().Cast<PlayerService>().GetValue(BonusType.ingredient_prob));
+        }
         //Algorithm of generation room drop...
         public List<InventoryItem> GenerateRoomDrop(RoomData roomData, RoomLevel roomLevel) {
                 
@@ -175,7 +192,7 @@ namespace Casual.Ravenhill {
 
             List<CollectableData> collectables = resourceService.GetCollectables(roomData.id).FindAll((item) => {
                 return ((int)roomLevel >= (int)item.roomLevel) &&
-                    (UnityEngine.Random.value < item.prob);
+                    (UnityEngine.Random.value < GetCollectableProb(item));
             });
             result.AddRange(collectables.Select(c => new InventoryItem(c, 1)).ToList());
 
@@ -183,7 +200,7 @@ namespace Casual.Ravenhill {
             result.AddRange(weapons.Select(w => new InventoryItem(w, 1)).ToList());
 
             List<IngredientData> ingredients = resourceService.GetIngredients(roomData.id).FindAll(item => {
-                return UnityEngine.Random.value < item.prob;
+                return UnityEngine.Random.value < GetIngredientProb(item);
             });
             result.AddRange(ingredients.Select(i => new InventoryItem(i, 1)).ToList());
 

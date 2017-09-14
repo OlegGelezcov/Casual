@@ -60,6 +60,21 @@ namespace Casual.Ravenhill {
         public int WishlistCount => wishlist.Count;
         #endregion
 
+
+        #region Buffs
+        public bool HasBuff(string id) => buffs.HasBuff(id);
+
+        public float GetValue(string id) => buffs.GetValue(id);
+
+        public void AddBuff(BonusData data) => buffs.AddBuff(data);
+
+        public List<BuffInfo> BuffList => buffs.BuffList;
+
+        public float GetValue(BonusType type) => buffs.GetValue(type);
+
+        #endregion
+
+
         public int GetItemCount(InventoryItemData data) {
             return inventory.ItemCount(data.type, data.id);
         }
@@ -78,8 +93,12 @@ namespace Casual.Ravenhill {
             inventory.RemoveItems(type);
         }
 
-        public void UseItem(InventoryItemData data ) {
+        public void UseItem(InventoryItemData data, System.Action<InventoryItemData> useAction = null) {
             Debug.Log($"Use item: {data.type}");
+            var item = inventory.GetItem(data);
+            if(item != null && item.count > 0 ) {
+                UseImpl(item, useAction);
+            }
         }
 
 
@@ -93,9 +112,13 @@ namespace Casual.Ravenhill {
             healthTimer -= Time.deltaTime;
             if(healthTimer <= 0.0f ) {
                 healthTimer += kHealthRestoreInterval;
-                AddHealth(1);
+                AddHealth(GetHealthRestoredForSecond());
             }
             buffs.Update();
+        }
+
+        private float GetHealthRestoredForSecond() {
+            return 1.0f * (1.0f + GetValue(BonusType.hp));
         }
 
         public void OnApplicationFocus(bool focus) {
@@ -167,9 +190,14 @@ namespace Casual.Ravenhill {
         }
 
         public void AddSilver(int count ) {
+            float val = count * (1.0f + GetValue(BonusType.silver));
+            AddSilverImpl(Mathf.RoundToInt(val));
+        }
+
+        private void AddSilverImpl(int count) {
             int oldCount = silver;
             silver += count;
-            if(oldCount != silver ) {
+            if (oldCount != silver) {
                 RavenhillEvents.OnPlayerSilverChanged(oldCount, silver);
             }
         }
@@ -220,14 +248,19 @@ namespace Casual.Ravenhill {
         }
 
         public void AddExp(int count) {
+            float val = count * (1.0f + GetValue(BonusType.exp));
+            AddExpImpl(Mathf.RoundToInt(val));
+        }
+
+        private void AddExpImpl(int count ) {
             int prevLevel = level;
             int oldExp = exp;
             exp += count;
             int newLevel = level;
-            if(oldExp != exp ) {
+            if (oldExp != exp) {
                 RavenhillEvents.OnPlayerExpChanged(oldExp, exp);
 
-                if(oldExp != newLevel ) {
+                if (oldExp != newLevel) {
                     RavenhillEvents.OnPlayerLevelChanged(prevLevel, newLevel);
                 }
             }
@@ -287,9 +320,56 @@ namespace Casual.Ravenhill {
                     AddItem(new InventoryItem(itemData, data.count));
                     Debug.Log($"After buy StoreItemData items was added {data.count}{itemData.id}");
                     return true;
+                } else {
+                    throw new System.ArgumentException("data");
+                }
+            } else {
+                viewService.ShowView(RavenhillViewType.bank);
+                return false;
+            }
+            
+        }
+
+        public bool Buy(InventoryItemData data) {
+            if (data.IsSellable) {
+                if (HasCoins(data.price)) {
+                    RemoveCoins(data.price);
+                    AddItem(new InventoryItem(data, 1));
+                    return true;
+                } else {
+                    viewService.ShowView(RavenhillViewType.bank);
                 }
             }
             return false;
+        }
+
+
+        private bool UseImpl(InventoryItem item, System.Action<InventoryItemData> useAction = null) {
+            if(GetItemCount(item.data) > 0 ) {
+                switch(item.data.type) {
+                    case InventoryItemType.Bonus: {
+                            bool result = UseItemAsBonus(item);
+                            useAction?.Invoke(item.data);
+                            return result;
+                        }
+                    case InventoryItemType.Tool: {
+                            RemoveItem(item.data.type, item.data.id, 1);
+                            useAction?.Invoke(item.data);
+                            return true;
+                        }
+                    default: {
+                            return false;
+                        }
+                }
+            }
+            return false;
+        }
+
+        private bool UseItemAsBonus(InventoryItem item ) {
+            BonusData data = item.data as BonusData;
+            RemoveItem(data.type, data.id, 1);
+            AddBuff(data);
+            return true;
         }
 
         #region ISaveable

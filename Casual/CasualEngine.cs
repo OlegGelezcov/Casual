@@ -8,6 +8,17 @@ namespace Casual {
 
         private Dictionary<Type, IService> services { get; } = new Dictionary<Type, IService>();
 
+        private CasualInput input = null;
+
+        public CasualInput Input {
+            get {
+                if(input == null ) {
+                    input = FindObjectOfType<CasualInput>();
+                }
+                return input;
+            }
+        }
+
         public virtual void Awake() { }
         public virtual void Start() { }
         public virtual void Update() { }

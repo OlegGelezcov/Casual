@@ -8,12 +8,15 @@ namespace Casual.Ravenhill.Data {
         public int interval { get; private set; }
         public float value { get; private set; }
         public Dictionary<string, int> ingredients { get; private set; }
+        public BonusType bonusType { get; private set; }
 
         public override void Load(UXMLElement element) {
             base.Load(element);
             price = new PriceData(element);
             ingredients = new Dictionary<string, int>();
             value = element.GetFloat("value");
+            interval = element.GetInt("time");
+            bonusType = element.GetEnum<BonusType>("type");
 
             element.Element("formula").Elements("ingredient").ForEach(ingredientElement => {
                 string ingredientId = ingredientElement.GetString("id");
@@ -35,5 +38,13 @@ namespace Casual.Ravenhill.Data {
                 return new List<string>(ingredients.Keys).OrderBy(i => i).ToList();
             }
         }
+    }
+
+    public enum BonusType {
+        exp,
+        silver,
+        collectable_prob,
+        hp,
+        ingredient_prob
     }
 }

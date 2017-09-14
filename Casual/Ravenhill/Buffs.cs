@@ -37,6 +37,10 @@ namespace Casual.Ravenhill {
             });
         }
 
+        public float GetValue(BonusType type) {
+            return buffs.Values.Where(b => b.Data.bonusType == type).Sum(b => b.Data.value);
+        }
+
         public void OnApplicationFocus(bool focus) {
             if(focus) {
                 lostFocusInterval = engine.Cast<RavenhillEngine>().LostFocusInterval;
@@ -110,10 +114,16 @@ namespace Casual.Ravenhill {
         }
     }
 
-    public class BuffInfo : RavenhillGameElement, ISaveElement {
+    public class BuffInfo : RavenhillGameElement, ISaveElement, IIdObject {
         
         public string Id { get; private set; }
         public float RemainTime { get; private set; }
+
+        public string id {
+            get {
+                return this.Id;
+            }
+        }
 
         private BonusData data = null;
 
@@ -152,11 +162,21 @@ namespace Casual.Ravenhill {
 
         public bool IsValid {
             get {
+                //bool dataNotNull = (Data != null);
+                //bool remainTimeBiggerZero = (RemainTime > 0.0f);
+
+                //if(!dataNotNull) {
+                //   // Debug.Log($"Buff: {Id}  reason: {nameof(dataNotNull)}");
+                //}
+                //if(!remainTimeBiggerZero) {
+                //   // Debug.Log($"Buff: {Id}  reason: {nameof(remainTimeBiggerZero)}");
+                //}
                 return (Data != null) && (RemainTime > 0.0f);
             }
         }
 
         public void Update(float deltaTime) {
+           // Debug.Log($"Buff: {Id} update on {deltaTime}");
             RemoveTime(deltaTime);
         }
 

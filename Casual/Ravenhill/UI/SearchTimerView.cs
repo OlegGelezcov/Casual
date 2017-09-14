@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Casual.Ravenhill.UI {
-    public class SearchTimerView : RavenhillUIBehaviour {
+    public class SearchTimerView : RavenhillUIBehaviour, IPauseCounterSource {
 
 #pragma warning disable 0649
         [SerializeField]
@@ -22,6 +22,9 @@ namespace Casual.Ravenhill.UI {
 
         private bool isStopped { get; set; } = false;
         public bool isBreaked { get; set; } = false;
+
+        private float pauseTimer = 0.0f;
+        private float pauseInterval = 0.0f;
 
         public override void OnEnable() {
             base.OnEnable();
@@ -47,6 +50,7 @@ namespace Casual.Ravenhill.UI {
             this.duration = duration;
             this.timer = duration;
             isStarted = true;
+
         }
 
         public float searchTime {
@@ -58,24 +62,17 @@ namespace Casual.Ravenhill.UI {
 
 
         public void SetPause(float interval) {
-            StartCoroutine(CorSetPause(interval));
-        }
-
-        private System.Collections.IEnumerator CorSetPause(float interval) {
             bool oldPaused = isPaused;
             isPaused = true;
+            pauseInterval = interval;
+            pauseTimer = pauseInterval;
+            timerText.color = Color.red;
 
             if (oldPaused != isPaused) {
                 RavenhillEvents.OnSearchTimerPauseChanged(oldPaused, isPaused, (int)interval);
             }
-
-            yield return new WaitForSeconds(interval);
-            oldPaused = isPaused;
-            isPaused = false;
-            if(oldPaused != isPaused ) {
-                RavenhillEvents.OnSearchTimerPauseChanged(oldPaused, isPaused, (int)interval);
-            }
         }
+
 
         public override void Update() {
             base.Update();
@@ -90,6 +87,25 @@ namespace Casual.Ravenhill.UI {
                 }
                 timerText.text = Utility.FormatMS(timer);
             }
+            if(isStarted && isPaused ) {
+                pauseTimer -= Time.deltaTime;
+                if(pauseTimer <= 0.0f ) {
+                    bool oldPaused = isPaused;
+                    isPaused = false;
+                    if (oldPaused != isPaused) {
+                        RavenhillEvents.OnSearchTimerPauseChanged(oldPaused, isPaused, (int)pauseInterval);
+                        timerText.color = Color.black;
+                    }
+                }
+            }
+        }
+
+        public int GetPauseTimer() {
+            int count = Mathf.RoundToInt(pauseTimer);
+            if(count < 0 ) {
+                count = 0;
+            }
+            return count;
         }
     }
 }

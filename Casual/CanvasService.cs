@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Casual {
     [RequireComponent(typeof(Canvas))]
@@ -17,6 +18,8 @@ namespace Casual {
 
         [SerializeField]
         private LastSiblingTransform m_LastSiblingTransform;
+
+        private Canvas canvas = null;
 #pragma warning restore 0649
 
         private FirstSiblingTransform firstSiblingTransform => m_FirstSiblingTransform;
@@ -33,6 +36,22 @@ namespace Casual {
                 }
                 return m_RectTransform;
             }
+        }
+
+        public Canvas Canvas {
+            get {
+                if(canvas == null ) {
+                    canvas = GetComponent<Canvas>();
+                }
+                return canvas;
+            }
+        }
+
+        public Vector2 TouchPositionToCanvasPosition(Vector2 touchPosition) {
+            return new Vector2(
+                (touchPosition.x - Screen.width * 0.5f) / Canvas.scaleFactor,
+                (touchPosition.y - Screen.height * 0.5f) / Canvas.scaleFactor
+                );
         }
 
         public override void Awake() {
@@ -84,6 +103,17 @@ namespace Casual {
                 return canvasUnscaledPosition;
             }
             return Vector2.zero;
+        }
+
+        public Vector3 GetUIWorldPosition(RectTransform transform ) {
+            var pos = RectTransformUtility.CalculateRelativeRectTransformBounds(Canvas.GetComponent<RectTransform>(), transform).center;
+            CanvasScaler scaler = Canvas.GetComponent<CanvasScaler>();
+            pos.x += scaler.referenceResolution.x / 2;
+            pos.y += scaler.referenceResolution.y / 2;
+            pos.x = pos.x * (Screen.width / scaler.referenceResolution.x);
+            pos.y = pos.y * (Screen.height / scaler.referenceResolution.y);
+            pos.z = 0;
+            return Camera.main.ScreenToWorldPoint(pos);
         }
     }
 }

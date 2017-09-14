@@ -284,8 +284,30 @@ namespace Casual.Ravenhill {
                         ShowAlchemy();
                     }
                     break;
+                case "hint": {
+                        string offsetStr = GetToken(source, 2).ToLower();
+                        Dictionary<string, HintView.OffsetType> offsets = new Dictionary<string, HintView.OffsetType> {
+                            ["up"] = HintView.OffsetType.Up,
+                            ["down"] = HintView.OffsetType.Down,
+                            ["left"] = HintView.OffsetType.Left,
+                            ["right"] = HintView.OffsetType.Right
+                        };
+                        HintView.OffsetType offset = offsets.GetOrDefault(offsetStr, HintView.OffsetType.Up);
+                        ShowHint(offset);
+                    }
+                    break;
             }
             return true;
+        }
+
+        private void ShowHint(HintView.OffsetType offset ) {
+            HintView.TextData textData = new HintView.TextData {
+                title = "Test hint title",
+                text = "Lorem ipsum dolores ....",
+                offsetType = offset,
+                screenPosition = new Vector2(Screen.width / 2, Screen.height / 2)
+            };
+            viewService.ShowView(RavenhillViewType.hint_view, textData);
         }
 
         private void ShowAlchemy() {

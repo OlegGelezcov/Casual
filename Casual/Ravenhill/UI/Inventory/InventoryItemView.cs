@@ -66,6 +66,7 @@ namespace Casual.Ravenhill.UI {
             priceText.text = data.price.price.ToString();
             buyButton.SetListener(() => {
                 Debug.Log($"buy item {data.type}-{data.id}");
+                playerService.Buy(data);
             });
         }
 

@@ -138,24 +138,25 @@ namespace Casual.Ravenhill {
 
         public void CollectObject(BaseSearchableObject searchableObject) {
             var activeData = activeObjects.FirstOrDefault(obj => obj.id == searchableObject.id);
-            activeObjects.Remove(activeData);
-            foundedObjects.Add(activeData);
-            RavenhillEvents.OnSearchProgressChanged(foundedSearchObjectCount, searchableObjectCount);
-            searchableObject.Collect();
 
-            if(isWin) {
-                Debug.Log("EXIT");
-                EndSearch(status: SearchStatus.success, showExitRoomView: true);
-            } 
-            
-            //else {
-            //    Debug.Log("ACTIVATE NEXT");
-            //    //ActivateIndices();
-            //    StartCoroutine(CorActivate());
-            //}
+            if (activeData != null) {
+                activeObjects.Remove(activeData);
+                foundedObjects.Add(activeData);
+                RavenhillEvents.OnSearchProgressChanged(foundedSearchObjectCount, searchableObjectCount);
+                searchableObject.Collect();
+
+                if (isWin) {
+                    Debug.Log("EXIT");
+                    EndSearch(status: SearchStatus.success, showExitRoomView: true);
+                }
+            }
         }
 
         private bool isWin => foundedSearchObjectCount == numberToFind;
+
+        public void WinRoomInstantly() {
+            EndSearch(SearchStatus.success, true);
+        }
 
         public void EndSearch(SearchStatus status, bool showExitRoomView) {
             var timerView = FindObjectOfType<SearchTimerView>();

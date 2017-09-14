@@ -29,6 +29,10 @@ namespace Casual.Ravenhill {
         message_box_view = 20,
         collectable_added_note_view = 21,
         alchemy_view = 22,
-        avatars_view = 23
+        avatars_view = 23,
+        hint_view = 24,
+        buffs_view = 25,
+        buy_item_view = 26,
+        pause_timer_view = 27
     }
 }

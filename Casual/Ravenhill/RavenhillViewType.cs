@@ -33,6 +33,8 @@ namespace Casual.Ravenhill {
         hint_view = 24,
         buffs_view = 25,
         buy_item_view = 26,
-        pause_timer_view = 27
+        pause_timer_view = 27,
+        search_pause_view = 28,
+        daily_reward_view = 29
     }
 }

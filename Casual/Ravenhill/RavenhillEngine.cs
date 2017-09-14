@@ -227,7 +227,7 @@ namespace Casual.Ravenhill {
         } 
         #endregion
 
-        public void DropItems(List<DropItem> dropItems, Transform parent = null, System.Func<bool> dropPredicate = null) {
+        public override void DropItems(List<DropItem> dropItems, Transform parent = null, System.Func<bool> dropPredicate = null) {
             StartCoroutine(CorDropItems(dropItems, parent, 0.1f, dropPredicate));
         } 
 

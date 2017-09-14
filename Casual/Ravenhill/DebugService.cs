@@ -296,8 +296,17 @@ namespace Casual.Ravenhill {
                         ShowHint(offset);
                     }
                     break;
+                case "daily": {
+                        int day = GetInt(source, 2);
+                        ShowDailyRewardView(day);
+                    }
+                    break;
             }
             return true;
+        }
+
+        private void ShowDailyRewardView(int day) {
+            viewService.ShowView(RavenhillViewType.daily_reward_view, day);
         }
 
         private void ShowHint(HintView.OffsetType offset ) {

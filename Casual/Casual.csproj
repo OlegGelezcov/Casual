@@ -73,6 +73,7 @@
     <Compile Include="Ravenhill\Behaviours\EyeToolObject.cs" />
     <Compile Include="Ravenhill\Behaviours\MagnifyingGlass.cs" />
     <Compile Include="Ravenhill\Buffs.cs" />
+    <Compile Include="Ravenhill\DailyRewardManager.cs" />
     <Compile Include="Ravenhill\Data\AchievmentData.cs" />
     <Compile Include="Ravenhill\Data\BankProductData.cs" />
     <Compile Include="Ravenhill\Data\BuffData.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Ravenhill\Data\BonusData.cs" />
     <Compile Include="Ravenhill\Data\ChargerData.cs" />
     <Compile Include="Ravenhill\Data\CollectionData.cs" />
+    <Compile Include="Ravenhill\Data\DailyRewardData.cs" />
     <Compile Include="Ravenhill\Data\DropItem.cs" />
     <Compile Include="Ravenhill\Data\DropType.cs" />
     <Compile Include="Ravenhill\Data\FoodData.cs" />
@@ -198,6 +200,8 @@
     <Compile Include="Ravenhill\UI\Collection\CollectionView.cs" />
     <Compile Include="Ravenhill\UI\Collection\WishItemView.cs" />
     <Compile Include="Ravenhill\UI\Collection\WishlistView.cs" />
+    <Compile Include="Ravenhill\UI\DailyView\DailyRewardView.cs" />
+    <Compile Include="Ravenhill\UI\DailyView\MedalView.cs" />
     <Compile Include="Ravenhill\UI\EnterRoomView\EnterRoomView.cs" />
     <Compile Include="Ravenhill\UI\ExitRoomView\CurrentScoreView.cs" />
     <Compile Include="Ravenhill\UI\ExitRoomView\CurrentScoreViewEditor.cs" />
@@ -244,6 +248,7 @@
     <Compile Include="Ravenhill\UI\SearchPan\ClockToolView.cs" />
     <Compile Include="Ravenhill\UI\SearchPan\EyeToolView.cs" />
     <Compile Include="Ravenhill\UI\SearchPan\InventoryItemCountText.cs" />
+    <Compile Include="Ravenhill\UI\SearchPauseView\SearchPauseView.cs" />
     <Compile Include="Ravenhill\UI\SearchText.cs" />
     <Compile Include="Ravenhill\UI\SearchTextSlot.cs" />
     <Compile Include="Ravenhill\UI\SearchTimerView.cs" />

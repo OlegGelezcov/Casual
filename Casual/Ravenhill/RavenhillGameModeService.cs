@@ -17,10 +17,12 @@ namespace Casual.Ravenhill {
         private readonly Queue<CollectableData> receivedCollectables = new Queue<CollectableData>();
         private bool collectableViewStarted = false;
         private float updateCollectableTimer = 1.0f;
+        private readonly DailyRewardManager dailyRewardManager = new DailyRewardManager();
 
         public override void Start() {
             base.Start();
             engine.GetService<ISaveService>().Register(this);
+            dailyRewardManager.Start();
         }
 
         public override void OnEnable() {
@@ -79,6 +81,7 @@ namespace Casual.Ravenhill {
                     StartCoroutine(CorShowReceivedCollectables(data));
                 }
             }
+            dailyRewardManager.Update();
         }
 
         private void OnSearchSessionEnded(SearchSession session ) {
@@ -358,9 +361,12 @@ namespace Casual.Ravenhill {
         public string GetSave() {
             UXMLWriteElement writeElement = new UXMLWriteElement(saveId);
             writeElement.AddAttribute("room_mode", roomMode.ToString());
-            writeElement.Add(roomManager.GetSave());
+            
             writeElement.AddAttribute("search_counter", searchCounter);
             writeElement.AddAttribute("last_search_room", lastSearchRoomId);
+
+            writeElement.Add(roomManager.GetSave());
+            writeElement.Add(dailyRewardManager.GetSave());
 
             return writeElement.ToString();
         }
@@ -382,6 +388,13 @@ namespace Casual.Ravenhill {
                     roomManager.InitSave();
                 }
 
+                UXMLElement dailyRewardElement = gameModeElement.Element("daily_reward");
+                if(dailyRewardElement != null) {
+                    dailyRewardManager.Load(dailyRewardElement);
+                } else {
+                    dailyRewardManager.InitSave();
+                }
+
                 searchCounter = gameModeElement.GetInt("search_counter", 0);
                 lastSearchRoomId = gameModeElement.GetString("last_search_room", string.Empty);
                 isLoaded = true;
@@ -392,6 +405,7 @@ namespace Casual.Ravenhill {
         public void InitSave() {
             roomMode = RoomMode.normal;
             roomManager.InitSave();
+            dailyRewardManager.InitSave();
             searchCounter = 0;
             lastSearchRoomId = string.Empty;
             isLoaded = true;

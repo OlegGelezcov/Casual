@@ -64,6 +64,7 @@ namespace Casual.Ravenhill {
         private Dictionary<string, BuffData> buffs { get; } = new Dictionary<string, BuffData>();
         private Dictionary<string, NpcData> npcs { get; } = new Dictionary<string, NpcData>();
         private Dictionary<string, AchievmentData> achievments { get; } = new Dictionary<string, AchievmentData>();
+        private Dictionary<int, DailyRewardData> dailyRewards { get; } = new Dictionary<int, DailyRewardData>();
 
         public CachedSprite expSprite;
         public CachedSprite healthSprite;
@@ -136,6 +137,7 @@ namespace Casual.Ravenhill {
             LoadBuffs();
             LoadNpcs();
             LoadAchievments();
+            LoadDailyRewards();
 
             LoadCollections();
             LoadMiscSprites();
@@ -186,6 +188,18 @@ namespace Casual.Ravenhill {
 
         public string GetMedalKey(int tier) {
             return medalTable.GetOrDefault(tier, string.Empty);
+        }
+
+        private void LoadDailyRewards() {
+            UXMLDocument document = new UXMLDocument(resourcePathDictionary["daily_rewards"]);
+            dailyRewards.Clear();
+
+            document.Element("daily_rewards").Elements("item").ForEach(itemElement => {
+                DailyRewardData data = new DailyRewardData();
+                data.Load(itemElement);
+                dailyRewards[data.day] = data;
+            });
+
         }
 
         private void LoadAchievments() {
@@ -699,6 +713,14 @@ namespace Casual.Ravenhill {
 
         public AchievmentData GetAchievment(string id) {
             return achievments.GetOrDefault(id);
+        }
+
+        public List<DropItem> GetDailyRewards(int day) {
+            DailyRewardData data = null;
+            if(dailyRewards.TryGetValue(day, out data)) {
+                return data.rewards;
+            }
+            return new List<DropItem>();
         }
 
         public List<WeaponData> weaponList => new List<WeaponData>(weapons.Values);

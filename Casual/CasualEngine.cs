@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Casual.Ravenhill.Data;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -54,6 +55,8 @@ namespace Casual {
         public T Cast<T>() where T : CasualEngine {
             return (this as T);
         }
+
+        public abstract void DropItems(List<DropItem> dropItems, Transform parent = null, System.Func<bool> dropPredicate = null);
     }
 
     public class ServiceNotRegisteredException : UnityException {

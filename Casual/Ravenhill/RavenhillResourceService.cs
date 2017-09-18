@@ -36,7 +36,8 @@ namespace Casual.Ravenhill {
             "Data/Loc/str_misc",
             "Data/Loc/str_quests",
             "Data/Loc/str_searchobjects",
-            "Data/Loc/str_tutorial"
+            "Data/Loc/str_tutorial",
+            "Data/Loc/str_remaster"
         };
 
         private Dictionary<string, string> resourcePathDictionary { get; } = new Dictionary<string, string>();
@@ -65,6 +66,7 @@ namespace Casual.Ravenhill {
         private Dictionary<string, NpcData> npcs { get; } = new Dictionary<string, NpcData>();
         private Dictionary<string, AchievmentData> achievments { get; } = new Dictionary<string, AchievmentData>();
         private Dictionary<int, DailyRewardData> dailyRewards { get; } = new Dictionary<int, DailyRewardData>();
+        private Dictionary<string, KeyValueProperty> settings { get; } = new Dictionary<string, KeyValueProperty>();
 
         public CachedSprite expSprite;
         public CachedSprite healthSprite;
@@ -138,6 +140,7 @@ namespace Casual.Ravenhill {
             LoadNpcs();
             LoadAchievments();
             LoadDailyRewards();
+            LoadSettings();
 
             LoadCollections();
             LoadMiscSprites();
@@ -163,7 +166,9 @@ namespace Casual.Ravenhill {
                 ["search_object_particles"] = "Prefabs/Effects/search_object_particles",
                 ["found_search_object"] = "Prefabs/Effects/found_search_object",
                 ["drop_object"] = "Prefabs/UI/Misc/drop_object",
-                ["map_npc"] = "Prefabs/map_npc"
+                ["map_npc"] = "Prefabs/map_npc",
+                ["spot"] = "Prefabs/Effects/Spot",
+                ["screen_text"] = "Prefabs/UI/ScreenText"
             });
         }
 
@@ -188,6 +193,16 @@ namespace Casual.Ravenhill {
 
         public string GetMedalKey(int tier) {
             return medalTable.GetOrDefault(tier, string.Empty);
+        }
+
+        private void LoadSettings() {
+            UXMLDocument document = new UXMLDocument(resourcePathDictionary["settings"]);
+
+            settings.Clear();
+            document.Element("settings").Elements("setting").ForEach(settingElement => {
+                KeyValueProperty property = new KeyValueProperty(settingElement);
+                settings[property.Key] = property;
+            });
         }
 
         private void LoadDailyRewards() {
@@ -623,6 +638,8 @@ namespace Casual.Ravenhill {
             return prefabObjectCache.GetObject(key, path);
         }
 
+        public string GetName(IconData iconData) => GetString(iconData.nameId);
+
         public override string GetString(string key) => stringResource.GetString(key);
 
         public int stringCount => stringResource.count;
@@ -721,6 +738,10 @@ namespace Casual.Ravenhill {
                 return data.rewards;
             }
             return new List<DropItem>();
+        }
+
+        public KeyValueProperty GetSetting(string key) {
+            return settings.GetOrDefault(key);
         }
 
         public List<WeaponData> weaponList => new List<WeaponData>(weapons.Values);

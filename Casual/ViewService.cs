@@ -18,6 +18,7 @@ namespace Casual {
         float LastViewRemoveInterval { get; }
         bool noModals { get; }
         GameObject GetView(RavenhillViewType viewType);
+        void CreateScreenText(string text, Vector2 screenPosition, Color color);
     }
 
     public abstract class ViewSerive : GameElement, IViewService {
@@ -55,6 +56,7 @@ namespace Casual {
         }
 
         public abstract GameObject GetView(RavenhillViewType viewType);
+        public abstract void CreateScreenText(string text, Vector2 screenPosition, Color color);
     }
 
 

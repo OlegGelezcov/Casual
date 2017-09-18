@@ -34,6 +34,12 @@ namespace Casual.Ravenhill.UI {
 
             trigger.SetEventTriggerClick((eventData) => {
                 Debug.Log($"Click on charger: {data.id}");
+                PointerEventData pointerData = eventData as PointerEventData;
+                if(pointerData != null ) {
+                    if(pointerData.GetPointerObjectName() == trigger.name ) {
+                        viewService.ShowView(RavenhillViewType.collection_buy_charger_view, collectionData);
+                    }
+                }
             });
         }
 

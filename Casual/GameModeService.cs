@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Casual {
 
-    public class GameModeService : GameBehaviour, IGameModeService {
+    public abstract class GameModeService : GameBehaviour, IGameModeService {
 
         public GameModeName gameModeName {
             get;
@@ -28,10 +28,13 @@ namespace Casual {
                 RavenhillEvents.OnGameModeChanged(oldGameModeName, this.gameModeName);
             }
         }
+
+        public abstract IRoomManager RoomManager { get; }
     }
 
     public interface IGameModeService : IService {
         GameModeName gameModeName { get; }
+        IRoomManager RoomManager { get; }
     }
 
     public enum GameModeName {
@@ -48,5 +51,7 @@ namespace Casual {
         fail
     }
 
-
+    public interface IRoomManager {
+        void RollSearchMode();
+    }
 }

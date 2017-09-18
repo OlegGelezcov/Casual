@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Casual.Ravenhill {
-    public class RoomManager : ISaveElement {
+    public class RoomManager : RavenhillGameElement, ISaveElement, IRoomManager {
 
         public Dictionary<string, RoomInfo> rooms { get; } = new Dictionary<string, RoomInfo>();
 
@@ -25,6 +25,13 @@ namespace Casual.Ravenhill {
 
         public void RollSearchMode(string roomId) {
             GetRoomInfo(roomId).RollSearchMode();
+            engine.GetService<IDebugService>().AddMessage($"roll serach mode for room {roomId}", ColorType.green);
+        }
+
+        public void RollSearchMode() {
+            resourceService.roomList.Where(room => room.roomType == Data.RoomType.search).ToList().ForEach(room => {
+                RollSearchMode(room.id);
+            });
         }
 
         public void AddProgress(string roomId ) {

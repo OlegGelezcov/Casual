@@ -26,6 +26,8 @@ namespace Casual.Ravenhill {
         public List<SearchObjectData> activeObjects { get; } = new List<SearchObjectData>();
         private List<SearchObjectData> foundedObjects { get; } = new List<SearchObjectData>();
 
+        private readonly SearchMissChecker missChecker = new SearchMissChecker();
+
         private SearchGroup activeGroup { get; set; }
         private BaseSearchableObject[] currentSearchObjects { get; set; }
         private int numberToFind { get; set; }
@@ -38,11 +40,17 @@ namespace Casual.Ravenhill {
         public override void OnEnable() {
             base.OnEnable();
             RavenhillEvents.SearchTimerCompleted += OnSearchTimerCompleted;
+            RavenhillEvents.Touch += OnTouch;
         }
 
         public override void OnDisable() {
             base.OnDisable();
             RavenhillEvents.SearchTimerCompleted -= OnSearchTimerCompleted;
+            RavenhillEvents.Touch -= OnTouch;
+        }
+
+        private void OnTouch(Vector2 position ) {
+            missChecker.Check(position);
         }
 
         private void OnSearchTimerCompleted() {
@@ -55,6 +63,10 @@ namespace Casual.Ravenhill {
             SearchSession session = ravenhillGameModeService.searchSession;
             StartSearch(session.roomInfo.currentRoomSetting.searchObjectCount);
             engine.GetService<IViewService>().ShowView(RavenhillViewType.search_pan, session);
+
+            if(ravenhillGameModeService.searchSession.searchMode == SearchMode.Night ) {
+                GameObject spotInstance = Instantiate<GameObject>(resourceService.GetCachedPrefab("spot"), new Vector3(0, 0, -30), Quaternion.identity);
+            }
         }
 
         public void StartSearch(int maxCount) {

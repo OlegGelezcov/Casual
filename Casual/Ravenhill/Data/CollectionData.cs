@@ -39,6 +39,11 @@ namespace Casual.Ravenhill.Data {
             return chargers.FirstOrDefault(obj => obj.id == chargerId);
         }
 
+        public int GetChargerCount(string chargerId ) {
+            var data = GetChargeData(chargerId);
+            return data?.count ?? 0;
+        }
+
         public DropItem GetDropItem(DropType type) {
             return rewards.FirstOrDefault(di => di.type == type);
         }

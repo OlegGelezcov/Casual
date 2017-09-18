@@ -1,5 +1,6 @@
 ﻿using Casual.Ravenhill.Data;
 using Casual.UI;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -21,8 +22,8 @@ namespace Casual.Ravenhill.UI {
             Vector2 startPosition = sourceTransform ? canvasService.WorldToCanvasPoint(sourceTransform.position) : dropDefaultPosition;
 
             gameObject.GetOrAdd<Bezier2Movable>().Move(startPosition, 
-                dropMidPosition, 
-                dropEndPosition, 
+                DropMidPosition(startPosition), 
+                DropEndPosition(startPosition), 
                 dropSpeed, MoveToEndPosition);
 
             gameObject.GetOrAdd<RectTransformAnimScale>().StartAnim(new MCFloatAnimData {
@@ -38,6 +39,30 @@ namespace Casual.Ravenhill.UI {
                     });
                 },
             });
+
+            if(dropItem.isCreateScreenText) {
+                CreateScreenText(dropItem, sourceTransform);
+            }
+        }
+
+        private readonly Dictionary<DropType, Color> dropTextColors = new Dictionary<DropType, Color> {
+            [DropType.exp] = Color.yellow,
+            [DropType.silver] = Color.blue,
+            [DropType.health] = Color.magenta,
+            [DropType.gold] = Utility.RGBA(193, 95, 31),
+            [DropType.item] = Color.green,
+            [DropType.max_health] = Utility.RGBA(102, 0, 51)
+        };
+
+        private void CreateScreenText(DropItem dropItem, Transform sourceTransform) {
+            Vector2 screenPosition = (sourceTransform != null) ? 
+                Camera.main.WorldToScreenPoint(sourceTransform.position) : 
+                new Vector3(Screen.width / 2, Screen.height / 2);
+            Color color = Color.white;
+            if(dropTextColors.ContainsKey(dropItem.type) ) {
+                color = dropTextColors[dropItem.type];
+            }
+            viewService.CreateScreenText("+" + dropItem.count.ToString(), screenPosition, color);
         }
 
         private Vector2 dropDefaultPosition {
@@ -46,36 +71,29 @@ namespace Casual.Ravenhill.UI {
             }
         }
 
-        private Vector2 dropMidPosition {
-            get {
-                return Utility.Range(dropMidPositionMin, dropMidPositionMax);
-            }
+        private Vector2 DropMidPosition(Vector2 startPosition) {
+            return startPosition + Utility.Range(dropMidPositionMin, dropMidPositionMax);
         }
 
-        private Vector2 dropEndPosition {
-            get {
-                return Utility.Range(dropEndPositionMin, dropEndPositionMax);
-            }
+        private Vector2 DropEndPosition(Vector2 startPosition) {
+            return startPosition + Utility.Range(dropEndPositionMin, dropEndPositionMax);
         }
 
-        private Vector2 moveMidPosition {
-            get {
-                return Utility.Range(moveMidPositionMin, moveMidPositionMax);
-            }
+        private Vector2 MoveMidPosition(Vector2 sourcePosition) {
+            return sourcePosition + Utility.Range(moveMidPositionMin, moveMidPositionMax);
         }
 
-        private Vector2 moveEndPosition {
-            get {
-                return Utility.Range(moveEndPositionMin, moveEndPositionMax);
-            }
+        private Vector2 MoveEndPosition(Vector2 sourcePosition) {
+            return sourcePosition + Utility.Range(moveEndPositionMin, moveEndPositionMax);
         }
 
         private void MoveToEndPosition() {
             if(!isCollected) {
                 isCollected = true;
-                gameObject.GetOrAdd<Bezier2Movable>().Move(GetComponent<RectTransform>().anchoredPosition,
-                    moveMidPosition,
-                    moveEndPosition,
+                Vector2 sourcePosirion = GetComponent<RectTransform>().anchoredPosition;
+                gameObject.GetOrAdd<Bezier2Movable>().Move(sourcePosirion,
+                    MoveMidPosition(sourcePosirion),
+                    MoveEndPosition(sourcePosirion),
                     moveSpeed, () => {
                         Destroy(gameObject);
                     });

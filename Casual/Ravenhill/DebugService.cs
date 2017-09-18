@@ -55,6 +55,7 @@ namespace Casual.Ravenhill {
             Add("show", new ShowCommand("show"));
             Add("clear", new ClearCommand("clear"));
             Add("add", new AddCommand("add"));
+            Add("restart", new RestartCommand("restart"));
         }
 
 
@@ -172,6 +173,16 @@ namespace Casual.Ravenhill {
         }
     }
 
+    public class RestartCommand : BaseCommand {
+        public RestartCommand(string commandName) : base(commandName) { }
+
+        public override bool Execute(string source) {
+            engine.GetService<ISaveService>().Restart();
+            engine.GetService<IDebugService>().AddMessage("restart game completed....");
+            return true;
+        }
+    }
+
     public class TestCommand : BaseCommand {
 
         public TestCommand(string commandName) 
@@ -186,6 +197,10 @@ namespace Casual.Ravenhill {
                     return true;
                 case "storycharge": {
                         TestStoryCharge();
+                    }
+                    return true;
+                case "searchmode": {
+                        engine.GetService<IGameModeService>().RoomManager.RollSearchMode();
                     }
                     return true;
                     
@@ -301,8 +316,16 @@ namespace Casual.Ravenhill {
                         ShowDailyRewardView(day);
                     }
                     break;
+                case "levelup": {
+                        ShowLevelUpView(GetInt(source, 2));
+                    }
+                    break;
             }
             return true;
+        }
+
+        private void ShowLevelUpView(int day) {
+            viewService.ShowView(RavenhillViewType.level_up_view, day);
         }
 
         private void ShowDailyRewardView(int day) {
@@ -451,6 +474,16 @@ namespace Casual.Ravenhill {
                     break;
                 case "collectable": {
                         resourceService.collectableList.ForEach(c => player.AddItem(new InventoryItem(c, 1)));
+                    }
+                    break;
+                case "exp": {
+                        int count = GetInt(source, 2);
+                        engine.GetService<IPlayerService>().AddExp(count);
+                        engine.GetService<IDebugService>().AddMessage($"Added {count} exp to player", ColorType.fuchsia);
+                    }
+                    break;
+                case "hp": {
+                        engine.DropItems(new List<DropItem> { new DropItem(DropType.health, GetInt(source, 2)) });
                     }
                     break;
             }

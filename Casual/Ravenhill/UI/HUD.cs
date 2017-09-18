@@ -1,6 +1,7 @@
 ﻿using Casual.Ravenhill.Data;
 using Casual.UI;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Casual.Ravenhill.UI {
@@ -20,9 +21,7 @@ namespace Casual.Ravenhill.UI {
         private ImageProgress expProgressImage => m_ExpProgressImage;
 
         [SerializeField]
-        private NumericTextProgress m_ExpText;
-
-        private NumericTextProgress expText => m_ExpText;
+        private Text expText;
 
 
         [SerializeField]
@@ -35,10 +34,9 @@ namespace Casual.Ravenhill.UI {
 
         private Text playerNameText => m_PlayerNameText;
 
-        [SerializeField]
-        private NumericTextProgress m_HealthText;
 
-        private NumericTextProgress healthText => m_HealthText;
+        [SerializeField]
+        private Text hpText;
 
         [SerializeField]
         private Text m_HealthTimerText;
@@ -46,14 +44,10 @@ namespace Casual.Ravenhill.UI {
         private Text healthTimerText => m_HealthTimerText;
 
         [SerializeField]
-        private NumericTextProgress m_GoldText;
-
-        private NumericTextProgress goldText => m_GoldText;
+        private Text goldText;
 
         [SerializeField]
-        private NumericTextProgress m_SilverText;
-
-        private NumericTextProgress silverText => m_SilverText;
+        private Text silverText;
 
         [SerializeField]
         private Button m_AvatarButton;
@@ -168,6 +162,13 @@ namespace Casual.Ravenhill.UI {
 
             changeNameButton.SetListener(() => {
                 Debug.Log("Change Name Button");
+                EnterTextView.Data enterTextData = new EnterTextView.Data {
+                    startInputText = playerService.PlayerName,
+                    title = "Enter new name:",
+                    OnCheck = (str) => str.IsName(),
+                    OnSubmit = (name) => playerService.SetName(name)
+                };
+                viewService.ShowView(RavenhillViewType.enter_text_view, enterTextData);
             });
 
             addGoldButton.SetListener(() => {
@@ -233,6 +234,7 @@ namespace Casual.Ravenhill.UI {
             });
 
             avatarButton.SetListener(() => viewService.ShowView(RavenhillViewType.avatars_view));
+
         }
 
         public override void OnEnable() {
@@ -318,8 +320,7 @@ namespace Casual.Ravenhill.UI {
 
         private void UpdateExp() {
             expProgressImage.SetValue(resourceService.levelExpTable.GetProgress(playerService.exp));
-            expText.postfix = "/" + resourceService.levelExpTable.GetExp(playerService.level + 1);
-            expText.SetValue(playerService.exp);
+            expText.text = $"{playerService.exp}/{resourceService.levelExpTable.GetExp(playerService.level + 1)}";
         }
 
         private void UpdateLevel() {
@@ -327,12 +328,11 @@ namespace Casual.Ravenhill.UI {
         } 
 
         private void UpdateName() {
-            playerNameText.text = playerService.playerName;
+            playerNameText.text = playerService.PlayerName;
         }
 
         private void UpdateHealthText() {
-            healthText.postfix = "/" + playerService.maxHealth.ToString();
-            healthText.SetValue(Mathf.FloorToInt(playerService.health));
+            hpText.text = $"{Mathf.FloorToInt(playerService.health)}/{playerService.maxHealth}";
         }
 
         private void UpdateHealthTimer(float realDelta) {
@@ -340,11 +340,11 @@ namespace Casual.Ravenhill.UI {
         }
 
         private void UpdateGold() {
-            goldText.SetValue(playerService.gold);
+            goldText.text = playerService.gold.ToString();
         }
 
         private void UpdateSilver() {
-            silverText.SetValue(playerService.silver);
+            silverText.text = playerService.silver.ToString();
         }
     }
 }

@@ -159,5 +159,9 @@ namespace Casual {
                 3 * t * t * invt * mid2 +
                 t * t * t * end;
         }
+
+        public static Color RGBA(int r, int g, int b, int a = 256) {
+            return new Color((float)r / 256.0f, (float)g / 256.0f, (float)b / 256.0f, (float)a / 256.0f);
+        }
     }
 }

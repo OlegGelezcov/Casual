@@ -19,6 +19,12 @@ namespace Casual.Ravenhill {
         private float updateCollectableTimer = 1.0f;
         private readonly DailyRewardManager dailyRewardManager = new DailyRewardManager();
 
+        public override IRoomManager RoomManager {
+            get {
+                return roomManager;
+            }
+        }
+
         public override void Start() {
             base.Start();
             engine.GetService<ISaveService>().Register(this);
@@ -30,6 +36,7 @@ namespace Casual.Ravenhill {
             RavenhillEvents.SearchSessionEnded += OnSearchSessionEnded;
             RavenhillEvents.InventoryItemAdded += OnInventoryItemAdded;
             RavenhillEvents.GameModeChanged += OnGameModeChanged;
+            RavenhillEvents.PlayerLevelChanged += OnLevelChanged;
         }
 
         public override void OnDisable() {
@@ -37,6 +44,25 @@ namespace Casual.Ravenhill {
             RavenhillEvents.SearchSessionEnded -= OnSearchSessionEnded;
             RavenhillEvents.InventoryItemAdded -= OnInventoryItemAdded;
             RavenhillEvents.GameModeChanged -= OnGameModeChanged;
+            RavenhillEvents.PlayerLevelChanged -= OnLevelChanged;
+        }
+
+        private void OnLevelChanged(int oldLevel, int newLevel) {
+            StartCoroutine(CorNewLevel(oldLevel, newLevel));
+        }
+
+        private System.Collections.IEnumerator CorNewLevel(int oldLevel, int newLevel ) {
+            int currentLevel = oldLevel + 1;
+
+            while (currentLevel <= newLevel) {
+                viewService.ShowViewWithCondition(RavenhillViewType.level_up_view, () => {
+                    return (gameModeName == GameModeName.map || gameModeName == GameModeName.hallway)
+                    && viewService.noModals;
+                }, currentLevel);
+                yield return new WaitForEndOfFrame();
+                currentLevel++;
+            }
+
         }
 
         private void OnInventoryItemAdded(InventoryItemType type, string itemId, int count ) {

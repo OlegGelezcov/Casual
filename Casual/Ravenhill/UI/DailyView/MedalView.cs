@@ -40,6 +40,10 @@ namespace Casual.Ravenhill.UI {
                     priceImage.overrideSprite = resourceService.GetPriceSprite(new PriceData(0, 1));
                 }
             }
+
+            if(day == currentDay ) {
+                toggle.isOn = true;
+            } 
         }
     }
 

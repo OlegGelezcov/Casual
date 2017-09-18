@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Casual.Ravenhill.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -198,6 +199,10 @@ namespace Casual.Ravenhill {
         //public override void RemoveView(object viewType) {
         //    this.RemoveView((RavenhillViewType)viewType);
         //}
+
+        public override void CreateScreenText(string text, Vector2 screenPosition, Color color) {
+            ScreenText.Create(text, screenPosition, color);
+        }
     }
 
 

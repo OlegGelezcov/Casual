@@ -211,6 +211,20 @@ namespace Casual {
         public static string ReplaceVar(this string source, string pattern, object what) {
             return source.Replace(pattern, what.ToString());
         }
+
+        public static bool IsName(this string str) {
+            if(str.IsValid()) {
+                bool ok = true;
+                foreach(char c in str) {
+                    if(!(char.IsLetterOrDigit(c) || c == '_')) {
+                        ok = false;
+                        break;
+                    }
+                }
+                return ok;
+            }
+            return false;
+        }
     }
 
     public enum ColorType {

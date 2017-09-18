@@ -71,6 +71,25 @@ namespace Casual.Ravenhill {
                     }
                 }
             });
+
+            List<DropItem> dropItems = GenerateCollectDrop();
+            if(dropItems.Count > 0) {
+                engine.DropItems(dropItems, transform);
+            }
+        }
+
+        private List<DropItem> GenerateCollectDrop() {
+            List<DropItem> dropItems = new List<DropItem>();
+            if(UnityEngine.Random.value < 0.3f ) {
+                dropItems.Add(new DropItem(DropType.silver, UnityEngine.Random.Range(1, 10)) {  isCreateScreenText = true });
+            }
+            if(UnityEngine.Random.value < 0.3f ) {
+                dropItems.Add(new DropItem(DropType.exp, UnityEngine.Random.Range(1, 5)) { isCreateScreenText = true });
+            }
+            if(UnityEngine.Random.value < 0.3f ) {
+                dropItems.Add(new DropItem(DropType.health, UnityEngine.Random.Range(1, 2)) { isCreateScreenText = true });
+            }
+            return dropItems;
         }
 
         private Vector3 FindSearchTextPosition() {

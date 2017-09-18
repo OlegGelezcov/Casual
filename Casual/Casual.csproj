@@ -72,6 +72,7 @@
     <Compile Include="Ravenhill\Behaviours\BombToolObject.cs" />
     <Compile Include="Ravenhill\Behaviours\EyeToolObject.cs" />
     <Compile Include="Ravenhill\Behaviours\MagnifyingGlass.cs" />
+    <Compile Include="Ravenhill\Behaviours\NightSpotlight.cs" />
     <Compile Include="Ravenhill\Buffs.cs" />
     <Compile Include="Ravenhill\DailyRewardManager.cs" />
     <Compile Include="Ravenhill\Data\AchievmentData.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Ravenhill\Data\InventoryItemType.cs" />
     <Compile Include="Ravenhill\Data\ISellable.cs" />
     <Compile Include="Ravenhill\Data\JournalEntryData.cs" />
+    <Compile Include="Ravenhill\Data\KeyValueProperty.cs" />
     <Compile Include="Ravenhill\Data\LevelExpTable.cs" />
     <Compile Include="Ravenhill\Data\NpcData.cs" />
     <Compile Include="Ravenhill\Data\NpcType.cs" />
@@ -169,6 +171,7 @@
     <Compile Include="Ravenhill\RoomRank.cs" />
     <Compile Include="Ravenhill\SearchGroup.cs" />
     <Compile Include="Ravenhill\SearchManager.cs" />
+    <Compile Include="Ravenhill\SearchMissChecker.cs" />
     <Compile Include="Ravenhill\SearchSession.cs" />
     <Compile Include="Ravenhill\Test\RavenhillTestListener.cs" />
     <Compile Include="Ravenhill\Test\TestColoredObjectAnim.cs" />
@@ -191,6 +194,8 @@
     <Compile Include="Ravenhill\UI\Bank\IBankContext.cs" />
     <Compile Include="Ravenhill\UI\BuffsView\BuffsView.cs" />
     <Compile Include="Ravenhill\UI\BuffsView\BuffView.cs" />
+    <Compile Include="Ravenhill\UI\BuyChargerView\BuyChargerItemView.cs" />
+    <Compile Include="Ravenhill\UI\BuyChargerView\CollectionBuyChargerView.cs" />
     <Compile Include="Ravenhill\UI\BuyItemView\BuyItemView.cs" />
     <Compile Include="Ravenhill\UI\Collection\ChargerItemView.cs" />
     <Compile Include="Ravenhill\UI\Collection\CollectableItemView.cs" />
@@ -203,6 +208,7 @@
     <Compile Include="Ravenhill\UI\DailyView\DailyRewardView.cs" />
     <Compile Include="Ravenhill\UI\DailyView\MedalView.cs" />
     <Compile Include="Ravenhill\UI\EnterRoomView\EnterRoomView.cs" />
+    <Compile Include="Ravenhill\UI\EnterTextView\EnterTextView.cs" />
     <Compile Include="Ravenhill\UI\ExitRoomView\CurrentScoreView.cs" />
     <Compile Include="Ravenhill\UI\ExitRoomView\CurrentScoreViewEditor.cs" />
     <Compile Include="Ravenhill\UI\ExitRoomView\ExitRoomView.cs" />
@@ -221,6 +227,7 @@
     <Compile Include="Ravenhill\UI\Journal\JournalView.cs" />
     <Compile Include="Ravenhill\UI\Journal\QuestListItemView.cs" />
     <Compile Include="Ravenhill\UI\KillEnemyView\KillEnemyView.cs" />
+    <Compile Include="Ravenhill\UI\LevelUpView\LevelUpView.cs" />
     <Compile Include="Ravenhill\UI\ListItemViews\InventoryItemShortView.cs" />
     <Compile Include="Ravenhill\UI\LoaderView\LoaderView.cs" />
     <Compile Include="Ravenhill\UI\MapBuffs\RoomBuffsView.cs" />
@@ -241,6 +248,7 @@
     <Compile Include="Ravenhill\UI\RavenhillCloseableView.cs" />
     <Compile Include="Ravenhill\UI\RavenhillUIBehaviour.cs" />
     <Compile Include="Ravenhill\UI\RectTransformBinding.cs" />
+    <Compile Include="Ravenhill\UI\ScreenText.cs" />
     <Compile Include="Ravenhill\UI\SearchPan.cs" />
     <Compile Include="Ravenhill\UI\SearchPan\BaseToolView.cs" />
     <Compile Include="Ravenhill\UI\SearchPan\BombToolView.cs" />

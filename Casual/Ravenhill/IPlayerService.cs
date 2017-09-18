@@ -5,7 +5,7 @@ namespace Casual.Ravenhill {
 
         int exp { get; }
         int level { get; }
-        string playerName { get; }
+        string PlayerName { get; }
         string avatarId { get; }
         int silver { get; }
         int gold { get; }

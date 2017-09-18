@@ -1,6 +1,7 @@
 ﻿using Casual.Ravenhill;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace Casual {
@@ -85,6 +86,12 @@ namespace Casual {
                     LoadSaveable(saveable);
                 }
             }
+        }
+
+        public void Restart() {
+            m_Saveables.Values.ToList().ForEach(saveable => {
+                saveable.InitSave();
+            });
         }
 
     }

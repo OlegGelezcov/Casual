@@ -29,6 +29,10 @@ namespace Casual.Ravenhill  {
                     GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
                     magGlassComponent = Camera.main.gameObject.GetOrAdd<MagnifyingGlass>();
                     magGlassComponent.Setup(magGlassMaterial, 0.3f, new Vector2(0.1f, 0.2f), new Vector2(0.3f, 1.0f), targetPosition);
+
+                    var nightSpot = FindObjectOfType<NightSpotlight>();
+                    nightSpot?.SetSpotToWorldPosition(targetPosition);
+
                     StartCoroutine(CorWait());
                 }
             });

@@ -18,8 +18,9 @@ namespace Casual.Ravenhill {
         private RoomSettingData m_RoomSettingData;
 
         public void RollSearchMode() {
-            int value = UnityEngine.Random.Range(0, 1);
-            SetSearchMode(value != 0 ? SearchMode.Day : SearchMode.Night);
+            int value = UnityEngine.Random.Range(0, 10);
+            SetSearchMode((value % 2 == 0) ? SearchMode.Day : SearchMode.Night);
+
         }
 
         public float progress {

@@ -87,6 +87,8 @@ namespace Casual.Ravenhill.UI {
             searchTimerView?.StartTimer(session.roomInfo.currentRoomSetting.searchTime);
 
             toolViews.ToList().ForEach(tv => tv.Setup());
+
+            m_PauseButton.SetListener(() => viewService.ShowView(RavenhillViewType.search_pause_view));
         }
 
         private SearchTextSlot FindEmptySlot() {

@@ -9,6 +9,8 @@ namespace Casual.Ravenhill.Data {
 
         public Color color { get; set; } = Color.white;
 
+        public bool isCreateScreenText { get; set; } = false;
+
         public DropItem(DropType type, int count, InventoryItemData itemData = null) {
             this.type = type;
             this.count = count;

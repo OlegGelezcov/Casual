@@ -43,6 +43,7 @@ namespace Casual.Ravenhill {
             foreach(var pair in collectables ) {
                 UXMLWriteElement itemElement = new UXMLWriteElement("item");
                 itemElement.AddAttribute("id", pair.Key);
+                itemElement.AddAttribute("type", pair.Value.type.ToString());
                 root.Add(itemElement);
             }
             return root;
@@ -56,7 +57,10 @@ namespace Casual.Ravenhill {
             collectables.Clear();
             foreach(UXMLElement itemElement in element.Elements("item")) {
                 string id = itemElement.GetString("id");
-                CollectableData data = resourceService.GetCollectable(id);
+                InventoryItemType type = itemElement.GetEnum<InventoryItemType>("type");
+
+                InventoryItemData data = resourceService.GetInventoryItemData(type, id);
+
                 if(data != null ) {
                     collectables[data.id] = data;
                 }

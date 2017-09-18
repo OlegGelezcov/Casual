@@ -1,6 +1,4 @@
-﻿using Casual.Ravenhill.Data;
-using Casual.UI;
-using System;
+﻿using Casual.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -99,6 +97,7 @@ namespace Casual.Ravenhill.UI {
                     engine.Cast<RavenhillEngine>().EnterSearchRoom(roomInfo);
                 } else {
                     Debug.Log("Health is very low...");
+                    viewService.ShowView(RavenhillViewType.store, InventoryTab.Foods);
                 }
             });
 
@@ -108,6 +107,7 @@ namespace Casual.Ravenhill.UI {
                     ravenhillGameModeService.roomManager.Unlock(roomInfo.roomData.id);
                 } else {
                     Debug.Log("No coins for action".Colored(ColorType.yellow));
+                    viewService.ShowView(RavenhillViewType.bank);
                 }
             });
 

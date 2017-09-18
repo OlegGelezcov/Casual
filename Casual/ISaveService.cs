@@ -10,5 +10,6 @@ namespace Casual {
         void Unregister(ISaveable saveable);
         void Save();
         void Load();
+        void Restart();
     }
 }

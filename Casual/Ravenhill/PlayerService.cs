@@ -15,9 +15,24 @@ namespace Casual.Ravenhill {
         public int level { get {
                 return resourceService.levelExpTable.GetLevelForExp(exp);
             }
-        } 
+        }
 
-        public string playerName { get; private set; } = string.Empty;
+        private string pname = string.Empty;
+
+        public string PlayerName {
+            get {
+                if(!pname.IsValid()) {
+                    if(resourceService.isLoaded) {
+                        pname = resourceService.GetString("default_player_name");
+                    }
+                }
+                return pname;
+            }
+
+            private set {
+                pname = value;
+            }
+        }
 
         public string avatarId { get; private set; } = "Avatar1";
 
@@ -289,10 +304,10 @@ namespace Casual.Ravenhill {
         }
 
         public void SetName(string newName) {
-            string oldName = playerName;
-            playerName = newName;
-            if(oldName != playerName ) {
-                RavenhillEvents.OnPlayerNameChanged(oldName, playerName);
+            string oldName = PlayerName;
+            PlayerName = newName;
+            if(oldName != PlayerName ) {
+                RavenhillEvents.OnPlayerNameChanged(oldName, PlayerName);
             }
         }
 
@@ -376,7 +391,7 @@ namespace Casual.Ravenhill {
         public string GetSave() {
             UXMLWriteElement playerElement = new UXMLWriteElement(saveId);
             playerElement.AddAttribute("exp", exp);
-            playerElement.AddAttribute("name", playerName);
+            playerElement.AddAttribute("name", PlayerName);
             playerElement.AddAttribute("avatar", avatarId);
             playerElement.AddAttribute("silver", silver);
             playerElement.AddAttribute("gold", gold);
@@ -388,7 +403,7 @@ namespace Casual.Ravenhill {
             playerElement.Add(wishlist.GetSave());
             playerElement.Add(buffs.GetSave());
             
-            Debug.Log($"SAVE PLAYER: {playerElement.ToString()}".Colored(ColorType.yellow));
+           // Debug.Log($"SAVE PLAYER: {playerElement.ToString()}".Colored(ColorType.yellow));
             return playerElement.ToString();
         }
 
@@ -396,11 +411,11 @@ namespace Casual.Ravenhill {
             if (string.IsNullOrEmpty(saveStr)) {
                 InitSave();
             } else {
-                Debug.Log($"LOAD PLAYER {saveStr}");
+                //Debug.Log($"LOAD PLAYER {saveStr}");
                 UXMLDocument document = UXMLDocument.FromXml(saveStr);
                 UXMLElement playerElement = document.Element(saveId);
                 exp = playerElement.GetInt("exp", 0);
-                playerName = playerElement.GetString("name", string.Empty);
+                pname = playerElement.GetString("name", string.Empty);
                 avatarId = playerElement.GetString("avatar", "Avatar1");
                 silver = playerElement.GetInt("silver", 0);
                 gold = playerElement.GetInt("gold", 0);
@@ -413,7 +428,7 @@ namespace Casual.Ravenhill {
                         interval = 0;
                     }
                     float restoreSpeed = 1.0f / (float)kHealthRestoreInterval;
-                    float restoreCount = restoreSpeed * time;
+                    float restoreCount = restoreSpeed * interval;
                     health += restoreCount;
                     health = Mathf.Clamp(health, 0, maxHealth);
                 }
@@ -440,7 +455,7 @@ namespace Casual.Ravenhill {
                     buffs.InitSave();
                 }
 
-                Debug.Log($"Player Loaded: exp-{exp}, name-{playerName}, avatar-{avatarId}, silver-{silver}, gold-{gold}");
+                //Debug.Log($"Player Loaded: exp-{exp}, name-{playerName}, avatar-{avatarId}, silver-{silver}, gold-{gold}");
 
                 isLoaded = true;
             }
@@ -449,7 +464,7 @@ namespace Casual.Ravenhill {
 
         public void InitSave() {
             exp = 0;
-            playerName = string.Empty;
+            pname = string.Empty;
             avatarId = "Avatar1";
             silver = 0;
             gold = 0;

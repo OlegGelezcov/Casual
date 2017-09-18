@@ -7,7 +7,7 @@ namespace Casual.Ravenhill.UI {
 
         public override bool isModal => true;
 
-        public override int siblingIndex => 3;
+        public override int siblingIndex => 4;
 
         public ButtonState GoldButtonState => goldButtonState;
 

@@ -73,6 +73,16 @@ namespace Casual.Ravenhill.UI {
             }
         }
 
+        public void RemoveFromTimer(int count) {
+            timer -= count;
+        }
+
+        public bool IsAllowMissPenalty {
+            get {
+                return (isStarted) && (!isPaused) && (!isStopped) && (!isBreaked);
+            }
+        }
+
 
         public override void Update() {
             base.Update();

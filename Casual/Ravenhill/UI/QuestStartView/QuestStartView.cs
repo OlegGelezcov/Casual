@@ -46,7 +46,7 @@ namespace Casual.Ravenhill.UI{
 
             if(ravenhillGameModeService.gameModeName == GameModeName.map ) {
                 showTargetButton.interactable = true;
-                showTargetButton.SetListener(() => Debug.Log("show target..."));
+                showTargetButton.SetListener(() => Debug.Log("show target..."), engine.GetService<IAudioService>());
             } else {
                 showTargetButton.interactable = false;
             }

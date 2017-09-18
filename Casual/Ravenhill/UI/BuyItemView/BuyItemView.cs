@@ -22,12 +22,12 @@
             iconImage.overrideSprite = resourceService.GetSprite(data);
             priceText.text = data.price.price.ToString();
             priceIconImage.overrideSprite = resourceService.GetPriceSprite(data.price);
-            closeBigButton.SetListener(Close);
+            closeBigButton.SetListener(Close, engine.GetService<IAudioService>());
             buyButton.SetListener(() => {
                 if( playerService.Buy(data)) {
                     Close();
                 }
-            });
+            }, engine.GetService<IAudioService>());
         }
     }
 

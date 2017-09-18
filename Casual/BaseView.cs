@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Casual {
+namespace Casual
+{
     public abstract class BaseView<T> : Ravenhill.RavenhillGameBehaviour {
 
 #pragma warning disable 0649

@@ -64,7 +64,7 @@ namespace Casual.Ravenhill.UI {
                     BonusData nextData = source[index];
                     Setup(nextData);
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             prevButton.SetListener(() => {
                 if(source != null ) {
@@ -75,14 +75,14 @@ namespace Casual.Ravenhill.UI {
                     BonusData prevData = source[index];
                     Setup(prevData);
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
 
             combineButton.SetListener(() => {
                 if(ravenhillGameModeService.IsAlchemyReadyToCharge(bonusData)) {
                     ravenhillGameModeService.ChargeAlchemy(bonusData);
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             combineUpdateTimer.Setup(0.5f, (delta) => {
                 if(bonusData != null ) {

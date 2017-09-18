@@ -30,7 +30,7 @@ namespace Casual.Ravenhill.UI{
                     detailView.DeactivateSelf();
                     questsView.Setup();
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             detailToggle.SetListener((isOn) => {
                 if(isOn) {
@@ -38,7 +38,7 @@ namespace Casual.Ravenhill.UI{
                     detailView.ActivateSelf();
                     detailView.Setup(engine.GetService<IJournalService>().GetAt(currentPage));
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             listToggle.isOn = true;
         }

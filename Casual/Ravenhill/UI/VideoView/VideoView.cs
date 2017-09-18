@@ -37,7 +37,7 @@ namespace Casual.Ravenhill.UI {
                         }
                     }
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             VideoData videoData = resourceService.GetVideoData(data.id);
             if(videoData != null ) {

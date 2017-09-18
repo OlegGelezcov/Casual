@@ -36,7 +36,7 @@ namespace Casual.Ravenhill.UI {
             submitButton.SetListener(() => {
                 data.OnSubmit(input.text);
                 Close();
-            });
+            }, engine.GetService<IAudioService>());
             input.Select();
             input.OnPointerClick(new PointerEventData(EventSystem.current));
 

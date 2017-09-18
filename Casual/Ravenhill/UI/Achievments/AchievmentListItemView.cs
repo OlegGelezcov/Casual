@@ -57,7 +57,7 @@
                         });
                     }
 
-                });
+                }, engine.GetService<IAudioService>());
             } else {
                 takeButton.DeactivateSelf();
             }

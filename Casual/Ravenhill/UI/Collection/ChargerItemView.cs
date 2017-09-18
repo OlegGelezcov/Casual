@@ -40,7 +40,7 @@ namespace Casual.Ravenhill.UI {
                         viewService.ShowView(RavenhillViewType.collection_buy_charger_view, collectionData);
                     }
                 }
-            });
+            }, engine.GetService<IAudioService>());
         }
 
         public override void OnEnable() {

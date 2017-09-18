@@ -43,7 +43,7 @@ namespace Casual.Ravenhill.UI {
             priceText.text = $"{product.realPrice}$";
             buyButton.SetListener(() => {
                 engine.GetService<IPurchaseService>().PurchaseProduct(product);
-            });
+            }, engine.GetService<IAudioService>());
         }
     }
 

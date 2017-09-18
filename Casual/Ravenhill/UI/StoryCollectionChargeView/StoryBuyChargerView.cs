@@ -19,10 +19,10 @@ namespace Casual.Ravenhill.UI {
 
             buyButton.SetListener(() => {
                 playerService.Buy(storeItemData);
-            });
+            }, engine.GetService<IAudioService>());
             askButton.SetListener(() => {
                 netService.Ask(chargerData);
-            });
+            }, engine.GetService<IAudioService>());
         }
     }
 

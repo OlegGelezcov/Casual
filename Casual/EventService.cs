@@ -1,8 +1,5 @@
-﻿using Casual.Ravenhill;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Casual {
+﻿namespace Casual
+{
 
     //public class EventService : IEventService {
 
@@ -55,7 +52,7 @@ namespace Casual {
     //    public virtual void Setup(object data) { }
     //}
 
-    
+
 
     //public interface IEventService : IService {
     //    void SendEvent(EventArgs eventArgs);
@@ -88,5 +85,5 @@ namespace Casual {
     //    void OnEvent(EventArgs<T> args);
     //}
 
-    
+
 }

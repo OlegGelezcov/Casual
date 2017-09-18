@@ -43,7 +43,7 @@ namespace Casual.Ravenhill.UI {
                 } else {
                     viewService.ShowView(RavenhillViewType.bank);
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             wishButtonTimer.Setup(0.5f, (delta) => {
                 if (data != null) {
@@ -57,7 +57,7 @@ namespace Casual.Ravenhill.UI {
             wishButton.SetListener(() => {
                 playerService.AddToWishlist(data);
                 wishButton.interactable = false;
-            });
+            }, engine.GetService<IAudioService>());
         }
 
         public override void Update() {

@@ -50,7 +50,7 @@ namespace Casual.Ravenhill.UI.Map {
                         Debug.Log($"click on ui room {roomId}");
                     }
                 }
-            });
+            }, engine.GetService<IAudioService>());
             rectTransformBinding = gameObject.GetOrAdd<RectTransformBinding>();
             rectTransformBinding.Bind(bindParent, offset, 0.02f);
             buffsView.Setup(roomId);

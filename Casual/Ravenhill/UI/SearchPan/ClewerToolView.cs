@@ -41,7 +41,7 @@ namespace Casual.Ravenhill.UI{
                 } else {
                     viewService.ShowView(RavenhillViewType.buy_item_view, toolData);
                 }
-            });
+            }, engine.GetService<IAudioService>());
         }
         protected override void OnUse(InventoryItemData data) {
             base.OnUse(data);

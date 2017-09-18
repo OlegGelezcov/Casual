@@ -67,6 +67,8 @@ namespace Casual.Ravenhill {
         private Dictionary<string, AchievmentData> achievments { get; } = new Dictionary<string, AchievmentData>();
         private Dictionary<int, DailyRewardData> dailyRewards { get; } = new Dictionary<int, DailyRewardData>();
         private Dictionary<string, KeyValueProperty> settings { get; } = new Dictionary<string, KeyValueProperty>();
+        private Dictionary<SoundType, string> audioClips { get; } = new Dictionary<SoundType, string>();
+        private ResourceObjectCache<SoundType, AudioClip> audioclipCache { get; } = new ResourceObjectCache<SoundType, AudioClip>();
 
         public CachedSprite expSprite;
         public CachedSprite healthSprite;
@@ -141,6 +143,7 @@ namespace Casual.Ravenhill {
             LoadAchievments();
             LoadDailyRewards();
             LoadSettings();
+            LoadAudio();
 
             LoadCollections();
             LoadMiscSprites();
@@ -193,6 +196,16 @@ namespace Casual.Ravenhill {
 
         public string GetMedalKey(int tier) {
             return medalTable.GetOrDefault(tier, string.Empty);
+        }
+
+        private void LoadAudio() {
+            UXMLDocument document = new UXMLDocument(resourcePathDictionary["audio"]);
+            audioClips.Clear();
+            document.Element("clips").Elements("clip").ForEach(clipElement => {
+                SoundType soundType = clipElement.GetEnum<SoundType>("type");
+                string path = clipElement.GetString("path");
+                audioClips[soundType] = path;
+            });
         }
 
         private void LoadSettings() {
@@ -742,6 +755,14 @@ namespace Casual.Ravenhill {
 
         public KeyValueProperty GetSetting(string key) {
             return settings.GetOrDefault(key);
+        }
+
+        public AudioClip GetAudioClip(SoundType soundType ) {
+            string path = null;
+            if(audioClips.TryGetValue(soundType, out path)) {
+                return audioclipCache.GetObject(soundType, path);
+            }
+            return null;
         }
 
         public List<WeaponData> weaponList => new List<WeaponData>(weapons.Values);

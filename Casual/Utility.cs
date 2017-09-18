@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Casual {
+namespace Casual
+{
     public static class Utility {
 
         public static int unixTime {

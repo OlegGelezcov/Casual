@@ -54,7 +54,7 @@ namespace Casual.Ravenhill.UI {
                     if(nextInfo != null ) {
                         Setup(nextInfo);
                     }
-                });
+                }, engine.GetService<IAudioService>());
             }
 
             if(journalService.IsFirst(info)) {
@@ -66,7 +66,7 @@ namespace Casual.Ravenhill.UI {
                     if(prevInfo != null ) {
                         Setup(prevInfo);
                     }
-                });
+                }, engine.GetService<IAudioService>());
             }
         }
 

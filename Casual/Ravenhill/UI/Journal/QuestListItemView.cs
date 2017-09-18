@@ -22,7 +22,7 @@ namespace Casual.Ravenhill.UI {
                 } else {
                     Debug.Log($"Journal entry for quest {data.id} not founded".Colored(ColorType.yellow));
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             var image = actionButton.GetComponent<Image>();
             if (data.type == QuestType.story || data.type == QuestType.charge_story_collection ) { 

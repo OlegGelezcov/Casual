@@ -69,7 +69,7 @@ namespace Casual.Ravenhill.UI {
 
             buyButton.SetListener(() => {
                 engine.GetService<IPurchaseService>().PurchaseProduct(product);
-            });
+            }, engine.GetService<IAudioService>());
         }
     }
 

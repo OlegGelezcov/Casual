@@ -26,7 +26,7 @@ namespace Casual.Ravenhill.UI {
             } else {
                 actionButton?.SetListener(() => {
                     Debug.Log("show market...");
-                });
+                }, engine.GetService<IAudioService>());
                 iconImage?.ActivateSelf();
                 descriptionText?.ActivateSelf();
                 if(iconImage != null ) {
@@ -39,7 +39,7 @@ namespace Casual.Ravenhill.UI {
         }
 
         private void Clear() {
-            actionButton?.SetListener(() => { });
+            actionButton?.SetListener(() => { }, engine.GetService<IAudioService>());
             iconImage?.DeactivateSelf();
             descriptionText?.DeactivateSelf();
         }

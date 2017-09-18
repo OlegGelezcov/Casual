@@ -20,7 +20,7 @@ namespace Casual.Ravenhill.UI {
 
         public override void Setup(object objdata = null) {
             base.Setup(objdata);
-            closeButton?.SetListener(Close);
+            closeButton?.SetListener(Close, engine.GetService<IAudioService>());
         }
     }
 }

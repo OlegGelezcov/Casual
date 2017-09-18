@@ -32,7 +32,7 @@ namespace Casual.Ravenhill.UI {
 
                 buyButton.SetListener(() => {
                     playerService.Buy(data);
-                });
+                }, engine.GetService<IAudioService>());
             }
 
             countText.text = $"You have {playerCount} from {requiredCount}";
@@ -43,7 +43,7 @@ namespace Casual.Ravenhill.UI {
                     playerService.AddToWishlist(data);
                     Resetup();
                 }
-            });
+            }, engine.GetService<IAudioService>());
         }
 
         public override void OnEnable() {

@@ -44,7 +44,7 @@ namespace Casual.Ravenhill.UI {
                         });
                     }
                 });
-            });
+            }, engine.GetService<IAudioService>());
 
             nonPresentTrigger.SetEventTriggerClick(p => {
                 PointerEventData pointerData = p as PointerEventData;
@@ -67,7 +67,7 @@ namespace Casual.Ravenhill.UI {
                         });
                     }
                 });
-            });
+            }, engine.GetService<IAudioService>());
         }
 
         private void OnTriggerClick(StoryCollectionData data) {

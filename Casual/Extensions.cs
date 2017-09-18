@@ -1,15 +1,12 @@
-﻿using Casual.Ravenhill.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Casual {
+namespace Casual
+{
     public static class Extensions {
 
         private static readonly Dictionary<ColorType, string> s_ColorTypeMap = new Dictionary<ColorType, string> {
@@ -94,26 +91,35 @@ namespace Casual {
             return (service as T);
         }
 
-        public static void SetEventTriggerClick(this EventTrigger trigger, UnityAction<BaseEventData> onClick) {
+        public static void SetEventTriggerClick(this EventTrigger trigger, UnityAction<BaseEventData> onClick, IButtonSoundProvider soundProvider) {
             trigger?.triggers?.Clear();
             if(onClick != null ) {
                 EventTrigger.TriggerEvent clickEvent = new EventTrigger.TriggerEvent();
-                clickEvent.AddListener(onClick);
+                clickEvent.AddListener((bed)=> {
+                    soundProvider?.PlayButton();
+                    onClick?.Invoke(bed);
+                });
                 trigger?.triggers?.Add(new EventTrigger.Entry { eventID = EventTriggerType.PointerClick, callback = clickEvent });
             }
         }
 
-        public static void SetListener(this Button button, UnityAction action ) {
+        public static void SetListener(this Button button, UnityAction action, IButtonSoundProvider soundProvider) {
             if(button == null ) { return; }
 
             button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(action);
+            button.onClick.AddListener(()=> {
+                soundProvider?.PlayButton();
+                action?.Invoke();
+            });
         }
 
-        public static void SetListener(this Toggle toggle, UnityAction<bool> action) {
+        public static void SetListener(this Toggle toggle, UnityAction<bool> action, IButtonSoundProvider soundProvider) {
             if(toggle == null) { return; }
             toggle.onValueChanged.RemoveAllListeners();
-            toggle.onValueChanged.AddListener(action);
+            toggle.onValueChanged.AddListener((isOn) => {
+                soundProvider?.PlayButton();
+                action?.Invoke(isOn);
+            });
         }
 
 

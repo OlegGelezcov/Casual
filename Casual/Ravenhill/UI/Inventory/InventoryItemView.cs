@@ -39,7 +39,7 @@ namespace Casual.Ravenhill.UI {
                     useButton.ActivateSelf();
                     useButton.SetListener(() => {
                         playerService.UseItem(data);
-                    });
+                    }, engine.GetService<IAudioService>());
                 } else {
                     useButton.DeactivateSelf();
                     SetupBuySection();
@@ -67,7 +67,7 @@ namespace Casual.Ravenhill.UI {
             buyButton.SetListener(() => {
                 Debug.Log($"buy item {data.type}-{data.id}");
                 playerService.Buy(data);
-            });
+            }, engine.GetService<IAudioService>());
         }
 
         public override void OnEnable() {

@@ -25,7 +25,7 @@ namespace Casual.Ravenhill.UI{
 
             medals.ToList().ForEach(medal => medal.Setup(day));
 
-            acceptButton.SetListener(Close);
+            acceptButton.SetListener(Close, engine.GetService<IAudioService>());
         }
 
         protected override void OnClose() {

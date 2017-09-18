@@ -158,7 +158,7 @@ namespace Casual.Ravenhill.UI {
 
             settingsButton.SetListener(() => {
                 Debug.Log("Click Settings");
-            });
+            }, engine.GetService<IAudioService>());
 
             changeNameButton.SetListener(() => {
                 Debug.Log("Change Name Button");
@@ -169,71 +169,71 @@ namespace Casual.Ravenhill.UI {
                     OnSubmit = (name) => playerService.SetName(name)
                 };
                 viewService.ShowView(RavenhillViewType.enter_text_view, enterTextData);
-            });
+            }, engine.GetService<IAudioService>());
 
             addGoldButton.SetListener(() => {
                 Debug.Log("add gold ");
                 viewService.ShowView(RavenhillViewType.bank);
-            });
+            }, engine.GetService<IAudioService>());
 
             addSilverButton.SetListener(() => {
                 Debug.Log("add silver");
                 viewService.ShowView(RavenhillViewType.bank);
-            });
+            }, engine.GetService<IAudioService>());
 
             bankButton.SetListener(() => {
                 Debug.Log("show bank");
                 viewService.ShowView(RavenhillViewType.bank);
-            });
+            }, engine.GetService<IAudioService>());
 
             storeButton.SetListener(() => {
                 Debug.Log("show store");
                 viewService.ShowView(RavenhillViewType.store, InventoryTab.Foods);
-            });
+            }, engine.GetService<IAudioService>());
 
             collectionsButton.SetListener(() => {
                 Debug.Log("show collections");
                 viewService.ShowView(RavenhillViewType.collections);
 
-            });
+            }, engine.GetService<IAudioService>());
 
             inventoryButton.SetListener(() => {
                 Debug.Log("show inventory");
                 viewService.ShowView(RavenhillViewType.inventory, InventoryTab.Foods);
-            });
+            }, engine.GetService<IAudioService>());
 
             socialButton.SetListener(() => {
                 Debug.Log("show social");
-            });
+            }, engine.GetService<IAudioService>());
 
             giftButton.SetListener(() => {
                 Debug.Log("show gifts");
-            });
+            }, engine.GetService<IAudioService>());
 
             gameCenterButton.SetListener(() => {
                 Debug.Log("show game center");
-            });
+            }, engine.GetService<IAudioService>());
 
             dialogButton.SetListener(() => {
                 Debug.Log("show dialogs");
                 viewService.ShowView(RavenhillViewType.famehall);
-            });
+            }, engine.GetService<IAudioService>());
 
             questButton.SetListener(() => {
                 Debug.Log("show quests");
-            });
+            }, engine.GetService<IAudioService>());
 
             journalButton.SetListener(() => {
                 Debug.Log("show journal");
                 viewService.ShowView(RavenhillViewType.journal);
-            });
+            }, engine.GetService<IAudioService>());
 
             achievmentButton.SetListener(() => {
                 Debug.Log("show achievments");
                 viewService.ShowView(RavenhillViewType.achievments_view);
-            });
+            }, engine.GetService<IAudioService>());
 
-            avatarButton.SetListener(() => viewService.ShowView(RavenhillViewType.avatars_view));
+            avatarButton.SetListener(() => viewService.ShowView(RavenhillViewType.avatars_view), engine.GetService<IAudioService>());
 
         }
 

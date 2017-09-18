@@ -33,7 +33,7 @@ namespace Casual.Ravenhill.UI {
                 } else {
                     Debug.Log($"Low coins show bank....");
                 }
-            });
+            }, engine.GetService<IAudioService>());
         }
     }
 

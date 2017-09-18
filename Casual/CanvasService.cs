@@ -1,14 +1,10 @@
 ﻿using Casual.Ravenhill;
 using Casual.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Casual {
+namespace Casual
+{
     [RequireComponent(typeof(Canvas))]
     public class CanvasService : RavenhillGameBehaviour, ICanvasSerive {
 

@@ -25,4 +25,7 @@
         IGameModeService gameModeService { get; }
     }
 
+    public interface IButtonSoundProvider {
+        void PlayButton();
+    }
 }

@@ -79,9 +79,9 @@ namespace Casual.Ravenhill.UI {
             }
 
             background.anchoredPosition = engine.GetService<ICanvasSerive>().TouchPositionToCanvasPosition(baseData.screenPosition) + offset;
-            eventTrigger.SetEventTriggerClick(OnEventTrigger);
+            eventTrigger.SetEventTriggerClick(OnEventTrigger, engine.GetService<IAudioService>());
             if(secondEventTrigger != null ) {
-                secondEventTrigger.SetEventTriggerClick(OnEventTrigger);
+                secondEventTrigger.SetEventTriggerClick(OnEventTrigger, engine.GetService<IAudioService>());
             }
         }
 

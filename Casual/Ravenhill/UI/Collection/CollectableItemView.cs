@@ -31,7 +31,7 @@ namespace Casual.Ravenhill.UI {
 
             addWishButton.SetListener(() => {
                 playerService.AddToWishlist(data);
-            });
+            }, engine.GetService<IAudioService>());
 
             if(playerCount > 0 ) {
                 sendGiftButton.interactable = true;
@@ -41,7 +41,7 @@ namespace Casual.Ravenhill.UI {
 
             sendGiftButton.SetListener(() => {
                 Debug.Log("Show Friend Selection View");
-            });
+            }, engine.GetService<IAudioService>());
         }
 
         public override void OnEnable() {

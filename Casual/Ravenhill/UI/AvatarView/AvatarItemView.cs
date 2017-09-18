@@ -11,7 +11,7 @@
                 if(isOn) {
                     playerService.SetAvatar(resourceService.GetAvatarData(AvatarId));
                 }
-            });
+            }, engine.GetService<IAudioService>());
         }
 
         public void Select() {

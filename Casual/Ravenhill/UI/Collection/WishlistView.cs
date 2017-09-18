@@ -24,7 +24,7 @@ namespace Casual.Ravenhill.UI {
 
             shareWishlistButton.SetListener(() => {
                 netService.ShareWishlist(wishItems);
-            });
+            }, engine.GetService<IAudioService>());
         }
 
         public override void OnEnable() {

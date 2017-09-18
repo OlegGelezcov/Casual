@@ -88,7 +88,7 @@ namespace Casual.Ravenhill.UI {
 
             toolViews.ToList().ForEach(tv => tv.Setup());
 
-            m_PauseButton.SetListener(() => viewService.ShowView(RavenhillViewType.search_pause_view));
+            m_PauseButton.SetListener(() => viewService.ShowView(RavenhillViewType.search_pause_view), engine.GetService<IAudioService>());
         }
 
         private SearchTextSlot FindEmptySlot() {

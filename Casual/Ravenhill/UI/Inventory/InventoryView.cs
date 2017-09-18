@@ -39,7 +39,7 @@ namespace Casual.Ravenhill.UI {
                         dataList = resourceService.foodList.Cast<InventoryItemData>().ToList()
                     });
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             toolToggle.SetListener((isOn) => {
                 if(isOn) {
@@ -49,7 +49,7 @@ namespace Casual.Ravenhill.UI {
                         dataList = resourceService.toolList.Cast<InventoryItemData>().ToList()
                     });
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             bonusToggle.SetListener((isOn) => {
                 if (isOn) {
@@ -59,7 +59,7 @@ namespace Casual.Ravenhill.UI {
                         dataList = resourceService.bonusList.Cast<InventoryItemData>().ToList()
                     });
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             ingredientToggle.SetListener((isOn) => {
                 if(isOn) {
@@ -69,7 +69,7 @@ namespace Casual.Ravenhill.UI {
                         dataList = resourceService.ingredientList.Cast<InventoryItemData>().ToList()
                     });
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             miscToggle.SetListener((isOn) => {
                 if(isOn) {
@@ -83,15 +83,15 @@ namespace Casual.Ravenhill.UI {
                         dataList = list
                     });
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             toggleMap[currentTab].isOn = true;
 
             storeButton.SetListener(() => {
                 engine.StartCoroutine(CorOpenStore(currentTab));
-            });
+            }, engine.GetService<IAudioService>());
 
-            bankButton.SetListener(() => engine.StartCoroutine(CorOpenBank()));
+            bankButton.SetListener(() => engine.StartCoroutine(CorOpenBank()), engine.GetService<IAudioService>());
         }
 
         private System.Collections.IEnumerator CorOpenBank() {

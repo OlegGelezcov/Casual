@@ -35,7 +35,7 @@ namespace Casual.Ravenhill.UI {
             roomInfoView.Setup(roomInfo);
             bestResultView.Setup(netService.GetBestRoomScore(roomInfo));
             myBestResultView.Setup(netService.GetPlayerBestRoomScore(roomInfo));
-            closeBigButton.SetListener(Close);
+            closeBigButton.SetListener(Close, engine.GetService<IAudioService>());
         }
 
         public override void OnEnable() {
@@ -99,7 +99,7 @@ namespace Casual.Ravenhill.UI {
                     Debug.Log("Health is very low...");
                     viewService.ShowView(RavenhillViewType.store, InventoryTab.Foods);
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             unlockButton.SetListener(() => {
                 if(playerService.HasCoins(roomInfo.roomData.price)) {
@@ -109,9 +109,9 @@ namespace Casual.Ravenhill.UI {
                     Debug.Log("No coins for action".Colored(ColorType.yellow));
                     viewService.ShowView(RavenhillViewType.bank);
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
-            closeBigButton.SetListener(() => Close());
+            closeBigButton.SetListener(() => Close(), engine.GetService<IAudioService>());
         }
 
         private void OnRoomUnlocked(RoomInfo room ) {

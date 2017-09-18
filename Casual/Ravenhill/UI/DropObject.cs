@@ -17,7 +17,7 @@ namespace Casual.Ravenhill.UI {
             icon.overrideSprite = resourceService.GetSprite(dropItem);
             icon.color = dropItem.color;
 
-            trigger.SetEventTriggerClick(eventData => MoveToEndPosition());
+            trigger.SetEventTriggerClick(eventData => MoveToEndPosition(), engine.GetService<IAudioService>());
 
             Vector2 startPosition = sourceTransform ? canvasService.WorldToCanvasPoint(sourceTransform.position) : dropDefaultPosition;
 

@@ -75,6 +75,17 @@ namespace Casual.Ravenhill {
         public static event System.Action<BuffInfo> BuffAdded;
         public static event System.Action<BuffInfo> BuffRemoved;
 
+        public static event System.Action<bool> MusicStateChanged;
+        public static event System.Action<bool> SoundStateChanged;
+
+        public static void OnSoundStateChanged(bool enabled) {
+            SoundStateChanged?.Invoke(enabled);
+        }
+
+        public static void OnMusicStateChanged(bool enabled ) {
+            MusicStateChanged?.Invoke(enabled);
+        }
+
         public static void OnBuffRemoved(BuffInfo buff ) {
             BuffRemoved?.Invoke(buff);
         }

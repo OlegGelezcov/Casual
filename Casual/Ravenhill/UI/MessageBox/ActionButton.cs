@@ -7,7 +7,7 @@
         public void Setup(string buttonName, System.Action buttonAction ) {
             button.SetListener(() => {
                 buttonAction?.Invoke();
-            });
+            }, engine.GetService<IAudioService>());
             if(nameText != null ) {
                 nameText.text = buttonName;
             }

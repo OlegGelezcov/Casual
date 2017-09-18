@@ -38,6 +38,7 @@ namespace Casual.Ravenhill {
         daily_reward_view = 29,
         level_up_view = 30,
         collection_buy_charger_view = 31,
-        enter_text_view = 32
+        enter_text_view = 32,
+        settings_view = 33
     }
 }

@@ -34,7 +34,7 @@ namespace Casual.Ravenhill.UI {
                         engine.Cast<RavenhillEngine>().DropItems(info.Data.rewards, null, () => !viewService.hasModals);
                         engine.GetService<INpcService>().Cast<NpcService>().RemoveNpc(info.RoomId);
                         Close();
-                    });
+                    }, engine.GetService<IAudioService>());
                     weaponIconImage.SetAlpha(1);
 
                 } else {
@@ -50,11 +50,11 @@ namespace Casual.Ravenhill.UI {
                         } else {
                             viewService.ShowView(RavenhillViewType.bank);
                         }
-                    });
+                    }, engine.GetService<IAudioService>());
                     weaponIconImage.SetAlpha(0.5f);
                 }
             }
-            closeBigButton.SetListener(Close);
+            closeBigButton.SetListener(Close, engine.GetService<IAudioService>());
         }
     }
 

@@ -40,7 +40,7 @@ namespace Casual.Ravenhill.UI {
                         .Where(obj => obj.IsSellable).ToList()
                     });
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             toolToggle.SetListener((isOn) => {
                 if (isOn) {
@@ -51,7 +51,7 @@ namespace Casual.Ravenhill.UI {
                         .Where(obj => obj.IsSellable).ToList()
                     });
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             bonusToggle.SetListener((isOn) => {
                 if (isOn) {
@@ -62,7 +62,7 @@ namespace Casual.Ravenhill.UI {
                         .Where(obj => obj.IsSellable).ToList()
                     });
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             ingredientToggle.SetListener((isOn) => {
                 if (isOn) {
@@ -73,7 +73,7 @@ namespace Casual.Ravenhill.UI {
                         .Where(obj => obj.IsSellable).ToList()
                     });
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             miscToggle.SetListener((isOn) => {
                 if (isOn) {
@@ -87,15 +87,15 @@ namespace Casual.Ravenhill.UI {
                         dataList = list
                     });
                 }
-            });
+            }, engine.GetService<IAudioService>());
 
             toggleMap[currentTab].isOn = true;
 
             inventoryButton.SetListener(() => {
                 engine.StartCoroutine(CorOpenInventory(currentTab));
-            });
+            }, engine.GetService<IAudioService>());
 
-            bankButton.SetListener(() => engine.StartCoroutine(CorOpenBank()));
+            bankButton.SetListener(() => engine.StartCoroutine(CorOpenBank()), engine.GetService<IAudioService>());
         }
 
         private System.Collections.IEnumerator CorOpenBank() {

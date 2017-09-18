@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Casual {
+﻿namespace Casual
+{
     public class GameElement : IGameElement {
 
         private IViewService m_ViewSerice;

@@ -126,7 +126,7 @@ namespace Casual.Ravenhill.UI {
 
             timeText.text = Utility.FormatMS(session.searchTime);
 
-            closeBigButton.SetListener(Close);
+            closeBigButton.SetListener(Close, engine.GetService<IAudioService>());
         }
 
         protected override void OnClose() {

@@ -26,7 +26,7 @@ namespace Casual.Ravenhill.UI {
 
             chargeButton.SetListener(() => {
                 ravenhillGameModeService.ChargeCollection(collectionData);
-            });
+            }, engine.GetService<IAudioService>());
         }
 
         public override void OnEnable() {

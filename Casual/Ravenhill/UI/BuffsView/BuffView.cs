@@ -46,7 +46,7 @@
                         });
                     }
                 }
-            });
+            }, engine.GetService<IAudioService>());
         }
 
         private void UpdateTimer() {

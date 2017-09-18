@@ -55,7 +55,7 @@ namespace Casual.Ravenhill.UI {
 
             SetupChargeButton(storyCollectionData);
             SetupCollectionIcon(storyCollectionData);
-            closeBigButton.SetListener(() => Close());
+            closeBigButton.SetListener(() => Close(), engine.GetService<IAudioService>());
             buyChargerView.Setup(storyCollectionData);
         }
 
@@ -71,7 +71,7 @@ namespace Casual.Ravenhill.UI {
                         engine.GetService<IVideoService>().PlayVideo(storyCollectionData.videoId, () => {
                             ravenhillGameModeService.ChargeStoryCollection(storyCollectionData);
                         });
-                    });
+                    }, engine.GetService<IAudioService>());
                 } else {
                     chargeButton.interactable = false;
                 }

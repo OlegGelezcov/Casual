@@ -1,12 +1,7 @@
 ﻿using Casual.Ravenhill;
-using Casual.Ravenhill.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Casual {
+namespace Casual
+{
 
     public abstract class GameModeService : GameBehaviour, IGameModeService {
 

@@ -14,7 +14,7 @@ namespace Casual.Ravenhill.UI {
                 removeWishButton.ActivateSelf();
                 removeWishButton.SetListener(() => {
                     playerService.RemoveFromWishlist(data);
-                });
+                }, engine.GetService<IAudioService>());
             }
         }
     }

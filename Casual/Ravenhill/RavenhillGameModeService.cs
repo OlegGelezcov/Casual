@@ -58,6 +58,12 @@ namespace Casual.Ravenhill {
             RavenhillEvents.PlayerLevelChanged -= OnLevelChanged;
         }
 
+        public void OnApplicationFocus(bool focus) {
+            if(isLoaded && focus ) {
+                RoomModeSwitcher.OnApplicationFocus(focus);
+            }
+        }
+
         private void OnLevelChanged(int oldLevel, int newLevel) {
             StartCoroutine(CorNewLevel(oldLevel, newLevel));
         }

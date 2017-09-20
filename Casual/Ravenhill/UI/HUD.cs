@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Casual.Ravenhill.UI {
-    public class HUD : RavenhillBaseView {
+    public partial class HUD : RavenhillBaseView {
 
         private UpdateTimer healthUpdateTimer { get; } = new UpdateTimer();
 
@@ -79,60 +79,60 @@ namespace Casual.Ravenhill.UI {
 
         private Button helpButton => m_HelpButton;
 
-        [SerializeField]
-        private Button m_BankButton;
+        //[SerializeField]
+        //private Button m_BankButton;
 
-        private Button bankButton => m_BankButton;
+        //private Button bankButton => m_BankButton;
 
-        [SerializeField]
-        private Button m_StoreButton;
+        //[SerializeField]
+        //private Button m_StoreButton;
 
-        private Button storeButton => m_StoreButton;
+        //private Button storeButton => m_StoreButton;
 
-        [SerializeField]
-        private Button m_CollectionsButton;
+        //[SerializeField]
+        //private Button m_CollectionsButton;
 
-        private Button collectionsButton => m_CollectionsButton;
+        //private Button collectionsButton => m_CollectionsButton;
 
-        [SerializeField]
-        private Button m_InventoryButton;
+        //[SerializeField]
+        //private Button m_InventoryButton;
 
-        private Button inventoryButton => m_InventoryButton;
+        //private Button inventoryButton => m_InventoryButton;
 
-        [SerializeField]
-        private Button m_SocialButton;
+        //[SerializeField]
+        //private Button m_SocialButton;
 
-        private Button socialButton => m_SocialButton;
+        //private Button socialButton => m_SocialButton;
 
-        [SerializeField]
-        private Button m_GiftButton;
+        //[SerializeField]
+        //private Button m_GiftButton;
 
-        private Button giftButton => m_GiftButton;
+        //private Button giftButton => m_GiftButton;
 
-        [SerializeField]
-        private Button m_GameCenterButton;
+        //[SerializeField]
+        //private Button m_GameCenterButton;
 
-        private Button gameCenterButton => m_GameCenterButton;
+        //private Button gameCenterButton => m_GameCenterButton;
 
-        [SerializeField]
-        private Button m_DialogButton;
+        //[SerializeField]
+        //private Button m_DialogButton;
 
-        private Button dialogButton => m_DialogButton;
+        //private Button dialogButton => m_DialogButton;
 
-        [SerializeField]
-        private Button m_QuestButton;
+        //[SerializeField]
+        //private Button m_QuestButton;
 
-        private Button questButton => m_QuestButton;
+        //private Button questButton => m_QuestButton;
 
-        [SerializeField]
-        private Button m_JournalButton;
+        //[SerializeField]
+        //private Button m_JournalButton;
 
-        private Button journalButton => m_JournalButton;
+        //private Button journalButton => m_JournalButton;
 
-        [SerializeField]
-        private Button m_AchievmentButton;
+        //[SerializeField]
+        //private Button m_AchievmentButton;
 
-        private Button achievmentButton => m_AchievmentButton;
+        //private Button achievmentButton => m_AchievmentButton;
 #pragma warning restore 0649
 
 
@@ -207,34 +207,40 @@ namespace Casual.Ravenhill.UI {
                 Debug.Log("show social");
             }, engine.GetService<IAudioService>());
 
-            giftButton.SetListener(() => {
-                Debug.Log("show gifts");
-            }, engine.GetService<IAudioService>());
-
-            gameCenterButton.SetListener(() => {
-                Debug.Log("show game center");
-            }, engine.GetService<IAudioService>());
-
-            dialogButton.SetListener(() => {
-                Debug.Log("show dialogs");
-                viewService.ShowView(RavenhillViewType.famehall);
-            }, engine.GetService<IAudioService>());
-
-            questButton.SetListener(() => {
-                Debug.Log("show quests");
-            }, engine.GetService<IAudioService>());
+            famehallButton.SetListener(() => viewService.ShowView(RavenhillViewType.famehall), engine.GetService<IAudioService>());
 
             journalButton.SetListener(() => {
                 Debug.Log("show journal");
                 viewService.ShowView(RavenhillViewType.journal);
             }, engine.GetService<IAudioService>());
 
-            achievmentButton.SetListener(() => {
+            achievmentsButton.SetListener(() => {
                 Debug.Log("show achievments");
                 viewService.ShowView(RavenhillViewType.achievments_view);
             }, engine.GetService<IAudioService>());
 
+            //giftButton.SetListener(() => {
+            //    Debug.Log("show gifts");
+            //}, engine.GetService<IAudioService>());
+
+            //gameCenterButton.SetListener(() => {
+            //    Debug.Log("show game center");
+            //}, engine.GetService<IAudioService>());
+
+            //dialogButton.SetListener(() => {
+            //    Debug.Log("show dialogs");
+            //    viewService.ShowView(RavenhillViewType.famehall);
+            //}, engine.GetService<IAudioService>());
+
+            //questButton.SetListener(() => {
+            //    Debug.Log("show quests");
+            //}, engine.GetService<IAudioService>());
+
+
+
             avatarButton.SetListener(() => viewService.ShowView(RavenhillViewType.avatars_view), engine.GetService<IAudioService>());
+
+            contextBankButton?.SetListener(() => viewService.ShowView(RavenhillViewType.bank), engine.GetService<IAudioService>());
 
         }
 
@@ -341,11 +347,51 @@ namespace Casual.Ravenhill.UI {
         }
 
         private void UpdateGold() {
-            goldText.text = playerService.gold.ToString();
+            NumericTextProgress progress = goldText.GetComponent<NumericTextProgress>();
+            if (progress == null) {
+                goldText.text = playerService.gold.ToString();
+            } else {
+                progress.SetValue(playerService.gold);
+            }
         }
 
         private void UpdateSilver() {
-            silverText.text = playerService.silver.ToString();
+            NumericTextProgress progress = silverText.GetComponent<NumericTextProgress>();
+            if (progress == null) {
+                silverText.text = playerService.silver.ToString();
+            } else {
+                progress.SetValue(playerService.silver);
+            }
         }
+    }
+
+    public partial class HUD : RavenhillBaseView {
+
+        [SerializeField]
+        private Button bankButton;
+
+        [SerializeField]
+        private Button storeButton;
+
+        [SerializeField]
+        private Button collectionsButton;
+
+        [SerializeField]
+        private Button inventoryButton;
+
+        [SerializeField]
+        private Button socialButton;
+
+        [SerializeField]
+        private Button achievmentsButton;
+
+        [SerializeField]
+        private Button famehallButton;
+
+        [SerializeField]
+        private Button journalButton;
+
+        [SerializeField]
+        private Button contextBankButton;
     }
 }

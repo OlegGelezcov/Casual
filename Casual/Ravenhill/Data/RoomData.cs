@@ -41,6 +41,10 @@ namespace Casual.Ravenhill.Data {
             return (mode == RoomMode.normal) ? iconPath : scaryIconPath;
         }
 
+        public string GetIconKey(RoomMode mode) {
+            return (mode == RoomMode.normal) ? "n_" + id : "s_" + id;
+        }
+
         public bool IsLinked(string otherRoomId ) {
             return linkedRooms.Contains(otherRoomId);
         }

@@ -46,6 +46,19 @@ namespace Casual.Ravenhill.UI{
         protected override void OnUse(InventoryItemData data) {
             base.OnUse(data);
             SearchManager.WinRoomInstantly();
+            StartCoroutine(CorShowEffect());
+            
+        }
+
+        private System.Collections.IEnumerator CorShowEffect() {
+            GameObject prefab = resourceService.GetCachedPrefab("quick_win_tool");
+
+            for (int i = 0; i < 5; i++ ) {
+                Vector2 position2D = Utility.Range(new Vector2(-1000, -450), new Vector2(1000, 700));
+                Vector3 position3D = new Vector3(position2D.x, position2D.y, -30);
+                GameObject instance = Instantiate<GameObject>(prefab, position3D, Quaternion.identity);
+                yield return new WaitForSeconds(0.15f);
+            }
         }
     }
 }

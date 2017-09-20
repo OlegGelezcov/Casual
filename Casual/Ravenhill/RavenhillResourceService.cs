@@ -171,7 +171,8 @@ namespace Casual.Ravenhill {
                 ["drop_object"] = "Prefabs/UI/Misc/drop_object",
                 ["map_npc"] = "Prefabs/map_npc",
                 ["spot"] = "Prefabs/Effects/Spot",
-                ["screen_text"] = "Prefabs/UI/ScreenText"
+                ["screen_text"] = "Prefabs/UI/ScreenText",
+                ["quick_win_tool"] = "Prefabs/Effects/quick_win_tool"
             });
         }
 

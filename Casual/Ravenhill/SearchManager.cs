@@ -191,7 +191,7 @@ namespace Casual.Ravenhill {
         }
 
         private System.Collections.IEnumerator CorShowExitRoomView() {
-            yield return new WaitForSeconds(4.0f);
+            yield return new WaitForSeconds(2.0f);
             viewService.RemoveView(RavenhillViewType.search_pan);
                
             viewService.ShowView(RavenhillViewType.exit_room_view, ravenhillGameModeService.searchSession);

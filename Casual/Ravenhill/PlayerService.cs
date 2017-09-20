@@ -155,6 +155,9 @@ namespace Casual.Ravenhill {
             if(oldCount != maxHealth ) {
                 RavenhillEvents.OnPlayerMaxHealthChanged(oldCount, maxHealth);
             }
+            if(count > 0 ) {
+                AddHealth(Mathf.Clamp(maxHealth - health, 0, maxHealth));
+            }
         }
 
         public void AddHealth(float count ) {

@@ -16,6 +16,8 @@ namespace Casual.Ravenhill {
 
         public int Interval => Mathf.RoundToInt(switchInterval);
 
+        private bool isLoaded = false;
+
         public RoomModeSwitcher(float switchInterval, IRoomMode roomMode) {
             this.switchInterval = switchInterval;
             this.switchTimer = switchInterval;
@@ -24,6 +26,17 @@ namespace Casual.Ravenhill {
             eventTimer.Setup(1.0f, (realDelay) => {
                 RavenhillEvents.OnRoomModeSwitchTimerChanged(switchTimer, switchInterval);
             });
+        }
+
+        public void OnApplicationFocus(bool focus ) {
+            if(focus  && isLoaded ) {
+                int interval = engine.Cast<RavenhillEngine>().LostFocusInterval;
+                if(interval > 0) {
+                    switchTimer -= interval;
+                    Debug.Log($"correct switcher on interval {interval}".Colored(ColorType.lightblue));
+                    CorrentSwitcherTimerToRange();
+                } 
+            }
         }
 
         public void Update() {
@@ -45,6 +58,7 @@ namespace Casual.Ravenhill {
 
         public void InitSave() {
             switchTimer = switchInterval;
+            isLoaded = true;
         }
 
         public void Load(UXMLElement element) {
@@ -53,15 +67,20 @@ namespace Casual.Ravenhill {
             int nowTime = Utility.unixTime;
             int sleepInterval = nowTime - saveTime;
             switchTimer -= sleepInterval;
+            CorrentSwitcherTimerToRange();
+            isLoaded = true;
+        } 
+
+        private void CorrentSwitcherTimerToRange() {
             bool needSwitchRoomMode = false;
-            while(switchTimer < 0.0f ) {
+            while (switchTimer < 0.0f) {
                 switchTimer += switchInterval;
                 needSwitchRoomMode = !needSwitchRoomMode;
             }
-            if(needSwitchRoomMode) {
+            if (needSwitchRoomMode) {
                 roomMode.SwitchRoomMode();
             }
-        } 
+        }
         #endregion
     }
 

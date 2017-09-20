@@ -48,6 +48,9 @@ namespace Casual.Ravenhill.UI.Map {
                 if (ravenhillViewService.noModals) {
                     if (viewRemovedInterval >= 0.5f) {
                         Debug.Log($"click on ui room {roomId}");
+                        RoomData roomData = resourceService.GetRoomData(roomId);
+                        RoomInfo roomInfo = ravenhillGameModeService.GetRoomInfo(roomData.id);
+                        viewService.ShowView(RavenhillViewType.enter_room_view, roomInfo);
                     }
                 }
             }, engine.GetService<IAudioService>());

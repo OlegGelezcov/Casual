@@ -24,7 +24,10 @@ namespace Casual.Ravenhill.UI {
 
         public void Setup(RoomInfo roomInfo) {
 
-            roomIconImage.overrideSprite = resourceService.GetSprite(roomInfo.roomData);
+            roomIconImage.overrideSprite = resourceService.GetSprite(
+                roomInfo.roomData.GetIconKey(ravenhillGameModeService.CurrentRoomMode), 
+                roomInfo.roomData.GetIcon(ravenhillGameModeService.CurrentRoomMode)
+                );
             roomLevelText.text = resourceService.GetRoomLevelName(roomInfo.roomLevel);
             roomLevelProgress.SetValue(0.0f, roomInfo.progress);
         }

@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseView.cs" />
+    <Compile Include="Behaviours\DestroySelf.cs" />
     <Compile Include="Behaviours\MovingFuncType.cs" />
     <Compile Include="Behaviours\PositionObject.cs" />
     <Compile Include="Behaviours\StaticPositionObject.cs" />
@@ -234,6 +235,7 @@
     <Compile Include="Ravenhill\UI\LevelUpView\LevelUpView.cs" />
     <Compile Include="Ravenhill\UI\ListItemViews\InventoryItemShortView.cs" />
     <Compile Include="Ravenhill\UI\LoaderView\LoaderView.cs" />
+    <Compile Include="Ravenhill\UI\LoadingPerspective\LoadingPerspective.cs" />
     <Compile Include="Ravenhill\UI\MapBuffs\RoomBuffsView.cs" />
     <Compile Include="Ravenhill\UI\MapBuffs\RoomMapBuffView.cs" />
     <Compile Include="Ravenhill\UI\Map\RoomMapUIView.cs" />

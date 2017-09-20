@@ -170,6 +170,7 @@
     <Compile Include="Ravenhill\RavenhillViewType.cs" />
     <Compile Include="Ravenhill\RoomInfo.cs" />
     <Compile Include="Ravenhill\RoomManager.cs" />
+    <Compile Include="Ravenhill\RoomModeSwitcher.cs" />
     <Compile Include="Ravenhill\RoomRank.cs" />
     <Compile Include="Ravenhill\SearchGroup.cs" />
     <Compile Include="Ravenhill\SearchManager.cs" />
@@ -251,6 +252,7 @@
     <Compile Include="Ravenhill\UI\RavenhillCloseableView.cs" />
     <Compile Include="Ravenhill\UI\RavenhillUIBehaviour.cs" />
     <Compile Include="Ravenhill\UI\RectTransformBinding.cs" />
+    <Compile Include="Ravenhill\UI\RoomModeSwitcherView\RoomModeSwitcherView.cs" />
     <Compile Include="Ravenhill\UI\ScreenQuestList\ScreenQuestListItemView.cs" />
     <Compile Include="Ravenhill\UI\ScreenQuestList\ScreenQuestsView.cs" />
     <Compile Include="Ravenhill\UI\ScreenText.cs" />

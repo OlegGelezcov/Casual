@@ -40,6 +40,7 @@ namespace Casual.Ravenhill {
         collection_buy_charger_view = 31,
         enter_text_view = 32,
         settings_view = 33,
-        screen_quest_list = 34
+        screen_quest_list = 34,
+        room_mode_switcher_view = 35
     }
 }

@@ -78,6 +78,12 @@ namespace Casual.Ravenhill {
         public static event System.Action<bool> MusicStateChanged;
         public static event System.Action<bool> SoundStateChanged;
 
+        public static event System.Action<float, float> RoomModeSwitchTimerChanged;
+
+        public static void OnRoomModeSwitchTimerChanged(float timer, float interval) {
+            RoomModeSwitchTimerChanged?.Invoke(timer, interval);
+        }
+
         public static void OnSoundStateChanged(bool enabled) {
             SoundStateChanged?.Invoke(enabled);
         }

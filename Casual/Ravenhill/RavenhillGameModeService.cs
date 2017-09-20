@@ -5,7 +5,10 @@ using System.Linq;
 using UnityEngine;
 
 namespace Casual.Ravenhill {
-    public class RavenhillGameModeService : GameModeService, ISaveable {
+    public class RavenhillGameModeService : GameModeService, ISaveable, IRoomMode {
+
+        private const float ROOM_MODE_SWITCH_INTERVAL = 60 * 60 * 2;
+
         public RoomData previousRoom { get; private set; }
         public RoomData currentRoom { get; private set; }
         public SearchSession searchSession { get; private set; } = new SearchSession();
@@ -19,10 +22,18 @@ namespace Casual.Ravenhill {
         private float updateCollectableTimer = 1.0f;
         private readonly DailyRewardManager dailyRewardManager = new DailyRewardManager();
 
+        private RoomModeSwitcher roomModeSwitcher = null;
+
         public override IRoomManager RoomManager {
             get {
                 return roomManager;
             }
+        }
+
+
+        public override void Awake() {
+            base.Awake();
+            CreateRoomModeSwitcher();
         }
 
         public override void Start() {
@@ -81,9 +92,11 @@ namespace Casual.Ravenhill {
             if(newName == GameModeName.map || newName == GameModeName.hallway ) {
                 viewService.ShowView(RavenhillViewType.buffs_view);
                 viewService.ShowView(RavenhillViewType.screen_quest_list);
+                viewService.ShowView(RavenhillViewType.room_mode_switcher_view, this);
             } else {
                 viewService.RemoveView(RavenhillViewType.buffs_view);
                 viewService.RemoveView(RavenhillViewType.screen_quest_list);
+                viewService.RemoveView(RavenhillViewType.room_mode_switcher_view);
             }
         }
 
@@ -110,6 +123,7 @@ namespace Casual.Ravenhill {
                 }
             }
             dailyRewardManager.Update();
+            RoomModeSwitcher.Update();
         }
 
         private void OnSearchSessionEnded(SearchSession session ) {
@@ -436,6 +450,8 @@ namespace Casual.Ravenhill {
             writeElement.Add(roomManager.GetSave());
             writeElement.Add(dailyRewardManager.GetSave());
 
+            writeElement.Add(RoomModeSwitcher.GetSave());
+
             return writeElement.ToString();
         }
 
@@ -465,6 +481,14 @@ namespace Casual.Ravenhill {
 
                 searchCounter = gameModeElement.GetInt("search_counter", 0);
                 lastSearchRoomId = gameModeElement.GetString("last_search_room", string.Empty);
+
+                UXMLElement roomModeSwitcherElement = gameModeElement.Element("room_mode_switcher");
+                if(roomModeSwitcherElement != null ) {
+                    RoomModeSwitcher.Load(roomModeSwitcherElement);
+                } else {
+                    RoomModeSwitcher.InitSave();
+                }
+
                 isLoaded = true;
             }
             return true;
@@ -476,6 +500,7 @@ namespace Casual.Ravenhill {
             dailyRewardManager.InitSave();
             searchCounter = 0;
             lastSearchRoomId = string.Empty;
+            RoomModeSwitcher.InitSave();
             isLoaded = true;
         }
 
@@ -485,6 +510,31 @@ namespace Casual.Ravenhill {
 
         public void OnLoaded() {
             
+        }
+
+
+        #endregion
+
+        #region IRoomMode
+        private void CreateRoomModeSwitcher() {
+            if (roomModeSwitcher == null) {
+                roomModeSwitcher = new RoomModeSwitcher(ROOM_MODE_SWITCH_INTERVAL, this);
+            }
+        }
+
+        private RoomModeSwitcher RoomModeSwitcher {
+            get {
+                CreateRoomModeSwitcher();
+                return roomModeSwitcher;
+            }
+        }
+
+        public IRoomModeSwitcher Switcher => RoomModeSwitcher;
+
+        public RoomMode CurrentRoomMode => roomMode;
+
+        public void SwitchRoomMode() {
+            SetRoomMode(roomMode == RoomMode.normal ? RoomMode.scary : RoomMode.normal);
         } 
         #endregion
     }

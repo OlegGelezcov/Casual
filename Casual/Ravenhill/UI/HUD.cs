@@ -158,6 +158,7 @@ namespace Casual.Ravenhill.UI {
 
             settingsButton.SetListener(() => {
                 Debug.Log("Click Settings");
+                viewService.ShowView(RavenhillViewType.settings_view);
             }, engine.GetService<IAudioService>());
 
             changeNameButton.SetListener(() => {

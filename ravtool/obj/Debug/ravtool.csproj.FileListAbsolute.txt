@@ -1,0 +1,6 @@
+C:\development\Casual\ravtool\bin\Debug\ravtool.exe.config
+C:\development\Casual\ravtool\bin\Debug\ravtool.exe
+C:\development\Casual\ravtool\bin\Debug\ravtool.pdb
+C:\development\Casual\ravtool\obj\Debug\ravtool.csprojResolveAssemblyReference.cache
+C:\development\Casual\ravtool\obj\Debug\ravtool.exe
+C:\development\Casual\ravtool\obj\Debug\ravtool.pdb

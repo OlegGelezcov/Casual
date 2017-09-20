@@ -31,6 +31,7 @@ namespace Casual.Ravenhill {
 
             if(isMiss) {
                 IncrementCounter(screenPosition);
+                engine.GetService<IAudioService>().PlaySound(SoundType.object_miss, true);
             }
         }
 

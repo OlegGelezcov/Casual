@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Casual.Ravenhill.UI {
 
-    public class SearchText : GameBehaviour {
+    public class SearchText : RavenhillUIBehaviour {
 
 #pragma warning disable 0649
         [SerializeField]
@@ -53,7 +53,13 @@ namespace Casual.Ravenhill.UI {
             this.searchObjectData = data;
             Clear();
             var resourceService = engine.GetService<IResourceService>();
-            text.text = resourceService.GetString(data.textId);
+
+            string targetText = resourceService.GetString(data.textId);
+            if(ravenhillGameModeService.HasShuffleWordsDebuff(ravenhillGameModeService.searchSession.roomId)) {
+                Debug.Log($"Apply debuff to words");
+                targetText = ravenhillGameModeService.ShufffleWord(targetText);
+            }
+            text.text = targetText;
         }
 
         public void Stroke() {

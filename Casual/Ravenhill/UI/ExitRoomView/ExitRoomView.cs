@@ -104,14 +104,16 @@ namespace Casual.Ravenhill.UI {
 
             if(session.searchStatus == SearchStatus.success) {
                 searchStatusText.text = resourceService.GetString("status_success");
+                engine.GetService<IAudioService>().PlaySound(SoundType.room_success, GetComponent<AudioSource>());
             } else {
                 searchStatusText.text = resourceService.GetString("status_fail");
+                engine.GetService<IAudioService>().PlaySound(SoundType.room_fail, GetComponent<AudioSource>());
             }
 
             if(session.searchStatus == SearchStatus.success ) {
                 expSilverRewardParent.ActivateSelf();
-                expRewardCountText.SetValue(0, session.roomData.expReward);
-                silverRewardCountText.SetValue(0, session.roomData.silverReward);
+                expRewardCountText.SetValue(0, ravenhillGameModeService.GetModifiedExpCount(session.roomId, session.roomData.expReward));
+                silverRewardCountText.SetValue(0, ravenhillGameModeService.GetModifiedSilverCount(session.roomId, session.roomData.silverReward));
             } else {
                 expSilverRewardParent.DeactivateSelf();
             }

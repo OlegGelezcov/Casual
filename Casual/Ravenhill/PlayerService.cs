@@ -50,6 +50,11 @@ namespace Casual.Ravenhill {
         private Wishlist wishlist { get; } = new Wishlist();
         private BuffManager buffs { get; } = new BuffManager();
 
+        private bool IsFullHealth {
+            get {
+                return Mathf.Abs(maxHealth - health) < 1.0f;
+            }
+        }
 
         #region Wishlist
         public bool AddToWishlist(InventoryItemData data) {
@@ -92,6 +97,10 @@ namespace Casual.Ravenhill {
 
         public int GetItemCount(InventoryItemData data) {
             return inventory.ItemCount(data.type, data.id);
+        }
+
+        public List<InventoryItem> GetItems(InventoryItemType type) {
+            return inventory.GetItems(type);
         }
 
 
@@ -350,6 +359,16 @@ namespace Casual.Ravenhill {
                 if (HasCoins(data.price)) {
                     RemoveCoins(data.price);
                     AddItem(new InventoryItem(data, 1));
+                    switch(data.type) {
+                        case InventoryItemType.Food: {
+                                engine.GetService<IAudioService>().PlaySound(SoundType.buy_food, true);
+                            }
+                            break;
+                        default: {
+                                engine.GetService<IAudioService>().PlaySound(SoundType.buy_item, true);
+                            }
+                            break;
+                    }
                     return true;
                 } else {
                     viewService.ShowView(RavenhillViewType.bank);
@@ -365,12 +384,24 @@ namespace Casual.Ravenhill {
                     case InventoryItemType.Bonus: {
                             bool result = UseItemAsBonus(item);
                             useAction?.Invoke(item.data);
+                            if(result) {
+                                engine.GetService<IAudioService>().PlaySound(SoundType.use_bonus, true);
+                            }
                             return result;
                         }
                     case InventoryItemType.Tool: {
                             RemoveItem(item.data.type, item.data.id, 1);
                             useAction?.Invoke(item.data);
+                            engine.GetService<IAudioService>().PlaySound(SoundType.use_tool, true);
                             return true;
+                        }
+                    case InventoryItemType.Food: {
+                            bool result = UseItemAsFood(item);
+                            useAction?.Invoke(item.data);
+                            if(result) {
+                                engine.GetService<IAudioService>().PlaySound(SoundType.buy_food, true);
+                            }
+                            return result;
                         }
                     default: {
                             return false;
@@ -385,6 +416,21 @@ namespace Casual.Ravenhill {
             RemoveItem(data.type, data.id, 1);
             AddBuff(data);
             return true;
+        }
+
+        private bool UseItemAsFood(InventoryItem item) {
+            FoodData foodData = item.data as FoodData; 
+            if ( (!IsFullHealth) || ( IsFullHealth && foodData.SpecialValue != 0)) {
+               
+                RemoveItem(foodData.type, foodData.id, 1);
+                
+                if(foodData.SpecialValue != 0 ) {
+                    AddMaxHealth(foodData.SpecialValue);
+                }
+                AddHealth(foodData.Value);
+                return true;
+            }
+            return false;
         }
 
         #region ISaveable

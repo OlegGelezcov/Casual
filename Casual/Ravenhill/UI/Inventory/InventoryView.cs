@@ -36,7 +36,8 @@ namespace Casual.Ravenhill.UI {
                     currentTab = InventoryTab.Foods;
                     listView.Clear();
                     listView.Setup(new ListView<Data.InventoryItemData>.ListViewData {
-                        dataList = resourceService.foodList.Cast<InventoryItemData>().ToList()
+                        //dataList = resourceService.foodList.Cast<InventoryItemData>().ToList()
+                        dataList = playerService.GetItems(InventoryItemType.Food).Select(i => i.data).OrderBy(d => d.id ).ToList()
                     });
                 }
             }, engine.GetService<IAudioService>());
@@ -46,7 +47,8 @@ namespace Casual.Ravenhill.UI {
                     currentTab = InventoryTab.Tools;
                     listView.Clear();
                     listView.Setup(new ListView<InventoryItemData>.ListViewData {
-                        dataList = resourceService.toolList.Cast<InventoryItemData>().ToList()
+                        //dataList = resourceService.toolList.Cast<InventoryItemData>().ToList()
+                        dataList = playerService.GetItems(InventoryItemType.Tool).Select(i => i.data).OrderBy( d => d.id).ToList()
                     });
                 }
             }, engine.GetService<IAudioService>());
@@ -56,7 +58,8 @@ namespace Casual.Ravenhill.UI {
                     currentTab = InventoryTab.Bonuses;
                     listView.Clear();
                     listView.Setup(new ListView<InventoryItemData>.ListViewData {
-                        dataList = resourceService.bonusList.Cast<InventoryItemData>().ToList()
+                        //dataList = resourceService.bonusList.Cast<InventoryItemData>().ToList()
+                        dataList = playerService.GetItems(InventoryItemType.Bonus).Select(i => i.data).OrderBy( d => d.id).ToList()
                     });
                 }
             }, engine.GetService<IAudioService>());
@@ -66,7 +69,8 @@ namespace Casual.Ravenhill.UI {
                     currentTab = InventoryTab.Ingredients;
                     listView.Clear();
                     listView.Setup(new ListView<InventoryItemData>.ListViewData {
-                        dataList = resourceService.ingredientList.Cast<InventoryItemData>().ToList()
+                        //dataList = resourceService.ingredientList.Cast<InventoryItemData>().ToList()
+                        dataList = playerService.GetItems(InventoryItemType.Ingredient).Select(i => i.data).OrderBy(d => d.id).ToList()
                     });
                 }
             }, engine.GetService<IAudioService>());
@@ -74,10 +78,15 @@ namespace Casual.Ravenhill.UI {
             miscToggle.SetListener((isOn) => {
                 if(isOn) {
                     currentTab = InventoryTab.Misc;
-                    List<InventoryItemData> list = new List<InventoryItemData>();
+                    /*List<InventoryItemData> list = new List<InventoryItemData>();
                     list.AddRange(resourceService.weaponList.Cast<InventoryItemData>());
                     list.AddRange(resourceService.chargerList.Cast<InventoryItemData>());
-                    list.AddRange(resourceService.storyChargerList.Cast<InventoryItemData>());
+                    list.AddRange(resourceService.storyChargerList.Cast<InventoryItemData>());*/
+
+                    List<InventoryItemData> list = new List<InventoryItemData>();
+                    list.AddRange(playerService.GetItems(InventoryItemType.Weapon).Select(i => i.data).OrderBy(d => d.id));
+                    list.AddRange(playerService.GetItems(InventoryItemType.Charger).Select(i => i.data).OrderBy(d => d.id));
+                    list.AddRange(playerService.GetItems(InventoryItemType.StoryCharger).Select(i => i.data).OrderBy(d => d.id));
                     listView.Clear();
                     listView.Setup(new ListView<InventoryItemData>.ListViewData {
                         dataList = list

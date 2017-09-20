@@ -84,11 +84,19 @@ namespace Casual.Ravenhill.UI {
             slots.ToList().ForEach((slot) => slot.Setup());
 
             SearchSession session = data as SearchSession;
-            searchTimerView?.StartTimer(session.roomInfo.currentRoomSetting.searchTime);
+            searchTimerView?.StartTimer(GetSearchTime());
 
             toolViews.ToList().ForEach(tv => tv.Setup());
 
             m_PauseButton.SetListener(() => viewService.ShowView(RavenhillViewType.search_pause_view), engine.GetService<IAudioService>());
+
+            m_SettingsButton.SetListener(() => {
+                viewService.ShowView(RavenhillViewType.settings_view);
+            }, engine.GetService<IAudioService>());
+        }
+
+        private int GetSearchTime() {
+            return ravenhillGameModeService.CurrentRoomSearchTime;
         }
 
         private SearchTextSlot FindEmptySlot() {

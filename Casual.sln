@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Casual", "Casual\Casual.csproj", "{C23DEBA1-276A-4C63-A757-8BCB0AEEC02F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ravtool", "ravtool\ravtool.csproj", "{69C914A7-4ECF-4A05-B416-7325ABC28E26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C23DEBA1-276A-4C63-A757-8BCB0AEEC02F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C23DEBA1-276A-4C63-A757-8BCB0AEEC02F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C23DEBA1-276A-4C63-A757-8BCB0AEEC02F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69C914A7-4ECF-4A05-B416-7325ABC28E26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69C914A7-4ECF-4A05-B416-7325ABC28E26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69C914A7-4ECF-4A05-B416-7325ABC28E26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69C914A7-4ECF-4A05-B416-7325ABC28E26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

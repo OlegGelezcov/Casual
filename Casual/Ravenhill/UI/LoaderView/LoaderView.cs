@@ -14,6 +14,8 @@ namespace Casual.Ravenhill.UI {
 
         public override RavenhillViewType viewType => RavenhillViewType.loader_view;
 
+        protected override bool IsPlayShowRemoveSound => false;
+
         public override bool isModal => true;
 
         public override int siblingIndex => 200;

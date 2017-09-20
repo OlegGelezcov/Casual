@@ -39,6 +39,7 @@ namespace Casual.Ravenhill {
         level_up_view = 30,
         collection_buy_charger_view = 31,
         enter_text_view = 32,
-        settings_view = 33
+        settings_view = 33,
+        screen_quest_list = 34
     }
 }

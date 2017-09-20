@@ -23,6 +23,21 @@ namespace Casual.Ravenhill {
             engine.GetService<ISaveService>().Register(this);
         }
 
+        public List<QuestInfo> GetQuests(Func<QuestInfo, bool> predicate) {
+            List<QuestInfo> result = new List<QuestInfo>();
+            foreach(var kvp in startedQuests ) {
+                if(predicate(kvp.Value)) {
+                    result.Add(kvp.Value);
+                }
+            }
+            foreach(var kvp in completedQuests) {
+                if(predicate(kvp.Value)) {
+                    result.Add(kvp.Value);
+                }
+            }
+            return result;
+        }
+
 
         private int TryCompleteQuests() {
             List<QuestInfo> tempQuestList = new List<QuestInfo>();
@@ -61,16 +76,22 @@ namespace Casual.Ravenhill {
             (ravenhillGameModeService.gameModeName == GameModeName.map || ravenhillGameModeService.gameModeName == GameModeName.hallway) &&
             (viewService.hasModals == false));
             if(quest.state == QuestState.ready ) {
-                if(quest.Data.endTextId.IsValid() && quest.Data.ownerId.IsValid()) {
-                    QuestDialogView.Data dialogData = new QuestDialogView.Data {
-                        isStart = false,
-                        quest = quest.Data
-                    };
-                    viewService.ShowView(RavenhillViewType.quest_dialog_view, dialogData);
-                } else {
-                    viewService.ShowView(RavenhillViewType.quest_end_view, quest.Data);
-                }
+                ShowRewardExplicit(quest);
             }
+        }
+
+
+        public void ShowRewardExplicit(QuestInfo quest) {
+            if (quest.Data.endTextId.IsValid() && quest.Data.ownerId.IsValid()) {
+                QuestDialogView.Data dialogData = new QuestDialogView.Data {
+                    isStart = false,
+                    quest = quest.Data
+                };
+                viewService.ShowView(RavenhillViewType.quest_dialog_view, dialogData);
+            } else {
+                viewService.ShowView(RavenhillViewType.quest_end_view, quest.Data);
+            }
+            engine.GetService<IAudioService>().PlaySound(SoundType.quest_finish, false);
         }
 
         private int TryStartQuests() {
@@ -148,6 +169,7 @@ namespace Casual.Ravenhill {
             if(quest.Data.type == QuestType.story || 
                 quest.Data.type == QuestType.charge_story_collection ) {
                 ravenhillGameModeService.ResetSearchCounter();
+
             }
         }
 

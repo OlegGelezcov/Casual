@@ -32,9 +32,9 @@ namespace Casual.Ravenhill.UI {
 
 
                 if(data.isUsableFromInventory ) {
-                    buyButton.DeactivateSelf();
-                    priceIconImage.DeactivateSelf();
-                    priceText.DeactivateSelf();
+                    //buyButton.DeactivateSelf();
+                    //priceIconImage.DeactivateSelf();
+                    //priceText.DeactivateSelf();
 
                     useButton.ActivateSelf();
                     useButton.SetListener(() => {
@@ -50,24 +50,24 @@ namespace Casual.Ravenhill.UI {
                 if (data.IsSellable) {
                     SetupBuySection();
                 } else {
-                    buyButton.DeactivateSelf();
-                    priceIconImage.DeactivateSelf();
-                    priceText.DeactivateSelf();
+                   // buyButton.DeactivateSelf();
+                    //priceIconImage.DeactivateSelf();
+                    //priceText.DeactivateSelf();
                 }
             }
         }
 
         private void SetupBuySection() {
-            buyButton.ActivateSelf();
-            priceIconImage.ActivateSelf();
-            priceText.ActivateSelf();
+            //buyButton.ActivateSelf();
+            //priceIconImage.ActivateSelf();
+            //priceText.ActivateSelf();
 
-            priceIconImage.overrideSprite = resourceService.GetPriceSprite(data.price);
-            priceText.text = data.price.price.ToString();
-            buyButton.SetListener(() => {
-                Debug.Log($"buy item {data.type}-{data.id}");
-                playerService.Buy(data);
-            }, engine.GetService<IAudioService>());
+            //priceIconImage.overrideSprite = resourceService.GetPriceSprite(data.price);
+            //priceText.text = data.price.price.ToString();
+            //buyButton.SetListener(() => {
+            //    Debug.Log($"buy item {data.type}-{data.id}");
+            //    playerService.Buy(data);
+            //}, engine.GetService<IAudioService>());
         }
 
         public override void OnEnable() {
@@ -106,16 +106,16 @@ namespace Casual.Ravenhill.UI {
         [SerializeField]
         private GameObject countPanObj;
 
-        [SerializeField]
-        private Button buyButton;
+        //[SerializeField]
+        //private Button buyButton;
 
         [SerializeField]
         private Button useButton;
 
-        [SerializeField]
-        private Image priceIconImage;
+        //[SerializeField]
+        //private Image priceIconImage;
 
-        [SerializeField]
-        private Text priceText;
+        //[SerializeField]
+        //private Text priceText;
     }
 }

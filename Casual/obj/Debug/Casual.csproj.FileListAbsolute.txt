@@ -7,3 +7,9 @@ C:\dev\Casual\Casual\obj\Debug\Casual.csprojResolveAssemblyReference.cache
 C:\dev\Casual\Casual\obj\Debug\Casual.dll
 C:\dev\Casual\Casual\obj\Debug\Casual.pdb
 C:\dev\Casual\Casual\obj\Debug\Casual.csproj.CoreCompileInputs.cache
+C:\development\Casual\Casual\bin\Debug\Casual.dll
+C:\development\Casual\Casual\bin\Debug\Casual.pdb
+C:\development\Casual\Casual\bin\Debug\UnityEngine.dll
+C:\development\Casual\Casual\bin\Debug\UnityEngine.UI.dll
+C:\development\Casual\Casual\bin\Debug\UnityEngine.xml
+C:\development\Casual\Casual\bin\Debug\UnityEngine.UI.xml

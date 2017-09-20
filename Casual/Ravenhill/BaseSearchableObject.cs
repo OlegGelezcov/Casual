@@ -33,6 +33,8 @@ namespace Casual.Ravenhill {
                transform);
             particles.transform.localPosition = new Vector3(0, 0, 1);
 
+            engine.GetService<IAudioService>().PlaySound(SoundType.object_hit, true);
+
             transformAnimScale.StartAnim(new MCFloatAnimData {
                 duration = 0.8f,
                 start = transform.localScale.x,

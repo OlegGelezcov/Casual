@@ -1,15 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Casual.Ravenhill {
+﻿namespace Casual.Ravenhill {
     public enum SoundType : byte {
         button,
-        view,
+        buy_food,
+        buy_item,
+        door_open,
+        drop_object,
         hallway,
+        heart,
+        level_up,
+        object_hit,
+        object_miss,
+        quest_finish,
+        room_fail,
+        room_success,
         search_day,
-        search_night
+        search_night,
+        take_exp,
+        take_health,
+        take_money,
+        use_bonus,
+        use_tool,
+        view_open,
+        view_close,
     }
 }

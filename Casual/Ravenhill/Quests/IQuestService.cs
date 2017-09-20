@@ -20,6 +20,8 @@ namespace Casual.Ravenhill {
         List<QuestInfo> completedQuestList { get; }
         QuestInfo GetInfo(QuestData data);
         bool RewardQuest(string id);
+        void ShowRewardExplicit(QuestInfo quest);
+        List<QuestInfo> GetQuests(Func<QuestInfo, bool> predicate);
 
     }
 }

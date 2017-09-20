@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace Casual.Ravenhill {
-    public class QuestInfo : RavenhillGameElement, ISaveElement, IQuest {
+    public class QuestInfo : RavenhillGameElement, ISaveElement, IQuest, IIdObject {
 
         public string id { get; private set; }
         public QuestState state { get; private set; } = QuestState.not_started;

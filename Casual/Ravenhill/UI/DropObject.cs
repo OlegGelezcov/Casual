@@ -43,6 +43,8 @@ namespace Casual.Ravenhill.UI {
             if(dropItem.isCreateScreenText) {
                 CreateScreenText(dropItem, sourceTransform);
             }
+
+            engine.GetService<IAudioService>().PlaySound(SoundType.drop_object, GetComponent<AudioSource>());
         }
 
         private readonly Dictionary<DropType, Color> dropTextColors = new Dictionary<DropType, Color> {
@@ -97,6 +99,34 @@ namespace Casual.Ravenhill.UI {
                     moveSpeed, () => {
                         Destroy(gameObject);
                     });
+                PlayTakeSound();
+            }
+        }
+
+        private void PlaySound(SoundType soundType) {
+            engine.GetService<IAudioService>().PlaySound(soundType, GetComponent<AudioSource>());
+        }
+
+        private void PlayTakeSound() {
+            switch(dropItem.type) {
+                case DropType.exp: {
+                        PlaySound(SoundType.take_exp);
+                    }
+                    break;
+                case DropType.health:
+                case DropType.max_health: {
+                        PlaySound(SoundType.take_health);
+                    }
+                    break;
+                case DropType.silver:
+                case DropType.gold: {
+                        PlaySound(SoundType.take_money);
+                    }
+                    break;
+                default: {
+                        PlaySound(SoundType.take_exp);
+                    }
+                    break;
             }
         }
 

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Casual.Ravenhill {
-    public class AudioService : RavenhillGameBehaviour, IAudioService {
+    public class AudioService : RavenhillGameBehaviour, IAudioService, ISaveable {
 
         [SerializeField]
         private AudioSource musicSource;
@@ -24,14 +19,27 @@ namespace Casual.Ravenhill {
 
         public override void Start() {
             base.Start();
+            engine.GetService<ISaveService>().Register(this);
         }
 
         public override void OnEnable() {
             base.OnEnable();
+            RavenhillEvents.GameModeChanged += OnGameModeChanged;
         }
 
         public override void OnDisable() {
             base.OnDisable();
+            RavenhillEvents.GameModeChanged -= OnGameModeChanged;
+        }
+
+        private void OnGameModeChanged(GameModeName oldGameMode, GameModeName newGameMode ) {
+            if(isLoaded) {
+                if(newGameMode == GameModeName.map || newGameMode == GameModeName.hallway || newGameMode == GameModeName.search) {
+                    if(IsMusicEnabled ) {
+                        PlayMusic(GetCurrentContextMusic());
+                    }
+                }
+            }
         }
 
         public bool IsMusicEnabled {
@@ -59,6 +67,8 @@ namespace Casual.Ravenhill {
                 }
             }
         }
+
+
 
         private SoundType GetCurrentContextMusic() {
             if(ravenhillGameModeService.gameModeName == GameModeName.search) {
@@ -88,20 +98,32 @@ namespace Casual.Ravenhill {
         }
 
         public void PlayButton() {
-            PlaySound(SoundType.button, false);
+            PlaySound(SoundType.button, true);
         }
 
-        public void PlayView() {
-            PlaySound(SoundType.view, false);
+        public void PlayViewOpen() {
+            PlaySound(SoundType.view_open, true);
         }
 
-        public void PlaySound(SoundType soundType, bool force = false) {
+        public void PlayViewClose() {
+            PlaySound(SoundType.view_close, true);
+        }
+
+        public void PlaySound(SoundType soundType, bool force = true) {
             if (IsSoundEnabled) {
                 if (force) {
                     PlaySoundImpl(soundType);
                 } else {
                     StartCoroutine(CorPlaySoundWhenSourceFree(soundType));
                 }
+            }
+        }
+
+        public void PlaySound(SoundType soundType, AudioSource customSource ) {
+            if(customSource == null ) {
+                PlaySound(soundType, false);
+            } else {
+                customSource.PlayOneShot(resourceService.GetAudioClip(soundType));
             }
         }
 
@@ -117,5 +139,46 @@ namespace Casual.Ravenhill {
         public void StopMusic() {
             musicSource.Stop();
         }
+
+
+        #region ISaveable
+        public string saveId => "audio_service";
+
+        public bool isLoaded { get; private set; }
+
+        public string GetSave() {
+            UXMLWriteElement root = new UXMLWriteElement(saveId);
+            root.AddAttribute("music_enabled", isMusicEnabled);
+            root.AddAttribute("sound_enabled", isSoundEnabled);
+            return root.ToString();
+        }
+
+        public bool Load(string saveStr) {
+            if(saveStr.IsValid()) {
+                UXMLDocument document = UXMLDocument.FromXml(saveStr);
+                UXMLElement root = document.Element(saveId);
+                isMusicEnabled = root.GetBool("music_enabled", true);
+                isSoundEnabled = root.GetBool("sound_enabled", true);
+                isLoaded = true;
+            } else {
+                InitSave();
+            }
+            return isLoaded;
+        }
+
+        public void InitSave() {
+            isMusicEnabled = true;
+            isSoundEnabled = true;
+            isLoaded = true;
+        }
+
+        public void OnRegister() {
+           
+        }
+
+        public void OnLoaded() {
+            
+        } 
+        #endregion
     }
 }

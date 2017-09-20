@@ -27,12 +27,14 @@ namespace Casual.Ravenhill.UI {
             priceText.text = data.price.price.ToString();
 
             buyButton.SetListener(() => {
-                if (playerService.HasCoins(data.price)) {
-                    playerService.RemoveCoins(data.price);
-                    playerService.AddItem(new InventoryItem(data, 1));
-                } else {
-                    Debug.Log($"Low coins show bank....");
-                }
+                //if (playerService.HasCoins(data.price)) {
+                //    playerService.RemoveCoins(data.price);
+                //    playerService.AddItem(new InventoryItem(data, 1));
+                //} else {
+                //    Debug.Log($"Low coins show bank....");
+                //}
+                playerService.Buy(data);
+
             }, engine.GetService<IAudioService>());
         }
     }

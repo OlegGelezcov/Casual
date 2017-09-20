@@ -143,6 +143,12 @@ namespace Casual.Ravenhill {
             return result;
         }
 
+        public float GetBuffValue(string roomId, string buffId) {
+            return GetBuffs(roomId).Where(buffData => buffData.id == buffId).Sum(buffData => buffData.Value);
+        }
+
+        
+
         public bool HasNpc(string npcId, string roomId ) {
             foreach(var pair in Npcs ) {
                 if(pair.Key == roomId) {

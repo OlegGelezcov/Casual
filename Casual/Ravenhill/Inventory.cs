@@ -27,6 +27,14 @@ namespace Casual.Ravenhill {
             return null;
         }
 
+        public List<InventoryItem> GetItems(InventoryItemType type) {
+            Dictionary<string, InventoryItem> filtered = null;
+            if(items.TryGetValue(type, out filtered)) {
+                return new List<InventoryItem>(filtered.Values);
+            }
+            return new List<InventoryItem>();
+        }
+
         private void AddItemImpl(InventoryItem item) {
             if (items.ContainsKey(item.data.type)) {
                 Dictionary<string, InventoryItem> filtered = items[item.data.type];

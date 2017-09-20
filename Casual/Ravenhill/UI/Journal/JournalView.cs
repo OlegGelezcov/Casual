@@ -40,7 +40,16 @@ namespace Casual.Ravenhill.UI{
                 }
             }, engine.GetService<IAudioService>());
 
-            listToggle.isOn = true;
+            if (data == null) {
+                listToggle.isOn = true;
+            } else {
+                QuestData questData = data as QuestData;
+                if(questData != null ) {
+                    OpenDetail(questData);
+                } else {
+                    listToggle.isOn = true;
+                }
+            }
         }
 
         public void OpenDetail(QuestData quest ) {

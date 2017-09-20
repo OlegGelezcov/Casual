@@ -1,0 +1,2 @@
+﻿Copy-Item -Path 'C:\development\Casual\Casual\bin\Debug\Casual.dll' -Destination 'C:\Users\olegg\Documents\Ravenhill\Assets\Plugins' -Force
+Copy-Item -Path 'C:\development\Casual\Casual\bin\Debug\Casual.pdb' -Destination 'C:\Users\olegg\Documents\Ravenhill\Assets\Plugins' -Force

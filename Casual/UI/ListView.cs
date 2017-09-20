@@ -171,6 +171,12 @@ namespace Casual.UI {
         }
     }
 
+    public class ScreenQuestListView : ListView<QuestInfo> {
+        public override void Setup(ListViewData data) {
+            base.Setup(data);
+        }
+    }
+
     public class AchievmentListView : ListView<AchievmentData> {
         public override void Setup(ListViewData data) {
             base.Setup(data);

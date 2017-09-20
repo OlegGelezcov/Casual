@@ -23,6 +23,8 @@ namespace Casual.Ravenhill.UI {
             goldCount.text = resourceService.GetSetting("gold_for_level").ValueAsString;
             hpCount.text = resourceService.GetSetting("max_hp_for_level").ValueAsString;
 
+            engine.GetService<IAudioService>().PlaySound(SoundType.level_up, GetComponent<AudioSource>());
+
         }
 
         protected override void OnClose() {

@@ -80,8 +80,10 @@ namespace Casual.Ravenhill {
         private void OnGameModeChanged(GameModeName oldName, GameModeName newName ) {
             if(newName == GameModeName.map || newName == GameModeName.hallway ) {
                 viewService.ShowView(RavenhillViewType.buffs_view);
+                viewService.ShowView(RavenhillViewType.screen_quest_list);
             } else {
                 viewService.RemoveView(RavenhillViewType.buffs_view);
+                viewService.RemoveView(RavenhillViewType.screen_quest_list);
             }
         }
 
@@ -249,8 +251,8 @@ namespace Casual.Ravenhill {
         private void ApplySessionResults(SearchSession session ) {
             if(session.searchStatus == SearchStatus.success ) {
                 List<DropItem> dropItems = new List<DropItem> {
-                    new DropItem(DropType.silver, session.roomData.silverReward),
-                    new DropItem(DropType.exp, session.roomData.expReward)
+                    new DropItem(DropType.silver, GetModifiedSilverCount(session.roomId, session.roomData.silverReward)),
+                    new DropItem(DropType.exp, GetModifiedExpCount(session.roomId, session.roomData.expReward))
                 };
                 foreach(InventoryItem item in session.roomDropList ) {
                     dropItems.Add(new DropItem(DropType.item, 1, item.data));
@@ -376,6 +378,46 @@ namespace Casual.Ravenhill {
                 playerService.AddItem(new InventoryItem(collectionData, 1));
                 RavenhillEvents.OnStoryCollectionCharged(collectionData);
             }
+        }
+
+        public int CurrentRoomSearchTime {
+            get {
+                Debug.Log($"debuff on room search time {searchSession.roomId}:{engine.GetService<INpcService>().GetBuffValue(searchSession.roomId, "BE001")}");
+                return Mathf.RoundToInt(
+                    searchSession.roomInfo.currentRoomSetting.searchTime * 
+                    (1.0f - engine.GetService<INpcService>().GetBuffValue(searchSession.roomId, "BE001"))
+                    );
+            }
+        }
+
+        public int GetModifiedExpCount(string roomId, int baseExp) {
+            Debug.Log($"Exp debuff for room {roomId}: {engine.GetService<INpcService>().GetBuffValue(roomId, "BE002")}");
+            return Mathf.RoundToInt(
+                baseExp * (1.0f - engine.GetService<INpcService>().GetBuffValue(roomId, "BE002"))
+                );
+        }
+
+        public int GetModifiedSilverCount(string roomId, int baseSilver ) {
+            Debug.Log($"Silver debuff for room {roomId}: {engine.GetService<INpcService>().GetBuffValue(roomId, "BE003")}");
+            return Mathf.RoundToInt(
+                baseSilver * (1.0f - engine.GetService<INpcService>().GetBuffValue(roomId, "BE003"))
+                );
+        }
+
+        public bool HasShuffleWordsDebuff(string roomId ) {
+            return !Mathf.Approximately(engine.GetService<INpcService>().GetBuffValue(roomId, "BE004"), 0.0f);
+        }
+
+        public string ShufffleWord(string text) {
+            List<string> words = text.Split(new char[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
+            List<string> result = new List<string>();
+            foreach(string word in words) {
+                char[] chArr = word.ToCharArray();
+                chArr.ShuffleArray();
+                string newStr = new string(chArr);
+                result.Add(newStr);
+            }
+            return string.Join(" ", result);
         }
 
 

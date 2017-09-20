@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\Users\olegg\Documents\Ravenhill\Assets\Plugins\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;RAVENHILL;UNITY_IOS;UNITY_EDITOR</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -251,6 +251,8 @@
     <Compile Include="Ravenhill\UI\RavenhillCloseableView.cs" />
     <Compile Include="Ravenhill\UI\RavenhillUIBehaviour.cs" />
     <Compile Include="Ravenhill\UI\RectTransformBinding.cs" />
+    <Compile Include="Ravenhill\UI\ScreenQuestList\ScreenQuestListItemView.cs" />
+    <Compile Include="Ravenhill\UI\ScreenQuestList\ScreenQuestsView.cs" />
     <Compile Include="Ravenhill\UI\ScreenText.cs" />
     <Compile Include="Ravenhill\UI\SearchPan.cs" />
     <Compile Include="Ravenhill\UI\SearchPan\BaseToolView.cs" />

@@ -45,17 +45,17 @@ namespace Casual.Ravenhill.Data {
             InventoryItemType type = element.GetEnum<InventoryItemType>("type");
             count = element.GetInt("count", 0);
 
-            Debug.Log($"loaded item {curid}-{type}-{count}".Colored(ColorType.green));
+            //Debug.Log($"loaded item {curid}-{type}-{count}".Colored(ColorType.green));
 
             if(string.IsNullOrEmpty(curid)) {
                 InitSave();
             } else {
                 data = resourceService.GetInventoryItemData(type, curid);
                 if(data == null ) {
-                    Debug.Log($"item data is null {curid}-{type}".Colored(ColorType.fuchsia));
+                    //Debug.Log($"item data is null {curid}-{type}".Colored(ColorType.fuchsia));
                     InitSave();
                 } else {
-                    Debug.Log($"item data not null {curid}-{type}".Colored(ColorType.grey));
+                    //Debug.Log($"item data not null {curid}-{type}".Colored(ColorType.grey));
                 }
             }
         }

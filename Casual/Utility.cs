@@ -55,6 +55,13 @@ namespace Casual
 
         }
 
+        public static bool IsNetworkReachable {
+            get {
+                return Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork ||
+                    Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork;
+            }
+        }
+
         public static string FormatMS(float interval ) {
             TimeSpan timeSpan = TimeSpan.FromSeconds(interval);
             return $"{timeSpan.Minutes.ToString("00")}:{timeSpan.Seconds.ToString("00")}";

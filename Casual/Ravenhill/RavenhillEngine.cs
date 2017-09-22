@@ -103,6 +103,7 @@ namespace Casual.Ravenhill {
             Register<INpcService, NpcService>(FindObjectOfType<NpcService>());
             Register<IAchievmentService, AchievmentService>(FindObjectOfType<AchievmentService>());
             Register<IAudioService, AudioService>(FindObjectOfType<AudioService>());
+            Register<IChatService, ChatService>(FindObjectOfType<ChatService>());
         }
 
         protected virtual void SetupServices() {
@@ -122,6 +123,7 @@ namespace Casual.Ravenhill {
             GetService<INpcService>().Setup(null);
             GetService<IAchievmentService>().Setup(null);
             GetService<IAudioService>().Setup(null);
+            GetService<IChatService>().Setup(null);
         }
 
         public void LoadScene(string roomId  ) {

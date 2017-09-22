@@ -1,4 +1,5 @@
 ﻿using Casual.Ravenhill.Data;
+using Casual.Ravenhill.Net;
 using Casual.Ravenhill.UI;
 using System;
 using System.Collections.Generic;
@@ -79,6 +80,12 @@ namespace Casual.Ravenhill {
         public static event System.Action<bool> SoundStateChanged;
 
         public static event System.Action<float, float> RoomModeSwitchTimerChanged;
+
+        public static event System.Action<List<ChatMessage>> ChatMessagesReceived;
+
+        public static void OnChatMessagesReceived(List<ChatMessage> messages ) {
+            ChatMessagesReceived?.Invoke(messages);
+        }
 
         public static void OnRoomModeSwitchTimerChanged(float timer, float interval) {
             RoomModeSwitchTimerChanged?.Invoke(timer, interval);

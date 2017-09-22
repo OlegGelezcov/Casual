@@ -139,6 +139,16 @@
     <Compile Include="Ravenhill\Map\MapNpc.cs" />
     <Compile Include="Ravenhill\Map\NpcWalkArea.cs" />
     <Compile Include="Ravenhill\Map\RoomMapPlank.cs" />
+    <Compile Include="Ravenhill\Net\ChatAttachment.cs" />
+    <Compile Include="Ravenhill\Net\ChatMessage.cs" />
+    <Compile Include="Ravenhill\Net\ChatMessageContainer.cs" />
+    <Compile Include="Ravenhill\Net\ChatService.cs" />
+    <Compile Include="Ravenhill\Net\DefaultMessageFactory.cs" />
+    <Compile Include="Ravenhill\Net\IChatClient.cs" />
+    <Compile Include="Ravenhill\Net\IChatService.cs" />
+    <Compile Include="Ravenhill\Net\IMessage.cs" />
+    <Compile Include="Ravenhill\Net\MessageFactory.cs" />
+    <Compile Include="Ravenhill\Net\MessageType.cs" />
     <Compile Include="Ravenhill\Net\NetPlayer.cs" />
     <Compile Include="Ravenhill\Net\NetRoomScore.cs" />
     <Compile Include="Ravenhill\Net\NetService.cs" />

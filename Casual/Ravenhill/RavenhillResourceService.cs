@@ -453,7 +453,7 @@ namespace Casual.Ravenhill {
                 BonusData bonusData = new BonusData();
                 bonusData.Load(bonusElement);
                 bonuses[bonusData.id] = bonusData;
-                Debug.Log($"load bonus {bonusData.id}");
+               // Debug.Log($"load bonus {bonusData.id}");
             });
         }
 

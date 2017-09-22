@@ -83,6 +83,12 @@ namespace Casual.Ravenhill {
 
         public static event System.Action<List<ChatMessage>> ChatMessagesReceived;
 
+        public static event System.Action<IGift> GiftSendedSuccess;
+
+        public static void OnGiftSendedSuccess(IGift gift) {
+            GiftSendedSuccess?.Invoke(gift);
+        }
+
         public static void OnChatMessagesReceived(List<ChatMessage> messages ) {
             ChatMessagesReceived?.Invoke(messages);
         }

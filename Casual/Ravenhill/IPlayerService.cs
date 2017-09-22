@@ -19,5 +19,11 @@ namespace Casual.Ravenhill {
         void SetGold(int count);
         void SetName(string newName);
         void SetAvatar(AvatarData avatar);
+
+        
+    }
+
+    public interface IInventory {
+        int GetItemCount(InventoryItemData itemData);
     }
 }

@@ -132,5 +132,11 @@ namespace Casual.Ravenhill.Net {
                 }
             }
         }
+
+        public bool IsCanChat {
+            get {
+                return Client?.IsCanChat ?? false;
+            }
+        }
     }
 }

@@ -105,14 +105,22 @@ namespace Casual.Ravenhill.Net {
             
         }
 
+        public bool IsLocalPlayer(ISender sender) {
+            return (LocalPlayer.id == sender.GetId());
+        }
+
+        public void SendGift(IGift gift) {
+            if(playerService.GetItemCount(gift.GetItemData()) > 0 ) {
+                playerService.RemoveItem(gift.GetItemData(), 1);
+                //really gift send here
+                RavenhillEvents.OnGiftSendedSuccess(gift);
+            }
+        }
     }
 
-    public interface INetService : IService {
-        NetRoomScore GetBestRoomScore(SearchSession session);
-        NetRoomScore GetPlayerBestRoomScore(SearchSession session);
-        NetRoomScore GetBestRoomScore(RoomInfo roomInfo);
-        NetRoomScore GetPlayerBestRoomScore(RoomInfo roomInfo);
-        int GetRank(SearchSession session);
-        NetPlayer LocalPlayer { get; }
-    }
+
+
+
+
+
 }

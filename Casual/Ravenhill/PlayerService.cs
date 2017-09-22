@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Casual.Ravenhill {
 
-    public class PlayerService : RavenhillGameBehaviour, IPlayerService, ISaveable {
+    public class PlayerService : RavenhillGameBehaviour, IPlayerService, ISaveable, IInventory {
 
         private const int kBaseMaxHealth = 100;
         private const int kHealthRestoreInterval = 180;
@@ -111,6 +111,10 @@ namespace Casual.Ravenhill {
 
         public bool RemoveItem(InventoryItemType type, string id, int count) {
             return inventory.RemoveItem(type, id, count);
+        }
+
+        public bool RemoveItem(InventoryItemData itemData, int count) {
+            return RemoveItem(itemData.type, itemData.id, count);
         }
 
         public void RemoveItems(InventoryItemType type) {

@@ -12,5 +12,6 @@ namespace Casual.Ravenhill.Net {
         List<IMessage> Messages { get; }
         int Count { get; }
         int MaxCount { get; }
+        bool IsCanChat { get; }
     }
 }

@@ -15,6 +15,7 @@ namespace Casual.Ravenhill.Net {
         string GetId();
         int GetLevel();
         string GetAvatar();
+        string GetName();
     }
 
     public interface IAttachment {

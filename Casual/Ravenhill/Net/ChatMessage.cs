@@ -14,6 +14,8 @@ namespace Casual.Ravenhill.Net {
         public string sended_id;
         public int sender_level;
         public string avatar_id;
+        public string sender_name;
+
         public List<ChatAttachment> attachments;
         public int message_type;
 
@@ -30,6 +32,7 @@ namespace Casual.Ravenhill.Net {
             avatar_id = sender.GetAvatar();
             this.attachments = new List<ChatAttachment>();
             message_type = (int)messageType;
+            sender_name = sender.GetName();
 
             foreach(IAttachment attach in attachments ) {
                 ChatAttachment concreteAttachment = attach as ChatAttachment;
@@ -47,5 +50,20 @@ namespace Casual.Ravenhill.Net {
             return time;
         }
 
+        public ISender GetSender() {
+            return new BaseSender(sended_id, sender_name, avatar_id, sender_level);
+        }
+
+        public int AttachmentCount {
+            get {
+                if(attachments == null ) {
+                    return 0;
+                }
+                if(attachments.Count == 0 ) {
+                    return 0;
+                }
+                return attachments.Count;
+            }
+        }
     }
 }

@@ -205,6 +205,7 @@ namespace Casual.Ravenhill.UI {
 
             socialButton.SetListener(() => {
                 Debug.Log("show social");
+                viewService.ShowView(RavenhillViewType.social_view);
             }, engine.GetService<IAudioService>());
 
             famehallButton.SetListener(() => viewService.ShowView(RavenhillViewType.famehall), engine.GetService<IAudioService>());

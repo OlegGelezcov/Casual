@@ -33,6 +33,10 @@ namespace Casual.Ravenhill.Net {
             return avatarId;
         }
 
+        public string GetName() {
+            return name;
+        }
+
         public override string ToString() {
             return $"Id: {id}, name: {name}, avatar: {avatarId}, level: {level}, is valid: {isValid}";
         }

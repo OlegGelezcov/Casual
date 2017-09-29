@@ -28,6 +28,7 @@ namespace Casual.Ravenhill.UI {
             GameObject messageInstance = Instantiate<GameObject>(messagePrefab);
             ChatMessageView view = messageInstance.GetComponent<ChatMessageView>();
             messageInstance.transform.SetParent(messageLayout, false);
+            messageInstance.transform.SetAsFirstSibling();
             view.Setup(message as ChatMessage);
             messageViews.Add(view);
         }

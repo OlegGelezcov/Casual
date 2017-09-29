@@ -17,6 +17,7 @@ namespace Casual.Ravenhill.UI {
 
         private System.Collections.IEnumerator CorSpawnBombs(List<BaseSearchableObject> searchableObjects) {
             foreach(BaseSearchableObject so in searchableObjects) {
+                so.SetCollectType(CollectType.Bomb);
                 Vector3 position = new Vector3(so.transform.position.x, so.transform.position.y, -30);
                 GameObject instance = Instantiate<GameObject>(effectPrefab, position, Quaternion.identity);
                 instance.GetComponent<BombToolObject>().SetTarget(so);

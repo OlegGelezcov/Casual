@@ -1,4 +1,5 @@
 ﻿using Casual.Ravenhill.Data;
+using Casual.Ravenhill.Net;
 using Casual.UI;
 using System;
 using UnityEngine;
@@ -122,8 +123,9 @@ namespace Casual.Ravenhill.UI {
 
             roomInfoView.Setup(session.roomInfo);
 
-            bestRoomScore.Setup(netService.GetBestRoomScore(session));
-            myBestRoomScore.Setup(netService.GetPlayerBestRoomScore(session));
+            INetRoom netRoom = new NetRoom(session.roomId, session.RoomMode);
+            bestRoomScore.Setup(netService.GetBestRoomScore(netRoom));
+            myBestRoomScore.Setup(netService.GetPlayerBestRoomScore(netRoom));
             currentScoreView.Setup(session);
 
             timeText.text = Utility.FormatMS(session.searchTime);

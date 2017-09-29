@@ -166,7 +166,10 @@ namespace Casual
 
         public static T GetOrDefault<K, T>(this Dictionary<K, T> dict, K key, T defaultValue = default(T)) {
             T value = default(T);
-            if(dict.TryGetValue(key, out value)) {
+            if (dict == null) {
+                return value;
+            }
+            if (dict.TryGetValue(key, out value)) {
                 return value;
             }
             return defaultValue;
@@ -230,6 +233,18 @@ namespace Casual
                 return ok;
             }
             return false;
+        }
+
+        public static string JoinToString(this List<string> items, string sep) {
+            string result = string.Empty;
+            for (int i = 0; i < items.Count; i++) {
+                if (i < (items.Count - 1)) {
+                    result += items[i] + sep;
+                } else if (i == (items.Count - 1)) {
+                    result += items[i];
+                }
+            }
+            return result;
         }
     }
 

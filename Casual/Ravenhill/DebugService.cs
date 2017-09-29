@@ -1,4 +1,5 @@
 ﻿using Casual.Ravenhill.Data;
+using Casual.Ravenhill.Net;
 using Casual.Ravenhill.UI;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,7 @@ namespace Casual.Ravenhill {
             Add("clear", new ClearCommand("clear"));
             Add("add", new AddCommand("add"));
             Add("restart", new RestartCommand("restart"));
+            Add("net", new NetCommand("net"));
         }
 
 
@@ -131,10 +133,11 @@ namespace Casual.Ravenhill {
 
         public bool Execute(string command) {
             string name = GetName(command);
+            bool result = false;
             if (commands.ContainsKey(name)) {
-                return commands[name].Execute(command);
+                result = commands[name].Execute(command);
             }
-            return false;
+            return result;
         }
 
         public void Setup(object data) {
@@ -150,6 +153,40 @@ namespace Casual.Ravenhill {
         }
 
 
+    }
+
+    public class NetCommand : BaseCommand {
+        public NetCommand(string commandName) :
+            base(commandName) { }
+        public override bool Execute(string source) {
+            string token = GetToken(source, 1);
+            if(token.ToLower() == "writeuser") {
+                engine.GetService<INetService>().UsersRequest.WriteUser(engine.GetService<INetService>().LocalPlayer);
+                return true;
+            } else if(token.ToLower() == "writepoints") {
+                string roomId = GetToken(source, 2);
+                string roomMode = GetToken(source, 3);
+                int count = GetInt(source, 4);
+
+                try {
+                    engine.GetService<INetService>().UsersRequest.WritePoints(new UserRoomPoints(
+                        user: engine.GetService<INetService>().LocalPlayer,
+                        roomPoints: new NetRoomPoints(roomId, (RoomMode)Enum.Parse(typeof(RoomMode), roomMode), count)
+                        ));
+                    return true;
+                } catch(Exception exception ) {
+                    engine.GetService<IDebugService>().AddMessage($"Usage: net writepoints r1 scary/normal 123");
+                }
+            } else if(token.ToLower() == "readallpoints") {
+                try {
+                    engine.GetService<INetService>().UsersRequest.ReadAllRoomPoints(new List<string> { "r4", "r6", "r7", "r9", "r12", "r14" });
+                    return true;
+                } catch(Exception exception) {
+                    engine.GetService<IDebugService>().AddMessage($"net readallpoints {Environment.NewLine}{exception.Message}");
+                }
+            }
+            return false;
+        }
     }
 
     public class ExitRoomViewCommand : BaseCommand {

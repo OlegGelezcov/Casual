@@ -26,6 +26,8 @@ namespace Casual.Ravenhill.UI {
         private float pauseTimer = 0.0f;
         private float pauseInterval = 0.0f;
 
+        private int countOfPauseOnSession = 0;
+
         public override void OnEnable() {
             base.OnEnable();
             RavenhillEvents.ViewAdded += OnViewAdded;
@@ -59,9 +61,30 @@ namespace Casual.Ravenhill.UI {
             }
         }
 
+        public int SessionPoints {
+            get {
+                float remain = timer;
+                if(remain < 0 ) {
+                    remain = 0;
+                }
+                if(countOfPauseOnSession > 0) {
+                    int low = Mathf.RoundToInt(5.0f / (countOfPauseOnSession + 1));
+                    int high = Mathf.RoundToInt(10.0f / (countOfPauseOnSession + 1));
+                    if(low >= high) {
+                        high = low + 1;
+                    }
+
+                    return Mathf.RoundToInt(remain * UnityEngine.Random.Range(low, high));
+                } else {
+                    return Mathf.RoundToInt(remain * UnityEngine.Random.Range(5, 10));
+                }
+            }
+        }
+
 
 
         public void SetPause(float interval) {
+            countOfPauseOnSession++;
             bool oldPaused = isPaused;
             isPaused = true;
             pauseInterval = interval;

@@ -1,4 +1,5 @@
 ﻿using Casual.Ravenhill;
+using Casual.Ravenhill.Data;
 
 namespace Casual
 {
@@ -10,7 +11,10 @@ namespace Casual
             private set;
         } = GameModeName.none;
 
-
+        public RoomMode roomMode {
+            get;
+            protected set;
+        } = RoomMode.normal;
 
         public void Setup(object data) {
             
@@ -29,6 +33,7 @@ namespace Casual
 
     public interface IGameModeService : IService {
         GameModeName gameModeName { get; }
+        RoomMode roomMode { get; }
         IRoomManager RoomManager { get; }
     }
 

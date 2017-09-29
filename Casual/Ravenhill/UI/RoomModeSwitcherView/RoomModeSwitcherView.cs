@@ -1,4 +1,5 @@
 ﻿namespace Casual.Ravenhill.UI {
+    using Casual.Ravenhill.Data;
     using Casual.UI;
     using UnityEngine;
     using UnityEngine.UI;
@@ -25,6 +26,22 @@
                 UpdateProgressValue();
             });
 
+        }
+
+        public override void OnEnable() {
+            base.OnEnable();
+            RavenhillEvents.RoomModeChanged += OnRoomModeChanged;
+        }
+
+        public override void OnDisable() {
+            base.OnDisable();
+            RavenhillEvents.RoomModeChanged -= OnRoomModeChanged;
+        }
+
+        private void OnRoomModeChanged(RoomMode oldRoomMode, RoomMode newRoomMode ) {
+            if(roomMode != null ) {
+                Setup(this.roomMode);
+            }
         }
 
         public override void Update() {

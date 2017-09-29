@@ -85,6 +85,34 @@ namespace Casual.Ravenhill {
 
         public static event System.Action<IGift> GiftSendedSuccess;
 
+        //-----------------Net events---------------------------------
+        public static event System.Action<INetUser> NetUserWritten;
+        public static event System.Action<string, INetError> NetErrorOccured;
+        public static event System.Action<UserRoomPoints> UserRoomPointsWritten;
+        public static event System.Action<INetUser, INetRoom, NetRoomPlayerRank> RoomNetRankReaded;
+        public static event System.Action<Dictionary<string, NetRoomPlayerRank>> RoomNetRanksReceived;
+
+
+        public static void OnRoomNetRanksReceived(Dictionary<string, NetRoomPlayerRank> ranks ) {
+            RoomNetRanksReceived?.Invoke(ranks);
+        }
+
+        public static void OnRoomNetRankReaded(INetUser user, INetRoom room, NetRoomPlayerRank rank) {
+            RoomNetRankReaded?.Invoke(user, room, rank);
+        }
+
+        public static void OnUserRoomPointsWritten(UserRoomPoints roomPoints) {
+            UserRoomPointsWritten?.Invoke(roomPoints);
+        }
+
+        public static void OnNetUserWritten(INetUser user) {
+            NetUserWritten?.Invoke(user);
+        }
+
+        public static void OnNetErrorOccured(string operation, INetError error) {
+            NetErrorOccured?.Invoke(operation, error);
+        }
+
         public static void OnGiftSendedSuccess(IGift gift) {
             GiftSendedSuccess?.Invoke(gift);
         }

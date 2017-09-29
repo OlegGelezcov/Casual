@@ -177,11 +177,14 @@ namespace Casual.Ravenhill {
             int searchTime = 0;
             if(timerView ) {
                 searchTime = Mathf.RoundToInt(timerView.searchTime);
+                ravenhillGameModeService.searchSession.AddPoints(timerView.SessionPoints);
             }  else {
                 searchTime = ravenhillGameModeService.searchSession.roomInfo.currentRoomSetting.searchTime;
             }
 
             engine.Cast<RavenhillEngine>().EndSearchSession(status, searchTime);
+
+            viewService.RemoveView(RavenhillViewType.pause_timer_view);
 
             if(status == SearchStatus.success || showExitRoomView ) {
                 StartCoroutine(CorShowExitRoomView());

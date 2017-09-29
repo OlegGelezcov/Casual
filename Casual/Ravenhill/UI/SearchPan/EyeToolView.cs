@@ -14,6 +14,7 @@ namespace Casual.Ravenhill.UI {
                 position.z = -30;
                 GameObject instance = Instantiate<GameObject>(effectPrefab, position, Quaternion.identity);
                 instance.GetComponentInChildren<EyeToolObject>().SetTarget(searchbaleObj.transform);
+                searchbaleObj.SetCollectType(CollectType.Eye);
             }
         }
 

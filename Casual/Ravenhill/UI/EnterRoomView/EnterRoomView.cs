@@ -1,4 +1,5 @@
-﻿using Casual.UI;
+﻿using Casual.Ravenhill.Net;
+using Casual.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,8 +34,10 @@ namespace Casual.Ravenhill.UI {
 
             marketAdView.Setup(resourceService.marketItems.RandomElement());
             roomInfoView.Setup(roomInfo);
-            bestResultView.Setup(netService.GetBestRoomScore(roomInfo));
-            myBestResultView.Setup(netService.GetPlayerBestRoomScore(roomInfo));
+
+            INetRoom netRoom = new NetRoom(roomInfo.id, ravenhillGameModeService.roomMode);
+            bestResultView.Setup(netService.GetBestRoomScore(netRoom));
+            myBestResultView.Setup(netService.GetPlayerBestRoomScore(netRoom));
             closeBigButton.SetListener(Close, engine.GetService<IAudioService>());
         }
 

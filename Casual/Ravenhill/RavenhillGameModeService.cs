@@ -3,6 +3,7 @@ using Casual.Ravenhill.Data;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Casual.Ravenhill.Net;
 
 namespace Casual.Ravenhill {
     public class RavenhillGameModeService : GameModeService, ISaveable, IRoomMode {
@@ -12,7 +13,7 @@ namespace Casual.Ravenhill {
         public RoomData previousRoom { get; private set; }
         public RoomData currentRoom { get; private set; }
         public SearchSession searchSession { get; private set; } = new SearchSession();
-        public RoomMode roomMode { get; private set; } = RoomMode.normal;
+        //public RoomMode roomMode { get; private set; } = RoomMode.normal;
         public RoomManager roomManager { get; } = new RoomManager();
         public int searchCounter { get; private set; } = 0;
         public string lastSearchRoomId { get; set; } = string.Empty;
@@ -213,6 +214,7 @@ namespace Casual.Ravenhill {
             ApplySessionResults(searchSession);
             var searchManager = FindObjectOfType<SearchManager>();
             searchManager?.Exit();
+            
         }
 
         public void ChangeRoom(string roomId ) {

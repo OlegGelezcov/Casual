@@ -9,6 +9,7 @@ using UnityEngine;
 using Casual.Ravenhill.UI;
 
 namespace Casual.Ravenhill {
+
     public abstract class BaseSearchableObject : RavenhillGameBehaviour, ISearchableObject {
 
         public abstract string id { get; }
@@ -21,7 +22,31 @@ namespace Casual.Ravenhill {
 
         public SearchObjectData data { get; protected set; }
 
+        private CollectType collectType = CollectType.Founded;
+
+        private void AddSessionPoints() {
+            switch(collectType) {
+                case CollectType.Founded: {
+                        ravenhillGameModeService.searchSession.AddPoints(UnityEngine.Random.Range(50, 100));
+                    }
+                    break;
+                case CollectType.Eye: {
+                        ravenhillGameModeService.searchSession.AddPoints(UnityEngine.Random.Range(10, 20));
+                    }
+                    break;
+                case CollectType.Bomb: {
+                        ravenhillGameModeService.searchSession.AddPoints(UnityEngine.Random.Range(1, 5));
+                    }
+                    break;
+            }
+        }
+
+        public void SetCollectType(CollectType collectType ) {
+            this.collectType = collectType;
+        }
+
         public virtual void Collect() {
+
             var transformAnimScale = gameObject.GetOrAdd<TransformAnimScale>();
             var coloredObject = gameObject.GetOrAdd<ColoredObject>();
             var coloredObjectAnim = gameObject.GetOrAdd<ColoredObjectAnim>();
@@ -78,18 +103,25 @@ namespace Casual.Ravenhill {
             if(dropItems.Count > 0) {
                 engine.DropItems(dropItems, transform);
             }
+            AddSessionPoints();
         }
 
         private List<DropItem> GenerateCollectDrop() {
             List<DropItem> dropItems = new List<DropItem>();
             if(UnityEngine.Random.value < 0.3f ) {
-                dropItems.Add(new DropItem(DropType.silver, UnityEngine.Random.Range(1, 10)) {  isCreateScreenText = true });
+                int count = UnityEngine.Random.Range(1, 10);
+                dropItems.Add(new DropItem(DropType.silver, count) {  isCreateScreenText = true });
+                ravenhillGameModeService.searchSession.AddPoints(count * UnityEngine.Random.Range(5, 10));
             }
             if(UnityEngine.Random.value < 0.3f ) {
-                dropItems.Add(new DropItem(DropType.exp, UnityEngine.Random.Range(1, 5)) { isCreateScreenText = true });
+                int count = UnityEngine.Random.Range(1, 5);
+                dropItems.Add(new DropItem(DropType.exp, count) { isCreateScreenText = true });
+                ravenhillGameModeService.searchSession.AddPoints(count * UnityEngine.Random.Range(5, 10));
             }
             if(UnityEngine.Random.value < 0.3f ) {
-                dropItems.Add(new DropItem(DropType.health, UnityEngine.Random.Range(1, 2)) { isCreateScreenText = true });
+                int count = UnityEngine.Random.Range(1, 2);
+                dropItems.Add(new DropItem(DropType.health, count) { isCreateScreenText = true });
+                ravenhillGameModeService.searchSession.AddPoints(count * UnityEngine.Random.Range(10, 20));
             }
             return dropItems;
         }
@@ -116,7 +148,11 @@ namespace Casual.Ravenhill {
             pos.y = -pos.y;
             return pos;
         }
+    }
 
-       
+    public enum CollectType {
+        Founded,
+        Eye,
+        Bomb
     }
 }

@@ -13,6 +13,11 @@ namespace Casual.Ravenhill {
         public bool isStarted { get; private set; }
         public List<InventoryItem> roomDropList { get; } = new List<InventoryItem>();
 
+        private int points = 0;
+
+        public void AddPoints(int pt ) {
+            points += pt;
+        }
 
         public SearchSession() {
         }
@@ -84,9 +89,14 @@ namespace Casual.Ravenhill {
 
         public int currentScore {
             get {
-                return 100;
+                return points;
             }
         }
+
+        public int Points => currentScore;
+
+        public RoomMode RoomMode => gameModeService.roomMode;
+
     }
 
 }

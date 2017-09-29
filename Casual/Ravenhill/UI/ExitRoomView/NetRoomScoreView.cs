@@ -45,7 +45,7 @@ namespace Casual.Ravenhill.UI {
                     rankText.text = roomScore.rank.ToString();
                 }
 
-                scoreText.text = roomScore.score.ToString();
+                scoreText.text = roomScore.RoomPoints.Points.ToString();
 
                 AvatarData avatarData = resourceService.GetAvatarData(roomScore.player.avatarId);
                 if(avatarData != null ) {

@@ -75,6 +75,7 @@ namespace Casual.Ravenhill {
         public CachedSprite maxHealthSprite;
         public CachedSprite silverSprite;
         public CachedSprite goldSprite;
+        public CachedSprite missSprite;
 
         private Dictionary<RoomLevel, string> roomLevelNameTable { get; } = new Dictionary<RoomLevel, string> {
             [RoomLevel.Beginner] = "Loc_rank_beginner",
@@ -161,6 +162,7 @@ namespace Casual.Ravenhill {
             maxHealthSprite = new CachedSprite("maxhealth", "Sprites/Misc/health", spriteObjectCache);
             goldSprite = new CachedSprite("gold", "Sprites/Misc/gold", spriteObjectCache);
             silverSprite = new CachedSprite("silver", "Sprites/Misc/silver", spriteObjectCache);
+            missSprite = new CachedSprite("miss", "Sprites/Misc/miss", spriteObjectCache);
         }
 
         private void PreloadPrefabs() {
@@ -581,6 +583,9 @@ namespace Casual.Ravenhill {
             if (data.hasIcon) {
                 return spriteObjectCache.GetObject(data.id, data.iconPath);
             } else {
+                if(data is NoneData ) {
+                    return missSprite.Sprite;
+                }
                 return transparent;
             }
         }
@@ -868,6 +873,9 @@ namespace Casual.Ravenhill {
                     }
                 case InventoryItemType.StoryCollectable: {
                         return GetStoryCollectable(id);
+                    }
+                case InventoryItemType.None: {
+                        return new NoneData();
                     }
                 default: {
                         throw new System.NotImplementedException($"{type}");

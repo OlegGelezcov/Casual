@@ -9,7 +9,10 @@ namespace Casual.Ravenhill.Net {
 
         private readonly Dictionary<NetErrorCode, string> netErrorMap = new Dictionary<NetErrorCode, string> {
             [NetErrorCode.unknown] = "Unknown",
-            [NetErrorCode.json] = "Parse json error"
+            [NetErrorCode.json] = "Parse json error",
+            [NetErrorCode.sender_not_founded] = "Sender of gift not founded in users collection",
+            [NetErrorCode.receiver_not_founded] = "Receiver of gift not founded in users collection",
+            [NetErrorCode.gift_not_found] = "Gift not founded in gifts collection"
         };
 
         public INetError Create(NetErrorCode code, string message) {

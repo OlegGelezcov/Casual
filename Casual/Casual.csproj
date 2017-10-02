@@ -100,6 +100,7 @@
     <Compile Include="Ravenhill\Data\JournalEntryData.cs" />
     <Compile Include="Ravenhill\Data\KeyValueProperty.cs" />
     <Compile Include="Ravenhill\Data\LevelExpTable.cs" />
+    <Compile Include="Ravenhill\Data\NoneData.cs" />
     <Compile Include="Ravenhill\Data\NpcData.cs" />
     <Compile Include="Ravenhill\Data\NpcType.cs" />
     <Compile Include="Ravenhill\Data\PriceData.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Ravenhill\Net\ChatService.cs" />
     <Compile Include="Ravenhill\Net\DefaultMessageFactory.cs" />
     <Compile Include="Ravenhill\Net\Gift.cs" />
+    <Compile Include="Ravenhill\Net\GiftsRequest.cs" />
     <Compile Include="Ravenhill\Net\IChatClient.cs" />
     <Compile Include="Ravenhill\Net\IChatService.cs" />
     <Compile Include="Ravenhill\Net\IGift.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="Ravenhill\Net\NetError.cs" />
     <Compile Include="Ravenhill\Net\NetErrorCode.cs" />
     <Compile Include="Ravenhill\Net\NetErrorFactory.cs" />
+    <Compile Include="Ravenhill\Net\NetGift.cs" />
     <Compile Include="Ravenhill\Net\NetPlayer.cs" />
     <Compile Include="Ravenhill\Net\NetRoomPlayerRank.cs" />
     <Compile Include="Ravenhill\Net\NetRoomPoints.cs" />

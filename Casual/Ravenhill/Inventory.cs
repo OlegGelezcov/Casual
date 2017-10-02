@@ -12,6 +12,7 @@ namespace Casual.Ravenhill {
         private readonly Dictionary<InventoryItemType, Dictionary<string, InventoryItem>> items = new Dictionary<InventoryItemType, Dictionary<string, InventoryItem>>();
 
         public void AddItem(InventoryItem item) {
+            if(item.type == InventoryItemType.None ) { return; }
             AddItemImpl(item);
             RavenhillEvents.OnInventoryItemAdded(item.data.type, item.id, item.count);
             RavenhillEvents.OnInventoryChanged(item.data.type, item.id, item.count);
@@ -82,6 +83,9 @@ namespace Casual.Ravenhill {
         }
 
         public int ItemCount(InventoryItemType type, string id ) {
+            if(type == InventoryItemType.None) {
+                return 0;
+            }
             Dictionary<string, InventoryItem> filtered = null;
             if(items.TryGetValue(type, out filtered)) {
                 InventoryItem item = null;

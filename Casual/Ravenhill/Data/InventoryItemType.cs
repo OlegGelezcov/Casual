@@ -1,5 +1,6 @@
 ﻿namespace Casual.Ravenhill.Data {
     public enum InventoryItemType : int {
+
         Tool = 0,
         Bonus = 1,
         Food = 2,
@@ -10,7 +11,8 @@
         Collection = 7,
         Collectable = 8,
         StoryCollection = 9,
-        StoryCollectable = 10
+        StoryCollectable = 10,
 
+        None = 1000
     }
 }

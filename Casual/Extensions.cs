@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Casual.Ravenhill.Data;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -245,6 +246,49 @@ namespace Casual
                 }
             }
             return result;
+        }
+
+        public static string GetStringOrDefault(this Dictionary<string, object> dict, string key, string defaultValue = "") {
+            if(dict == null ) {
+                return defaultValue;
+            }
+
+            if (dict.ContainsKey(key)) {
+                object obj = dict[key];
+                if(obj != null ) {
+                    return obj.ToString();
+                }
+            }
+            return defaultValue;
+        }
+
+        public static int GetIntOrDefault(this Dictionary<string, object> dict, string key, int defaultValue = default(int)) {
+            if(dict == null ) {
+                return defaultValue;
+            }
+
+            if (dict.ContainsKey(key)) {
+                object obj = dict[key];
+                if(obj != null ) {
+                    int val;
+                    if(int.TryParse(obj.ToString(), out val)) {
+                        return val;
+                    }
+                }
+            }
+            return defaultValue;
+        }
+
+        public static InventoryItemType GetItemType(this Dictionary<string, object> dict, string key) {
+            string strType = dict.GetStringOrDefault(key);
+            if(string.IsNullOrEmpty(strType)) {
+                return InventoryItemType.None;
+            }
+            InventoryItemType result;
+            if(Enum.TryParse<InventoryItemType>(strType, out result)) {
+                return result;
+            }
+            return InventoryItemType.None;
         }
     }
 

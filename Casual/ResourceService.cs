@@ -18,5 +18,7 @@ namespace Casual {
 
         public abstract Sprite GetSprite(IconData data);
 
+        public abstract InventoryItemData GetInventoryItemData(InventoryItemType type, string id);
+
     }
 }

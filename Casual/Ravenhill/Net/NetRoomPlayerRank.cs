@@ -5,7 +5,7 @@ namespace Casual.Ravenhill.Net {
         private RankedRoomNetPlayer maxPlayer;
         private RankedRoomNetPlayer myPlayer;
 
-        public NetRoomPlayerRank(Dictionary<string, object> dict ) {
+        public NetRoomPlayerRank(Dictionary<string, object> dict, IResourceService resourceService) {
 
             if (dict == null || dict.Count == 0) {
                 maxPlayer = RankedRoomNetPlayer.Null;
@@ -16,7 +16,7 @@ namespace Casual.Ravenhill.Net {
                 if (dict.ContainsKey("max_user")) {
                     Dictionary<string, object> maxDict = dict["max_user"] as Dictionary<string, object>;
                     if (maxDict != null) {
-                        maxPlayer = new RankedRoomNetPlayer(maxDict);
+                        maxPlayer = new RankedRoomNetPlayer(maxDict, resourceService);
                     } else {
                         maxPlayer = RankedRoomNetPlayer.Null;
                     }
@@ -25,7 +25,7 @@ namespace Casual.Ravenhill.Net {
                 if (dict.ContainsKey("my_user")) {
                     Dictionary<string, object> myDict = dict["my_user"] as Dictionary<string, object>;
                     if (myDict != null) {
-                        myPlayer = new RankedRoomNetPlayer(myDict);
+                        myPlayer = new RankedRoomNetPlayer(myDict, resourceService);
                     } else {
                         myPlayer = RankedRoomNetPlayer.Null;
                     }

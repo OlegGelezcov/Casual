@@ -114,6 +114,8 @@ namespace Casual
             });
         }
 
+
+
         public static void SetListener(this Toggle toggle, UnityAction<bool> action, IButtonSoundProvider soundProvider) {
             if(toggle == null) { return; }
             toggle.onValueChanged.RemoveAllListeners();

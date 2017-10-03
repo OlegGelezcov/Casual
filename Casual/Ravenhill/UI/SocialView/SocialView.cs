@@ -1,5 +1,6 @@
 ﻿namespace Casual.Ravenhill.UI {
     using UnityEngine;
+    using UnityEngine.UI;
 
     public partial class SocialView : RavenhillCloseableView {
 
@@ -11,8 +12,26 @@
 
         public override void Setup(object objdata = null) {
             base.Setup(objdata);
-            chatView.Setup();
 
+            chatToggle.SetListener((isOn) => {
+                if (isOn) {
+                    chatView.ActivateSelf();
+                    chatView.Setup();
+                } else {
+                    chatView.DeactivateSelf();
+                }
+            }, engine.GetService<IAudioService>());
+
+            giftsToggle.SetListener((isOn) => {
+                if (isOn) {
+                    giftsView.ActivateSelf();
+                    giftsView.Setup();
+                } else {
+                    giftsView.DeactivateSelf();
+                }
+            }, engine.GetService<IAudioService>());
+
+            chatToggle.isOn = true;
         }
     }
 
@@ -21,5 +40,13 @@
         [SerializeField]
         private ChatView chatView;
 
+        [SerializeField]
+        private SocialGiftsView giftsView;
+
+        [SerializeField]
+        private Toggle chatToggle;
+
+        [SerializeField]
+        private Toggle giftsToggle;
     }
 }

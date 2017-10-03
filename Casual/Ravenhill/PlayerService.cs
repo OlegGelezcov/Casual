@@ -47,7 +47,7 @@ namespace Casual.Ravenhill {
         public float healthTimer { get; set; } = kHealthRestoreInterval;
 
         private Inventory inventory { get; } = new Inventory();
-        private Wishlist wishlist { get; } = new Wishlist();
+        public Wishlist wishlist { get; } = new Wishlist();
         private BuffManager buffs { get; } = new BuffManager();
 
         private bool IsFullHealth {

@@ -14,8 +14,8 @@ namespace Casual.Ravenhill.Net {
             this.roomPoints = roomPoints;
         }
 
-        public RankedRoomNetPlayer(Dictionary<string, object> dict ) {
-            this.player = new NetPlayer(dict, true);
+        public RankedRoomNetPlayer(Dictionary<string, object> dict, IResourceService resourceService) {
+            this.player = new NetPlayer(dict, true, resourceService);
             this.roomPoints = new NetRoomPoints(dict);
             if (dict.ContainsKey("rank")) {
                 if(!int.TryParse(dict["rank"].ToString(), out rank)) {

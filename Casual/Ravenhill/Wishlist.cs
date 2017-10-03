@@ -37,6 +37,16 @@ namespace Casual.Ravenhill {
         public int Count => collectables.Count;
         #endregion
 
+        public Dictionary<string, string> JsonCompatibale {
+            get {
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                foreach(var c in collectables) {
+                    dict.Add(c.Key, c.Value.type.ToString());
+                }
+                return dict;
+            }
+        }
+
         #region ISaveElement
         public UXMLWriteElement GetSave() {
             UXMLWriteElement root = new UXMLWriteElement("wishlist");

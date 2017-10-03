@@ -10,11 +10,16 @@ namespace Casual.Ravenhill.Net {
 
     public class UsersRequest : BaseRequest {
 
-        public UsersRequest(INetService netService, string url, INetErrorFactory errorFactory) : base(netService, url, errorFactory) { }
+        private IResourceService resourceService;
+
+        public UsersRequest(INetService netService, string url, INetErrorFactory errorFactory, IResourceService resourceService) : 
+            base(netService, url, errorFactory) {
+            this.resourceService = resourceService;
+        }
 
 
-        public void WriteUser(INetUser user) {
-            WriteUser(user, (netUser) => {
+        public void WriteUser(INetUser user, Dictionary<string, string> wishlist) {
+            WriteUser(user, MiniJSON.Json.Serialize(wishlist), (netUser) => {
                 netService.OnNetUserWritten(netUser);
             }, (error) => {
                 netService.OnNetErrorOccured("write_user", error);
@@ -34,8 +39,7 @@ namespace Casual.Ravenhill.Net {
                 netService.OnRoomNetRankReaded(user, room, rank);
             }, (error) => {
                 netService.OnNetErrorOccured("read_points", error);
-            });
-        }
+            });}
 
         public void ReadAllRoomPoints(INetUser user, List<string> roomIds ) {
             ReadAllRoomPoints(user, roomIds, (ranks) => {
@@ -49,13 +53,14 @@ namespace Casual.Ravenhill.Net {
             ReadAllRoomPoints(netService.LocalPlayer, roomIds);
         }
 
-        private void WriteUser(INetUser user, System.Action<INetUser> onSuccess, System.Action<INetError> onError) {
+        private void WriteUser(INetUser user, string wishlist, System.Action<INetUser> onSuccess, System.Action<INetError> onError) {
             WWWForm form = new WWWForm();
             form.AddField("op", "write_user");
             form.AddField("user_id", user.id);
             form.AddField("user_name", user.name);
             form.AddField("avatar_id", user.avatarId);
             form.AddField("level", user.level);
+            form.AddField("wishlist", wishlist);
 
             MakeRequest(form, (json) => {
                 try {
@@ -64,7 +69,7 @@ namespace Casual.Ravenhill.Net {
                         onError?.Invoke(errorFactory.Create(NetErrorCode.json, string.Empty));
                         return;
                     }
-                    NetPlayer player = new NetPlayer(userObj, true);
+                    NetPlayer player = new NetPlayer(userObj, true, resourceService);
                     onSuccess?.Invoke(player);
 
                 } catch(Exception exception) {
@@ -92,7 +97,7 @@ namespace Casual.Ravenhill.Net {
                         onError?.Invoke(errorFactory.Create(NetErrorCode.json, string.Empty));
                         return;
                     }
-                    UserRoomPoints returnedPoints = new UserRoomPoints(dict);
+                    UserRoomPoints returnedPoints = new UserRoomPoints(dict, resourceService);
                     onSuccess?.Invoke(returnedPoints);
                 } catch(Exception exception ) {
                     onError?.Invoke(errorFactory.Create(NetErrorCode.json, string.Empty));
@@ -117,7 +122,7 @@ namespace Casual.Ravenhill.Net {
                         onError?.Invoke(errorFactory.Create(NetErrorCode.json, string.Empty));
                         return;
                     }
-                    NetRoomPlayerRank rank = new NetRoomPlayerRank(dict);
+                    NetRoomPlayerRank rank = new NetRoomPlayerRank(dict, resourceService);
                     onSuccess?.Invoke(rank);
                 } catch(Exception exception ) {
                     onError?.Invoke(errorFactory.Create(NetErrorCode.json, string.Empty));
@@ -153,7 +158,7 @@ namespace Casual.Ravenhill.Net {
             foreach(var kvp in rootDict ) {
                 Dictionary<string, object> rankDict = kvp.Value as Dictionary<string, object>;
                 if(rankDict != null ) {
-                    NetRoomPlayerRank rank = new NetRoomPlayerRank(rankDict);
+                    NetRoomPlayerRank rank = new NetRoomPlayerRank(rankDict, resourceService);
                     ranks[kvp.Key] = rank;
                 }
             }

@@ -11,5 +11,6 @@ namespace Casual.Ravenhill {
         bool Remove(InventoryItemData data);
         bool IsContains(InventoryItemData data);
         bool IsFull { get; }
+
     }
 }

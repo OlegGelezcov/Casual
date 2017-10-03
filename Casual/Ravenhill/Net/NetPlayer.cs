@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Casual.Ravenhill.Data;
+using System;
 using System.Collections.Generic;
 
 namespace Casual.Ravenhill.Net {
@@ -9,6 +10,9 @@ namespace Casual.Ravenhill.Net {
         public string avatarId { get; private set; }
         public int level { get; private set; }
         public bool isValid { get; private set; }
+        public int time { get; private set; }
+        public List<InventoryItemData> wishlistRemoted { get; } = new List<InventoryItemData>();
+
 
         public static NetPlayer Null => new NetPlayer(string.Empty, string.Empty, string.Empty, 1, false);
 
@@ -22,8 +26,8 @@ namespace Casual.Ravenhill.Net {
             this.isValid = valid;
         }
 
-        public NetPlayer(Dictionary<string, object> dict, bool isValid) {
-            LoadFromDictionary(dict);
+        public NetPlayer(Dictionary<string, object> dict, bool isValid, IResourceService resourceService) {
+            LoadFromDictionary(dict, resourceService);
             this.isValid = isValid;
         }
 
@@ -35,17 +39,36 @@ namespace Casual.Ravenhill.Net {
             this.isValid = player.isValid;
         }
 
-        public void LoadFromDictionary(Dictionary<string, object> dict) {
+        public void LoadFromDictionary(Dictionary<string, object> dict, IResourceService resourceService) {
             id = dict.GetOrDefault("user_id", string.Empty).ToString();
             name = dict.GetOrDefault("user_name", string.Empty).ToString();
             avatarId = dict.GetOrDefault("avatar_id", "Avatar1").ToString();
 
             string strLevel = dict.GetOrDefault("level", "1").ToString();
+            time = dict.GetIntOrDefault("time", 0);
+
             int result;
             if(int.TryParse(strLevel, out result )) {
                 level = result;
             } else {
                 level = 1;
+            }
+
+            wishlistRemoted.Clear();
+            if (dict.ContainsKey("wishlist")) {
+                Dictionary<string, object> wishlistDict = dict["wishlist"] as Dictionary<string, object>;
+                if(wishlistDict != null ) {
+                    foreach (var kvp in wishlistDict) {
+                        string itemID = kvp.Key;
+                        InventoryItemType itemType;
+                        if(System.Enum.TryParse<InventoryItemType>(kvp.Value.ToString(), out itemType)) {
+                            var itemData = resourceService.GetInventoryItemData(itemType, itemID);
+                            if(itemData != null && itemData.type != InventoryItemType.None ) {
+                                wishlistRemoted.Add(itemData);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -82,7 +105,7 @@ namespace Casual.Ravenhill.Net {
         }
 
         public override string ToString() {
-            return $"Id: {id}, name: {name}, avatar: {avatarId}, level: {level}, is valid: {isValid}";
+            return $"Id: {id}{Environment.NewLine}, name: {name}{Environment.NewLine}, avatar: {avatarId}{Environment.NewLine}, level: {level}{Environment.NewLine}, is valid: {isValid}";
         }
 
         public UXMLWriteElement GetSave() {

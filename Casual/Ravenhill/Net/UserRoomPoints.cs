@@ -14,8 +14,8 @@ namespace Casual.Ravenhill.Net {
             this.roomPoints = roomPoints;
         }
 
-        public UserRoomPoints(Dictionary<string, object> dict) {
-            this.user = new NetPlayer(dict, true);
+        public UserRoomPoints(Dictionary<string, object> dict, IResourceService resourceService) {
+            this.user = new NetPlayer(dict, true, resourceService);
             this.roomPoints = new NetRoomPoints(dict);
         }
 

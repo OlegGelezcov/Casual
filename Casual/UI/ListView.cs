@@ -1,5 +1,6 @@
 ﻿using Casual.Ravenhill;
 using Casual.Ravenhill.Data;
+using Casual.Ravenhill.Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -188,6 +189,12 @@ namespace Casual.UI {
         public override void Setup(ListViewData data) {
             base.Setup(data);
             Debug.Log("Setup Buff List");
+        }
+    }
+
+    public class SocialGiftListView : ListView<NetGift> {
+        public override void Setup(ListViewData data) {
+            base.Setup(data);
         }
     }
 }

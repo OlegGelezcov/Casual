@@ -11,6 +11,7 @@ namespace Casual.Ravenhill.Net {
         json = 2,
         sender_not_founded = 3,
         receiver_not_founded = 4,
-        gift_not_found = 5
+        gift_not_found = 5,
+        take_gift_fail = 6
     }
 }

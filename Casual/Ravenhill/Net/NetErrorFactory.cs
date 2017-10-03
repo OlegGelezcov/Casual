@@ -12,7 +12,8 @@ namespace Casual.Ravenhill.Net {
             [NetErrorCode.json] = "Parse json error",
             [NetErrorCode.sender_not_founded] = "Sender of gift not founded in users collection",
             [NetErrorCode.receiver_not_founded] = "Receiver of gift not founded in users collection",
-            [NetErrorCode.gift_not_found] = "Gift not founded in gifts collection"
+            [NetErrorCode.gift_not_found] = "Gift not founded in gifts collection",
+            [NetErrorCode.take_gift_fail] = "Take gift error"
         };
 
         public INetError Create(NetErrorCode code, string message) {

@@ -84,6 +84,8 @@ namespace Casual.Ravenhill {
         public static event System.Action<List<ChatMessage>> ChatMessagesReceived;
 
         public static event System.Action<IGift> GiftSendedSuccess;
+        public static event System.Action<Dictionary<string, NetGift>> GiftsReceived;
+        public static event System.Action<NetGift> GiftTaken;
 
         //-----------------Net events---------------------------------
         public static event System.Action<INetUser> NetUserWritten;
@@ -92,6 +94,19 @@ namespace Casual.Ravenhill {
         public static event System.Action<INetUser, INetRoom, NetRoomPlayerRank> RoomNetRankReaded;
         public static event System.Action<Dictionary<string, NetRoomPlayerRank>> RoomNetRanksReceived;
 
+        public static event System.Action<FriendCollection> FriendsUpdated;
+
+        public static void OnFriendsUpdated(FriendCollection friends) {
+            FriendsUpdated?.Invoke(friends);
+        }
+
+        public static void OnGiftTaken(NetGift gift) {
+            GiftTaken?.Invoke(gift);
+        }
+
+        public static void OnGiftsReceived(Dictionary<string, NetGift> gifts) {
+            GiftsReceived?.Invoke(gifts);
+        }
 
         public static void OnRoomNetRanksReceived(Dictionary<string, NetRoomPlayerRank> ranks ) {
             RoomNetRanksReceived?.Invoke(ranks);

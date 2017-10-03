@@ -1,14 +1,15 @@
 ﻿using Casual.Ravenhill.Data;
 using System.Collections.Generic;
+using System;
 
 namespace Casual.Ravenhill.Net {
-    public class NetGift : IGift {
+    public class NetGift : IGift, IIdObject {
 
         private Gift gift = null;
-        private string id = null;
+        private string _id = null;
 
         public NetGift(Dictionary<string, object> dict, IResourceService resource) {
-            id = dict.GetStringOrDefault("gift_id");
+            _id = dict.GetStringOrDefault("gift_id");
 
             string senderId = dict.GetStringOrDefault("sender_id");
             string senderName = dict.GetStringOrDefault("sender_name");
@@ -30,7 +31,9 @@ namespace Casual.Ravenhill.Net {
 
         }
 
-        public string Id => id;
+        public string Id => _id;
+
+        public string id => _id;
 
         public InventoryItemData GetItemData() {
             return gift.GetItemData();

@@ -138,27 +138,27 @@ namespace Casual.Ravenhill.UI {
         protected virtual void GiveItem() {
             switch(dropItem.type) {
                 case DropType.exp: {
-                        playerService.AddExp(dropItem.count);
+                        playerService?.AddExp(dropItem.count);
                     }
                     break;
                 case DropType.gold: {
-                        playerService.AddGold(dropItem.count);
+                        playerService?.AddGold(dropItem.count);
                     }
                     break;
                 case DropType.health: {
-                        playerService.AddHealth(dropItem.count);
+                        playerService?.AddHealth(dropItem.count);
                     }
                     break;
                 case DropType.item: {
-                        playerService.AddToInventory(new InventoryItem(dropItem.itemData, dropItem.count));
+                        playerService?.AddToInventory(new InventoryItem(dropItem.itemData, dropItem.count));
                     }
                     break;
                 case DropType.max_health: {
-                        playerService.AddMaxHealth(dropItem.count);
+                        playerService?.AddMaxHealth(dropItem.count);
                     }
                     break;
                 case DropType.silver: {
-                        playerService.AddSilver(dropItem.count);
+                        playerService?.AddSilver(dropItem.count);
                     }
                     break;
             }

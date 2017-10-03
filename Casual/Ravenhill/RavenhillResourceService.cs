@@ -839,7 +839,7 @@ namespace Casual.Ravenhill {
             }
         }
 
-        public InventoryItemData GetInventoryItemData(InventoryItemType type, string id) {
+        public override InventoryItemData GetInventoryItemData(InventoryItemType type, string id) {
             switch (type) {
                 case InventoryItemType.Bonus: {
                         return GetBonus(id);

@@ -148,6 +148,8 @@
     <Compile Include="Ravenhill\Net\ChatMessageContainer.cs" />
     <Compile Include="Ravenhill\Net\ChatService.cs" />
     <Compile Include="Ravenhill\Net\DefaultMessageFactory.cs" />
+    <Compile Include="Ravenhill\Net\FriendCollection.cs" />
+    <Compile Include="Ravenhill\Net\FriendRequest.cs" />
     <Compile Include="Ravenhill\Net\Gift.cs" />
     <Compile Include="Ravenhill\Net\GiftsRequest.cs" />
     <Compile Include="Ravenhill\Net\IChatClient.cs" />
@@ -193,6 +195,7 @@
     <Compile Include="Ravenhill\RavenhillEngine.cs" />
     <Compile Include="Ravenhill\RavenhillEventArgs.cs" />
     <Compile Include="Ravenhill\RavenhillEventService.cs" />
+    <Compile Include="Ravenhill\RavenhillExtensions.cs" />
     <Compile Include="Ravenhill\RavenhillGameBehaviour.cs" />
     <Compile Include="Ravenhill\RavenhillGameElement.cs" />
     <Compile Include="Ravenhill\RavenhillGameModeService.cs" />
@@ -305,6 +308,9 @@
     <Compile Include="Ravenhill\UI\SocialView\ChatMessageList.cs" />
     <Compile Include="Ravenhill\UI\SocialView\ChatMessageView.cs" />
     <Compile Include="Ravenhill\UI\SocialView\ChatView.cs" />
+    <Compile Include="Ravenhill\UI\SocialView\FriendView\FriendWishView.cs" />
+    <Compile Include="Ravenhill\UI\SocialView\GiftView\SocialGiftItemView.cs" />
+    <Compile Include="Ravenhill\UI\SocialView\GiftView\SocialGiftsView.cs" />
     <Compile Include="Ravenhill\UI\SocialView\SocialView.cs" />
     <Compile Include="Ravenhill\UI\Store\StoreItemView.cs" />
     <Compile Include="Ravenhill\UI\Store\StoreView.cs" />

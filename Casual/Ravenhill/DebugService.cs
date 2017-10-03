@@ -58,6 +58,7 @@ namespace Casual.Ravenhill {
             Add("add", new AddCommand("add"));
             Add("restart", new RestartCommand("restart"));
             Add("net", new NetCommand("net"));
+            Add("log", new LogCommand("log"));
         }
 
 
@@ -155,13 +156,31 @@ namespace Casual.Ravenhill {
 
     }
 
+    public class LogCommand : BaseCommand {
+        public LogCommand(string commandName) : base(commandName) { }
+
+        public override bool Execute(string source) {
+            string token = GetToken(source, 1);
+            switch(token) {
+                case "netplayer": {
+                        engine.GetService<IDebugService>().AddMessage(engine.GetService<INetService>().LocalPlayer.ToString(), ColorType.yellow);
+                        return true;
+                    }
+                default: {
+                        return false;
+                    }
+
+            }
+        }
+    }
+
     public class NetCommand : BaseCommand {
         public NetCommand(string commandName) :
             base(commandName) { }
         public override bool Execute(string source) {
             string token = GetToken(source, 1);
             if(token.ToLower() == "writeuser") {
-                engine.GetService<INetService>().UsersRequest.WriteUser(engine.GetService<INetService>().LocalPlayer);
+                engine.GetService<INetService>().UsersRequest.WriteUser(engine.GetService<INetService>().LocalPlayer, engine.GetService<IPlayerService>().wishlist.JsonCompatibale);
                 return true;
             } else if(token.ToLower() == "writepoints") {
                 string roomId = GetToken(source, 2);

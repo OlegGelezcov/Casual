@@ -12,9 +12,13 @@ namespace Casual.Ravenhill.Net {
         private NetPlayer localPlayer = null;
         private readonly UpdateTimer localPlayerUpdater = new UpdateTimer();
         private UsersRequest usersRequest;
+        private GiftsRequest giftsRequest;
         private readonly Dictionary<string, NetRoomPlayerRank> ranks = new Dictionary<string, NetRoomPlayerRank>();
-        private bool isRanksRequested = false;
+        private readonly Dictionary<string, NetGift> gifts = new Dictionary<string, NetGift>();
 
+        private bool isRanksRequested = false;
+        private bool isPlayerWrited = false;
+        private bool isGiftsRequested = false;
 
 
         private void UpdateRanks(Dictionary<string, NetRoomPlayerRank> newRanks ) {
@@ -29,10 +33,19 @@ namespace Casual.Ravenhill.Net {
 
         public void Setup(object data) {
             INetErrorFactory errorFactory = new NetErrorFactory();
-            usersRequest = new UsersRequest(this, "https://server.playnebula.com/raven/users.php", errorFactory);
+            usersRequest = new UsersRequest(this, "https://server.playnebula.com/raven/users.php", errorFactory, resourceService);
+            giftsRequest = new GiftsRequest(this, "https://server.playnebula.com/raven/gifts.php", errorFactory, resourceService);
         }
 
         public UsersRequest UsersRequest => usersRequest;
+        public GiftsRequest GiftsRequest => giftsRequest;
+        public List<NetGift> Gifts {
+            get {
+                List<NetGift> result = new List<NetGift>(gifts.Values);
+                result = result.OrderBy(g => g.Id).ToList();
+                return result;
+            }
+        }
 
         public void OnRoomNetRanksReceived(Dictionary<string, NetRoomPlayerRank> ranks ) {
             RavenhillEvents.OnRoomNetRanksReceived(ranks);
@@ -60,6 +73,39 @@ namespace Casual.Ravenhill.Net {
             RavenhillEvents.OnNetErrorOccured(operation, error);
             Debug.Log($"Error: {operation} => {error.ToString()}".Colored(ColorType.red));
         }
+
+        #region Gifts API
+        public void OnGiftsReceived(Dictionary<string, NetGift> receivedGifts) {
+            isGiftsRequested = true;
+            gifts.Clear();
+            foreach(var kvp in receivedGifts) {
+                gifts.Add(kvp.Key, kvp.Value);
+            }
+            RavenhillEvents.OnGiftsReceived(gifts);
+        }
+
+        public void OnGiftSended(NetGift gift) {
+            var itemData = gift.GetItemData();
+            if (itemData != null) {
+                if (playerService.GetItemCount(itemData) > 0) {
+                    playerService.RemoveItem(itemData, 1);
+                    RavenhillEvents.OnGiftSendedSuccess(gift);
+                }
+            }
+        }
+
+        public void OnGiftTaken(NetGift gift ) {
+            if(gifts.ContainsKey(gift.Id)) {
+                gifts.Remove(gift.Id);
+                Debug.Log($"Gift removed: {gifts.Count}");
+                if(gift.GetItemData() != null ) {
+                    DropItem dropItem = new DropItem(DropType.item, 1, gift.GetItemData());
+                    engine.DropItems(new List<DropItem> { dropItem });
+                }
+            }
+            RavenhillEvents.OnGiftTaken(gift);
+        }
+        #endregion
 
         private void RequestRanks() {
             if(!isRanksRequested) {
@@ -107,6 +153,21 @@ namespace Casual.Ravenhill.Net {
         private void OnGameModeChanged(GameModeName oldGameMode, GameModeName newGameMode ) {
             if(newGameMode == GameModeName.map || newGameMode == GameModeName.hallway ) {
                 RequestRanks();
+                WritePlayer();
+                GetGifts();
+            }
+        }
+
+        private void WritePlayer() {
+            if(!isPlayerWrited) {
+                isPlayerWrited = true;
+                UsersRequest.WriteUser(LocalPlayer, engine.GetService<IPlayerService>().wishlist.JsonCompatibale);
+            }
+        }
+
+        private void GetGifts() {
+            if(!isGiftsRequested) {
+                GiftsRequest.GetGifts();
             }
         }
 
@@ -118,14 +179,23 @@ namespace Casual.Ravenhill.Net {
 
         private void OnPlayerNameChanged(string oldName, string newName) {
             UpdateLocalPlayer();
+            if (isLoaded) {
+                UsersRequest.WriteUser(LocalPlayer, engine.GetService<IPlayerService>().wishlist.JsonCompatibale);
+            }
         }
 
         private void OnPlayerAvatarChanged(string oldAvatar, string newAvatar ) {
             UpdateLocalPlayer();
+            if (isLoaded) {
+                UsersRequest.WriteUser(LocalPlayer, engine.GetService<IPlayerService>().wishlist.JsonCompatibale);
+            }
         }
 
         private void OnPlayerLevelChanged(int oldLevel, int newLevel ) {
             UpdateLocalPlayer();
+            if (isLoaded) {
+                UsersRequest.WriteUser(LocalPlayer, engine.GetService<IPlayerService>().wishlist.JsonCompatibale);
+            }
         }
 
         private void UpdateLocalPlayer() {
@@ -149,7 +219,7 @@ namespace Casual.Ravenhill.Net {
 
         public NetRoomPlayerRank GetRank(INetRoom room ) {
             if(!ranks.ContainsKey(room.GetNetRoomId())) {
-                ranks.Add(room.GetNetRoomId(), new NetRoomPlayerRank(null));
+                ranks.Add(room.GetNetRoomId(), new NetRoomPlayerRank(null, resourceService));
             } 
             return ranks[room.GetNetRoomId()];
         }
@@ -238,11 +308,16 @@ namespace Casual.Ravenhill.Net {
         }
 
         public void SendGift(IGift gift) {
+
             if(playerService.GetItemCount(gift.GetItemData()) > 0 ) {
-                playerService.RemoveItem(gift.GetItemData(), 1);
+                
                 //really gift send here
-                RavenhillEvents.OnGiftSendedSuccess(gift);
+                GiftsRequest.SendGift(gift.GetReceiver(), gift.GetItemData());
             }
+        }
+
+        public void TakeGift(string giftId ) {
+            GiftsRequest.TakeGift(giftId);
         }
 
         public void ExecuteCoroutine(IEnumerator coroutine) {

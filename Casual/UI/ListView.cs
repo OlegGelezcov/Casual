@@ -197,4 +197,8 @@ namespace Casual.UI {
             base.Setup(data);
         }
     }
+
+    public class SocialFriendListView : ListView<NetPlayer> {
+
+    }
 }

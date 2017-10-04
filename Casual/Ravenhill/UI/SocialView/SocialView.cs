@@ -20,7 +20,7 @@
                 } else {
                     chatView.DeactivateSelf();
                 }
-            }, engine.GetService<IAudioService>());
+            });
 
             giftsToggle.SetListener((isOn) => {
                 if (isOn) {
@@ -29,8 +29,16 @@
                 } else {
                     giftsView.DeactivateSelf();
                 }
-            }, engine.GetService<IAudioService>());
+            });
 
+            friendsToggle.SetListener((isOn) => {
+                if(isOn) {
+                    friendsView.ActivateSelf();
+                    friendsView.Setup();
+                } else {
+                    friendsView.DeactivateSelf();
+                }
+            });
             chatToggle.isOn = true;
         }
     }
@@ -44,9 +52,15 @@
         private SocialGiftsView giftsView;
 
         [SerializeField]
+        private FriendsView friendsView;
+
+        [SerializeField]
         private Toggle chatToggle;
 
         [SerializeField]
         private Toggle giftsToggle;
+
+        [SerializeField]
+        private Toggle friendsToggle;
     }
 }

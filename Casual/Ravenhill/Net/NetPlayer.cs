@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 
 namespace Casual.Ravenhill.Net {
-    public class NetPlayer : INetUser, ISender, ISaveElement, INullObject {
+    public class NetPlayer : INetUser, ISender, ISaveElement, INullObject, IIdObject {
 
         public string id { get; private set; }
         public string name { get; private set; }

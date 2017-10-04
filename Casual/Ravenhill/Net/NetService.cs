@@ -13,12 +13,15 @@ namespace Casual.Ravenhill.Net {
         private readonly UpdateTimer localPlayerUpdater = new UpdateTimer();
         private UsersRequest usersRequest;
         private GiftsRequest giftsRequest;
+        private FriendRequest friendRequest;
+
         private readonly Dictionary<string, NetRoomPlayerRank> ranks = new Dictionary<string, NetRoomPlayerRank>();
         private readonly Dictionary<string, NetGift> gifts = new Dictionary<string, NetGift>();
 
         private bool isRanksRequested = false;
         private bool isPlayerWrited = false;
         private bool isGiftsRequested = false;
+        
 
 
         private void UpdateRanks(Dictionary<string, NetRoomPlayerRank> newRanks ) {
@@ -35,10 +38,13 @@ namespace Casual.Ravenhill.Net {
             INetErrorFactory errorFactory = new NetErrorFactory();
             usersRequest = new UsersRequest(this, "https://server.playnebula.com/raven/users.php", errorFactory, resourceService);
             giftsRequest = new GiftsRequest(this, "https://server.playnebula.com/raven/gifts.php", errorFactory, resourceService);
+            friendRequest = new FriendRequest(this, "https://server.playnebula.com/raven/friends.php", errorFactory, resourceService);
         }
 
         public UsersRequest UsersRequest => usersRequest;
         public GiftsRequest GiftsRequest => giftsRequest;
+        public FriendRequest FriendRequest => friendRequest;
+
         public List<NetGift> Gifts {
             get {
                 List<NetGift> result = new List<NetGift>(gifts.Values);
@@ -151,11 +157,12 @@ namespace Casual.Ravenhill.Net {
         }
 
         private void OnGameModeChanged(GameModeName oldGameMode, GameModeName newGameMode ) {
-            if(newGameMode == GameModeName.map || newGameMode == GameModeName.hallway ) {
+            if(HelperUtils.IsHallwayGamemode(newGameMode) ) {
                 RequestRanks();
                 WritePlayer();
                 GetGifts();
             }
+            FriendRequest?.OnGameModeChanged(newGameMode);
         }
 
         private void WritePlayer() {

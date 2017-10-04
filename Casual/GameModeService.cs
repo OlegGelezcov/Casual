@@ -46,6 +46,8 @@ namespace Casual
         hallway
     }
 
+    
+
     public enum SearchStatus {
         success,
         fail

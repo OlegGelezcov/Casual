@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Casual.Ravenhill {
-    using UnityEngine;
+﻿namespace Casual.Ravenhill {
     using UnityEngine.Events;
     using UnityEngine.UI;
 
@@ -13,6 +6,10 @@ namespace Casual.Ravenhill {
 
         public static void SetListener(this Button button, UnityAction action) {
             button.SetListener(action, CasualEngine.Get<RavenhillEngine>().GetService<IAudioService>());
+        }
+
+        public static void SetListener(this Toggle toggle, UnityAction<bool> action) {
+            toggle.SetListener(action, CasualEngine.Get<RavenhillEngine>().GetService<IAudioService>());
         }
     }
 }

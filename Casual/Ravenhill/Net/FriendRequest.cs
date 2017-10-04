@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Casual.Ravenhill.Net {
@@ -10,11 +7,27 @@ namespace Casual.Ravenhill.Net {
 
         private readonly FriendCollection friends = new FriendCollection();
         private IResourceService resourceService;
+        private bool isFriendsRequested = false;
+
 
         public FriendRequest(INetService netService, string url, INetErrorFactory errorFactory, IResourceService resourceService) : 
             base(netService, url, errorFactory) {
             this.resourceService = resourceService;
         }
+
+        public void OnGameModeChanged(GameModeName newGameMode ) {
+            if(HelperUtils.IsHallwayGamemode(newGameMode)) {
+                if(!isFriendsRequested) {
+                    if (Utility.IsNetworkReachable) {
+                        GetFriends();
+                        isFriendsRequested = true;
+                    }
+                }
+            }
+        }
+
+
+        public FriendCollection Friends => friends;
 
         public void GetFriends() {
             GetFriends(netService.LocalPlayer, (newfriends) => {

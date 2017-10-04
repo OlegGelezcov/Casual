@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Casual.Ravenhill.Net {
     public interface INetService : IService, ICoroutineExecutor {
@@ -16,6 +12,8 @@ namespace Casual.Ravenhill.Net {
         List<NetGift> Gifts { get; }
 
         UsersRequest UsersRequest { get; }
+        FriendRequest FriendRequest { get; }
+
         void OnNetUserWritten(INetUser user);
         void OnNetErrorOccured(string operation, INetError error);
         void OnUserRoomPointsWritten(UserRoomPoints roomPoints);

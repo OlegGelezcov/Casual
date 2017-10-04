@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Casual.Ravenhill.UI {
+﻿namespace Casual.Ravenhill.UI {
     using Casual.Ravenhill.Data;
     using Casual.Ravenhill.Net;
-    using UnityEngine;
     using UnityEngine.UI;
 
     public class FriendWishView : RavenhillUIBehaviour {
